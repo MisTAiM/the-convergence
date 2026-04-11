@@ -2,7 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#050504">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="The Convergence">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
 <title>THE CONVERGENCE — Live Intelligence Platform</title>
 <meta name="description" content="Ancient prophetic texts, live world data, pattern recognition, and AI-powered predictions — synthesized into one intelligence platform.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -52,8 +58,45 @@
     <span id="live-clock" style="font-family:var(--fm);font-size:9px;color:var(--ash)"></span>
     <button id="update-btn" class="btn-gold" style="font-size:8px;padding:2px 10px">↻ Refresh</button>
     <div class="live-badge"><span class="blink"></span>LIVE</div>
+    <button id="hamburger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
+
+<!-- MOBILE MENU -->
+<div id="mobile-menu" role="navigation" aria-label="Mobile navigation">
+  <div class="mobile-menu-section">Live Data</div>
+  <a href="#live" onclick="closeMobileMenu()">Live Feed</a>
+  <a href="#csi" onclick="closeMobileMenu()">CSI Score</a>
+  <a href="#horsemen" onclick="closeMobileMenu()">Horsemen</a>
+  <a href="#finance" onclick="closeMobileMenu()">Markets & Weather</a>
+  <div class="mobile-menu-section">Analysis</div>
+  <a href="#matcher" onclick="closeMobileMenu()">Prophecy Matcher</a>
+  <a href="#babylon" onclick="closeMobileMenu()">Babylon Index</a>
+  <a href="#empire" onclick="closeMobileMenu()">Empire Clock</a>
+  <a href="#tipping" onclick="closeMobileMenu()">Tipping Simulator</a>
+  <a href="#forbidden" onclick="closeMobileMenu()">Forbidden Knowledge</a>
+  <a href="#cycle" onclick="closeMobileMenu()">Cycle Clock</a>
+  <div class="mobile-menu-section">Intelligence</div>
+  <a href="#patterns" onclick="closeMobileMenu()">Pattern Engine</a>
+  <a href="#history" onclick="closeMobileMenu()">History Log</a>
+  <a href="#predictions" onclick="closeMobileMenu()">Predictions</a>
+  <a href="#oracle" onclick="closeMobileMenu()">Oracle</a>
+  <div class="mobile-menu-section">Foundations</div>
+  <a href="#whispers" onclick="closeMobileMenu()">Whisper Wall</a>
+  <a href="#parallels" onclick="closeMobileMenu()">Pattern Library</a>
+  <a href="#survival" onclick="closeMobileMenu()">Survival Profile</a>
+  <a href="#restore" onclick="closeMobileMenu()">Restoration Signals</a>
+  <a href="#books" onclick="closeMobileMenu()">Ancient Texts</a>
+  <a href="#charts" onclick="closeMobileMenu()">Charts</a>
+  <a href="#data" onclick="closeMobileMenu()">World Data</a>
+  <a href="#synthesis" onclick="closeMobileMenu()">Synthesis</a>
+  <a href="#sources" onclick="closeMobileMenu()">Sources</a>
+  <div style="padding:1rem 1.5rem .5rem;display:flex;gap:.8rem;align-items:center">
+    <button onclick="DataEngine.forceUpdate();closeMobileMenu();" style="background:transparent;border:1px solid var(--gld);color:var(--gld);font-family:var(--fm);font-size:9px;letter-spacing:.15em;padding:.6rem 1.2rem;cursor:pointer;min-height:44px">↻ REFRESH DATA</button>
+  </div>
+</div>
 
 <!-- ====== HERO ====== -->
 <section id="hero" style="opacity:1;transform:none">
@@ -165,7 +208,7 @@
   <p class="mod-desc">Revelation's four agents of civilizational disruption mapped to real current verified data. Recalculated from live news sentiment + World Bank API every refresh cycle.</p>
   <div class="last-updated"></div>
 
-  <div class="g4 mt2">
+  <div class="g4 horsemen-grid mt2">
     <div style="background:var(--surf);padding:2rem;text-align:center">
       <div style="font-size:2.5rem;margin-bottom:.8rem">⚔️</div>
       <div style="font-family:var(--fd);font-size:1.5rem;font-weight:600;color:var(--ebrt);margin-bottom:.4rem">WAR</div>
@@ -259,7 +302,7 @@
   <div class="mod-label">Module 07 · Interactive · Global Tipping Points Report 2025</div>
   <h2 class="mod-title">Climate Tipping Cascade Simulator</h2>
   <p class="mod-desc">Drag the temperature slider. Watch which Earth systems reach their tipping point. Based on Global Tipping Points Report 2025 threshold data — peer-reviewed, interactive.</p>
-  <div style="display:grid;grid-template-columns:1fr 330px;gap:3rem;margin-top:2rem">
+  <div style="display:grid;grid-template-columns:1fr 330px;gap:3rem;margin-top:2rem" class="tipping-grid">
     <div id="tip-nodes" style="display:flex;flex-direction:column;gap:4px"></div>
     <div style="background:var(--abyss);border:1px solid var(--bdr);padding:2rem">
       <div style="font-family:var(--fm);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--gld);margin-bottom:1.2rem;font-weight:400">Temperature Above Pre-Industrial</div>
@@ -453,6 +496,7 @@
   <h2 class="mod-title">World Data Dashboard</h2>
   <p class="mod-desc">Live figures from World Bank API, NASA GISTEMP, IMF, and FAS — fetched fresh every refresh cycle and stored in history log.</p>
   <div class="last-updated"></div>
+  <div class="table-scroll">
   <table style="width:100%;border-collapse:collapse;margin-top:2rem">
     <thead>
       <tr style="border-bottom:1px solid var(--bhi)">
@@ -466,6 +510,7 @@
       <tr><td colspan="4" style="padding:2rem;text-align:center;color:var(--smk);font-style:italic">Loading World Bank API data...</td></tr>
     </tbody>
   </table>
+  </div>
   <!-- Nuclear data -->
   <div style="margin-top:2rem">
     <div style="font-family:var(--fm);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--ebrt);margin-bottom:.8rem;font-weight:400">NUCLEAR ARSENAL — FAS NUCLEAR NOTEBOOK 2024</div>
@@ -690,7 +735,63 @@
 <script src="/js/modules.js"></script>
 <script src="/js/app.js"></script>
 <script>
-// History utility functions
+// ============ HAMBURGER MENU ============
+(function() {
+  const btn = document.getElementById('hamburger');
+  const menu = document.getElementById('mobile-menu');
+  if (!btn || !menu) return;
+
+  btn.addEventListener('click', () => {
+    const isOpen = menu.classList.toggle('open');
+    btn.classList.toggle('open', isOpen);
+    btn.setAttribute('aria-expanded', isOpen);
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  });
+
+  // Close on outside click
+  document.addEventListener('click', (e) => {
+    if (!btn.contains(e.target) && !menu.contains(e.target)) {
+      closeMobileMenu();
+    }
+  });
+
+  // Close on resize to desktop
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 768) closeMobileMenu();
+  });
+})();
+
+window.closeMobileMenu = function() {
+  const btn = document.getElementById('hamburger');
+  const menu = document.getElementById('mobile-menu');
+  if (menu) menu.classList.remove('open');
+  if (btn) { btn.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); }
+  document.body.style.overflow = '';
+};
+
+// ============ MOBILE TOUCH SCROLL TICKER FIX ============
+(function() {
+  const ticker = document.querySelector('.ticker-inner');
+  if (!ticker) return;
+  // Pause ticker animation on touch
+  ticker.addEventListener('touchstart', () => ticker.style.animationPlayState = 'paused', { passive: true });
+  ticker.addEventListener('touchend', () => ticker.style.animationPlayState = 'running', { passive: true });
+})();
+
+// ============ VIEWPORT HEIGHT FIX (iOS Safari) ============
+(function() {
+  function setVH() {
+    const vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', vh + 'px');
+  }
+  setVH();
+  window.addEventListener('resize', setVH);
+  window.addEventListener('orientationchange', () => setTimeout(setVH, 300));
+})();
+
+// ============ SAFE AREA INSET for iOS notch ============
+document.documentElement.style.setProperty('--safe-top', 'env(safe-area-inset-top, 0px)');
+document.documentElement.style.setProperty('--safe-bot', 'env(safe-area-inset-bottom, 0px)');
 window.clearHistory = function() {
   if (confirm('Clear all history data? This cannot be undone.')) {
     const db = DataEngine.getDB();

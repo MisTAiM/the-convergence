@@ -109,7 +109,7 @@ async function initApp() {
   // Init data
   await DataEngine.init();
 
-  // Manual refresh button
+  // Manual refresh button (desktop + mobile)
   document.getElementById('update-btn')?.addEventListener('click', () => {
     DataEngine.forceUpdate();
   });
