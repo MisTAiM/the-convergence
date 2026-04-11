@@ -7,16 +7,6 @@
         { "key": "Access-Control-Allow-Origin", "value": "*" },
         { "key": "Cache-Control", "value": "s-maxage=300, stale-while-revalidate=60" }
       ]
-    },
-    {
-      "source": "/(.*\\.(png|ico|svg|json|webp))",
-      "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=86400" }
-      ]
     }
-  ],
-  "rewrites": [
-    { "source": "/favicon.ico", "destination": "/public/favicon.ico" },
-    { "source": "/apple-touch-icon.png", "destination": "/public/apple-touch-icon.png" }
   ]
 }
