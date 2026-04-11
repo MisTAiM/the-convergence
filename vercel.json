@@ -1,0 +1,24 @@
+{
+  "version": 2,
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Cache-Control", "value": "s-maxage=300, stale-while-revalidate=60" }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" }
+      ]
+    }
+  ],
+  "rewrites": [
+    { "source": "/api/news", "destination": "/api/news.js" },
+    { "source": "/api/worldbank", "destination": "/api/worldbank.js" },
+    { "source": "/api/weather", "destination": "/api/weather.js" },
+    { "source": "/api/fx", "destination": "/api/fx.js" }
+  ]
+}

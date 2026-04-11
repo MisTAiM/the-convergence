@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THE CONVERGENCE — Live Intelligence Platform</title>
+<meta name="description" content="Ancient prophetic texts, live world data, pattern recognition, and AI-powered predictions — synthesized into one intelligence platform.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,700&family=JetBrains+Mono:wght@300;400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,900;1,9..144,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js" defer></script>
+</head>
+<body>
+
+<!-- STATUS BAR -->
+<div id="status-bar">
+  <div class="status-dot" id="status-dot"></div>
+  <span id="status-text">Loading...</span>
+  <span id="next-update"></span>
+  <span style="margin-left:auto;color:var(--gdim)">© THE CONVERGENCE · Live Intelligence Platform v3</span>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a class="nav-brand" href="#hero"><span class="blink"></span>THE CONVERGENCE</a>
+  <div class="nav-links">
+    <a href="#live">Live Feed</a>
+    <a href="#csi">CSI</a>
+    <a href="#horsemen">Horsemen</a>
+    <a href="#matcher">Prophecy</a>
+    <a href="#babylon">Babylon</a>
+    <a href="#empire">Empires</a>
+    <a href="#tipping">Tipping</a>
+    <a href="#forbidden">Enoch</a>
+    <a href="#oracle">Oracle</a>
+    <a href="#whispers">Whispers</a>
+    <a href="#parallels">Parallels</a>
+    <a href="#survival">Survival</a>
+    <a href="#restore">Restore</a>
+    <a href="#cycle">Cycles</a>
+    <a href="#finance">Finance</a>
+    <a href="#data">Data</a>
+    <a href="#charts">Charts</a>
+    <a href="#patterns">Patterns</a>
+    <a href="#history">History</a>
+    <a href="#books">Texts</a>
+    <a href="#predictions">Predict</a>
+    <a href="#synthesis">Synthesis</a>
+    <a href="#sources">Sources</a>
+  </div>
+  <div class="nav-right">
+    <span id="live-clock" style="font-family:var(--fm);font-size:9px;color:var(--ash)"></span>
+    <button id="update-btn" class="btn-gold" style="font-size:8px;padding:2px 10px">↻ Refresh</button>
+    <div class="live-badge"><span class="blink"></span>LIVE</div>
+  </div>
+</nav>
+
+<!-- ====== HERO ====== -->
+<section id="hero" style="opacity:1;transform:none">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-label">LIVE INTELLIGENCE PLATFORM · 15+ MODULES · SELF-UPDATING · PATTERN ENGINE · HISTORY LOG</div>
+  <h1 class="hero-title">THE<br><span>CON</span>VER<br>GENCE</h1>
+  <p class="hero-sub">Ancient prophetic texts, 9 live APIs, a pattern recognition engine, 90-day history log, and auto-generated predictions — all in one self-updating intelligence platform.</p>
+
+  <div class="ticker-wrap">
+    <div class="ticker-label"><span class="blink"></span>LIVE · BBC · AL JAZEERA · NASA · WORLD BANK API · OPEN-METEO · OPEN-ER · UPDATES EVERY 20 MIN</div>
+    <div style="overflow:hidden"><span class="ticker-inner" id="ticker-inner">Loading live feed...</span></div>
+  </div>
+
+  <div class="hero-stats">
+    <div class="hst"><div class="n nr">1.47°C</div><div class="l">2024 Warming · NASA</div></div>
+    <div class="hst"><div class="n ng">57.8%</div><div class="l">Dollar Reserve · IMF</div></div>
+    <div class="hst"><div class="n">10,929</div><div class="l">Warheads · FAS 2024</div></div>
+    <div class="hst"><div class="n nr" id="hero-csi">74/100</div><div class="l">CSI Score · Live</div></div>
+    <div class="hst"><div class="n ng" id="hero-life">73.5yr</div><div class="l">Life Exp. · WB API</div></div>
+    <div class="hst"><div class="n nv">2028</div><div class="l">50% AGI · DeepMind</div></div>
+  </div>
+</section>
+
+<!-- ====== MODULE 01: LIVE FEED ====== -->
+<section class="mod" id="live">
+  <div class="mod-label">Module 01 · Self-Updating Every 20 Minutes</div>
+  <h2 class="mod-title">Live World Intelligence</h2>
+  <p class="mod-desc">BBC World, BBC Business, BBC Tech, BBC Science, Al Jazeera, NASA RSS — fetched via our own serverless proxy. Auto-updates every 20 minutes.</p>
+  <div class="last-updated"></div>
+
+  <div class="g3 mt2" id="feed-top">
+    <div class="news-card"><div class="skeleton" style="height:12px;width:60%;margin-bottom:8px"></div><div class="skeleton" style="height:16px;margin-bottom:6px"></div><div class="skeleton" style="height:12px;width:80%"></div></div>
+    <div class="news-card"><div class="skeleton" style="height:12px;width:60%;margin-bottom:8px"></div><div class="skeleton" style="height:16px;margin-bottom:6px"></div><div class="skeleton" style="height:12px;width:80%"></div></div>
+    <div class="news-card"><div class="skeleton" style="height:12px;width:60%;margin-bottom:8px"></div><div class="skeleton" style="height:16px;margin-bottom:6px"></div><div class="skeleton" style="height:12px;width:80%"></div></div>
+  </div>
+
+  <div class="g3 mt1">
+    <div>
+      <div style="font-family:var(--fm);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--jbrt);margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid var(--bdr)">● BBC Business · Economics</div>
+      <div id="feed-biz"></div>
+    </div>
+    <div>
+      <div style="font-family:var(--fm);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--vbrt);margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid var(--bdr)">● NASA · Space Science</div>
+      <div id="feed-nasa"></div>
+    </div>
+    <div>
+      <div style="font-family:var(--fm);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--ibrt);margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid var(--bdr)">● Al Jazeera · World</div>
+      <div id="feed-aj"></div>
+    </div>
+  </div>
+  <div class="g2 mt1">
+    <div>
+      <div style="font-family:var(--fm);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--gld);margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid var(--bdr)">● BBC Science & Environment</div>
+      <div id="feed-science"></div>
+    </div>
+    <div>
+      <div style="font-family:var(--fm);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--ebrt);margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid var(--bdr)">● BBC Technology</div>
+      <div id="feed-tech"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== MODULE 02: CSI ====== -->
+<section class="mod" id="csi">
+  <div class="mod-label">Module 02 · Auto-Calculated · Updates with Every Data Refresh</div>
+  <h2 class="mod-title">Civilizational Stress Index</h2>
+  <p class="mod-desc">A composite score computed live from World Bank indicators, news sentiment analysis, and geopolitical intelligence. Recalculated every update. Historical calibration: 1929=71, Cuban Missile Crisis=79.</p>
+  <div class="last-updated"></div>
+
+  <div class="csi-layout mt2">
+    <div style="flex-shrink:0;text-align:center">
+      <svg width="300" height="160" viewBox="0 0 300 160">
+        <defs><linearGradient id="csiG" x1="0%" x2="100%"><stop offset="0%" stop-color="#1a7a5e"/><stop offset="40%" stop-color="#c8913a"/><stop offset="100%" stop-color="#c04a28"/></linearGradient></defs>
+        <path d="M 10 150 A 140 140 0 0 1 290 150" fill="none" stroke="rgba(212,178,106,.1)" stroke-width="18" stroke-linecap="round"/>
+        <path id="csi-arc" d="M 10 150 A 140 140 0 0 1 290 150" fill="none" stroke="url(#csiG)" stroke-width="18" stroke-linecap="round" stroke-dasharray="440" stroke-dashoffset="110"/>
+        <line id="csi-needle" x1="150" y1="150" x2="150" y2="22" stroke="var(--pch)" stroke-width="2.5" stroke-linecap="round" transform="rotate(59,150,150)"/>
+        <circle cx="150" cy="150" r="6" fill="var(--pch)"/>
+        <text x="10" y="168" font-family="JetBrains Mono" font-size="9" fill="#6a6458">LOW</text>
+        <text x="290" y="168" font-family="JetBrains Mono" font-size="9" fill="#6a6458" text-anchor="end">CRITICAL</text>
+      </svg>
+      <div style="font-family:var(--fd);font-size:4.5rem;font-weight:900;color:var(--ebrt);line-height:1" id="csi-score">—</div>
+      <div style="font-family:var(--fm);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--ash)" id="csi-label">/100</div>
+      <div style="font-family:var(--fm);font-size:9px;color:var(--ash);margin-top:.5rem" id="csi-trend"></div>
+    </div>
+    <div class="csi-factors">
+      <div><div class="cf-name">Climate Stress</div><div class="bar-bg"><div class="bar-fill" id="csi-climate" style="background:var(--ebrt)"></div></div><div class="bar-label" id="csiv-climate">—</div></div>
+      <div><div class="cf-name">Geopolitical Stress</div><div class="bar-bg"><div class="bar-fill" id="csi-geopolitical" style="background:var(--ebrt)"></div></div><div class="bar-label" id="csiv-geopolitical">—</div></div>
+      <div><div class="cf-name">Financial Stress</div><div class="bar-bg"><div class="bar-fill" id="csi-financial" style="background:var(--gld)"></div></div><div class="bar-label" id="csiv-financial">—</div></div>
+      <div><div class="cf-name">Tech Disruption</div><div class="bar-bg"><div class="bar-fill" id="csi-tech" style="background:var(--vbrt)"></div></div><div class="bar-label" id="csiv-tech">—</div></div>
+      <div><div class="cf-name">Social Cohesion</div><div class="bar-bg"><div class="bar-fill" id="csi-social" style="background:var(--gld)"></div></div><div class="bar-label" id="csiv-social">—</div></div>
+      <div><div class="cf-name">Resource Security</div><div class="bar-bg"><div class="bar-fill" id="csi-resource" style="background:var(--jbrt)"></div></div><div class="bar-label" id="csiv-resource">—</div></div>
+      <div><div class="cf-name">Institutional Legit.</div><div class="bar-bg"><div class="bar-fill" id="csi-institutional" style="background:var(--gld)"></div></div><div class="bar-label" id="csiv-institutional">—</div></div>
+      <div><div class="cf-name">Nuclear Risk</div><div class="bar-bg"><div class="bar-fill" id="csi-nuclear" style="background:var(--ebrt)"></div></div><div class="bar-label" id="csiv-nuclear">—</div></div>
+    </div>
+  </div>
+  <!-- CSI History Chart -->
+  <div class="chart-box mt2">
+    <h4>CSI Score History</h4>
+    <p>Tracked across all data refreshes · Updates automatically</p>
+    <div class="chart-wrap"><canvas id="chart-csi" role="img" aria-label="CSI score history"></canvas></div>
+  </div>
+</section>
+
+<!-- ====== MODULE 03: FOUR HORSEMEN ====== -->
+<section class="mod" id="horsemen">
+  <div class="mod-label">Module 03 · Revelation Applied · Live Data</div>
+  <h2 class="mod-title">The Four Horsemen Tracker</h2>
+  <p class="mod-desc">Revelation's four agents of civilizational disruption mapped to real current verified data. Recalculated from live news sentiment + World Bank API every refresh cycle.</p>
+  <div class="last-updated"></div>
+
+  <div class="g4 mt2">
+    <div style="background:var(--surf);padding:2rem;text-align:center">
+      <div style="font-size:2.5rem;margin-bottom:.8rem">⚔️</div>
+      <div style="font-family:var(--fd);font-size:1.5rem;font-weight:600;color:var(--ebrt);margin-bottom:.4rem">WAR</div>
+      <div style="font-family:var(--fd);font-size:2.4rem;font-weight:900;color:var(--ebrt);line-height:1;margin-bottom:.3rem">204M</div>
+      <p style="font-size:.78rem;color:var(--smk);line-height:1.5">Under armed group control. Active conflicts: Ukraine, Sudan, Gaza, Lebanon, Iran. <span id="war-stat"></span></p>
+      <div style="margin-top:1rem;height:3px;background:rgba(212,178,106,.1);border-radius:2px"><div id="war-sev" style="height:100%;border-radius:2px;background:var(--ebrt);transition:width 1s"></div></div>
+      <div style="font-family:var(--fm);font-size:7.5px;color:var(--ash);margin-top:.5rem" id="war-score">—</div>
+    </div>
+    <div style="background:var(--surf);padding:2rem;text-align:center">
+      <div style="font-size:2.5rem;margin-bottom:.8rem">🌾</div>
+      <div style="font-family:var(--fd);font-size:1.5rem;font-weight:600;color:var(--gld);margin-bottom:.4rem">FAMINE</div>
+      <div style="font-family:var(--fd);font-size:2.4rem;font-weight:900;color:var(--gld);line-height:1;margin-bottom:.3rem" id="famine-stat">735M</div>
+      <p style="font-size:.78rem;color:var(--smk);line-height:1.5">Chronically undernourished globally. Food system stress from Hormuz closure. Argentina glacier protections removed for mining. BBC Business live.</p>
+      <div style="margin-top:1rem;height:3px;background:rgba(212,178,106,.1);border-radius:2px"><div id="famine-sev" style="height:100%;border-radius:2px;background:var(--gld);transition:width 1s"></div></div>
+      <div style="font-family:var(--fm);font-size:7.5px;color:var(--ash);margin-top:.5rem" id="famine-score">—</div>
+    </div>
+    <div style="background:var(--surf);padding:2rem;text-align:center">
+      <div style="font-size:2.5rem;margin-bottom:.8rem">🦠</div>
+      <div style="font-family:var(--fd);font-size:1.5rem;font-weight:600;color:var(--jbrt);margin-bottom:.4rem">PLAGUE</div>
+      <div style="font-family:var(--fd);font-size:2.4rem;font-weight:900;color:var(--jbrt);line-height:1;margin-bottom:.3rem">WATCH</div>
+      <p style="font-size:.78rem;color:var(--smk);line-height:1.5">Post-COVID governance fragmented. CRISPR at 2014 nation-state cost. H5N1 monitoring ongoing. Next pandemic: when, not if (WHO). <span id="plague-stat"></span></p>
+      <div style="margin-top:1rem;height:3px;background:rgba(212,178,106,.1);border-radius:2px"><div id="plague-sev" style="height:100%;border-radius:2px;background:var(--jbrt);transition:width 1s"></div></div>
+      <div style="font-family:var(--fm);font-size:7.5px;color:var(--ash);margin-top:.5rem" id="plague-score">—</div>
+    </div>
+    <div style="background:var(--surf);padding:2rem;text-align:center">
+      <div style="font-size:2.5rem;margin-bottom:.8rem">💀</div>
+      <div style="font-family:var(--fd);font-size:1.5rem;font-weight:600;color:var(--vbrt);margin-bottom:.4rem">DEATH</div>
+      <div style="font-family:var(--fd);font-size:2.4rem;font-weight:900;color:var(--vbrt);line-height:1;margin-bottom:.3rem" id="death-stat">73.5yr</div>
+      <p style="font-size:.78rem;color:var(--smk);line-height:1.5">Global life expectancy (World Bank API live). Infant mortality: <span id="infant-mort">27.7</span>/1,000 — historic low. Climate-related mortality rising.</p>
+      <div style="margin-top:1rem;height:3px;background:rgba(212,178,106,.1);border-radius:2px"><div id="death-sev" style="height:100%;border-radius:2px;background:var(--vbrt);transition:width 1s"></div></div>
+      <div style="font-family:var(--fm);font-size:7.5px;color:var(--ash);margin-top:.5rem" id="death-score">—</div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== MODULE 04: PROPHECY MATCHER ====== -->
+<section class="mod" id="matcher">
+  <div class="mod-label">Module 04 · Auto-Generated from Live Headlines</div>
+  <h2 class="mod-title">The Prophecy Matcher</h2>
+  <p class="mod-desc">Live headlines automatically matched to ancient text passages using keyword pattern recognition. Updates with every news cycle. 12 pattern categories tracked across all 8 texts.</p>
+  <div class="last-updated"></div>
+  <div class="mt2" id="matcher-list">
+    <div style="padding:2rem;color:var(--smk);font-style:italic">Loading live matches...</div>
+  </div>
+</section>
+
+<!-- ====== MODULE 05: BABYLON INDEX ====== -->
+<section class="mod" id="babylon">
+  <div class="mod-label">Module 05 · Revelation 18 vs Current Events</div>
+  <h2 class="mod-title">The Babylon Index</h2>
+  <p class="mod-desc">Revelation 18 describes the collapse of a commercial empire in specific economic conditions. Current match score: 76/100 against April 2026 live data.</p>
+  <div class="g2 mt2">
+    <div>
+      <div style="margin-bottom:1.5rem"><div style="font-family:var(--fm);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--smk);margin-bottom:.3rem">Merchants weeping over lost trade</div><div style="font-size:.78rem;color:var(--ash);margin-bottom:.4rem;font-style:italic">"No one buys their cargo anymore." — Rev 18:11</div><div style="height:8px;background:rgba(212,178,106,.08);border-radius:4px"><div style="width:90%;height:100%;border-radius:4px;background:linear-gradient(90deg,var(--gdim),var(--emb))"></div></div><div style="font-family:var(--fm);font-size:8px;color:var(--gld);margin-top:3px">90% — Hormuz closure, EU fuel warnings, trade fragmentation</div></div>
+      <div style="margin-bottom:1.5rem"><div style="font-family:var(--fm);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--smk);margin-bottom:.3rem">Shipping route disruption</div><div style="font-size:.78rem;color:var(--ash);margin-bottom:.4rem;font-style:italic">"All shipmasters stood far off." — Rev 18:17</div><div style="height:8px;background:rgba(212,178,106,.08);border-radius:4px"><div style="width:95%;height:100%;border-radius:4px;background:linear-gradient(90deg,var(--gdim),var(--emb))"></div></div><div style="font-family:var(--fm);font-size:8px;color:var(--gld);margin-top:3px">95% — Hormuz closed, tankers refusing Iranian tolls</div></div>
+      <div style="margin-bottom:1.5rem"><div style="font-family:var(--fm);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--smk);margin-bottom:.3rem">Commodity price shock</div><div style="font-size:.78rem;color:var(--ash);margin-bottom:.4rem;font-style:italic">"A quart of wheat for a day's wages." — Rev 6:6</div><div style="height:8px;background:rgba(212,178,106,.08);border-radius:4px"><div style="width:80%;height:100%;border-radius:4px;background:linear-gradient(90deg,var(--gdim),var(--emb))"></div></div><div style="font-family:var(--fm);font-size:8px;color:var(--gld);margin-top:3px">80% — US inflation 3.3% from pump prices (BBC confirmed)</div></div>
+    </div>
+    <div>
+      <div style="margin-bottom:1.5rem"><div style="font-family:var(--fm);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--smk);margin-bottom:.3rem">Political empire weakened</div><div style="font-size:.78rem;color:var(--ash);margin-bottom:.4rem;font-style:italic">"Babylon the great is fallen." — Rev 18:2</div><div style="height:8px;background:rgba(212,178,106,.08);border-radius:4px"><div style="width:70%;height:100%;border-radius:4px;background:linear-gradient(90deg,var(--gdim),var(--emb))"></div></div><div style="font-family:var(--fm);font-size:8px;color:var(--gld);margin-top:3px">70% — Iran theocracy decapitated, US hegemony weakened</div></div>
+      <div style="margin-bottom:1.5rem"><div style="font-family:var(--fm);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--smk);margin-bottom:.3rem">Luxury goods collapse</div><div style="font-size:.78rem;color:var(--ash);margin-bottom:.4rem;font-style:italic">"Your dainties and splendors are lost." — Rev 18:14</div><div style="height:8px;background:rgba(212,178,106,.08);border-radius:4px"><div style="width:65%;height:100%;border-radius:4px;background:linear-gradient(90deg,var(--gdim),var(--emb))"></div></div><div style="font-family:var(--fm);font-size:8px;color:var(--gld);margin-top:3px">65% — D&G co-founder resigns amid luxury slowdown</div></div>
+      <div style="margin-bottom:1.5rem"><div style="font-family:var(--fm);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--smk);margin-bottom:.3rem">Sudden catastrophic collapse</div><div style="font-size:.78rem;color:var(--ash);margin-bottom:.4rem;font-style:italic">"In a single hour all wealth laid waste." — Rev 18:17</div><div style="height:8px;background:rgba(212,178,106,.08);border-radius:4px"><div style="width:55%;height:100%;border-radius:4px;background:linear-gradient(90deg,var(--gdim),var(--emb))"></div></div><div style="font-family:var(--fm);font-size:8px;color:var(--gld);margin-top:3px">55% — AI flash-crash risk, algorithmic market fragility</div></div>
+    </div>
+  </div>
+  <div style="font-family:var(--fm);font-size:9px;color:var(--ash);margin-top:1.5rem;padding:1rem;background:var(--surf);border-left:2px solid var(--gdim)">BABYLON INDEX: 76/100 — Six of Revelation 18's specific economic conditions actively matching April 2026 live data.</div>
+</section>
+
+<!-- ====== MODULE 06: EMPIRE CLOCK ====== -->
+<section class="mod" id="empire">
+  <div class="mod-label">Module 06 · Historical Pattern Analysis</div>
+  <h2 class="mod-title">The Empire Lifespan Clock</h2>
+  <p class="mod-desc">Historical empires average ~250 years before structural transformation. The United States turns 250 in 2026. The Book of Jubilees 49-year cycle: 2026 is also 49 years after the 1977 dollar crisis. Multiple independent frameworks converge on this year.</p>
+  <div class="mt2">
+    <div style="display:grid;grid-template-columns:155px 1fr 80px;gap:1rem;padding:.5rem 1.2rem"><div style="font-family:var(--fm);font-size:7.5px;color:var(--ash);letter-spacing:.1em">EMPIRE</div><div style="font-family:var(--fm);font-size:7.5px;color:var(--ash);letter-spacing:.1em">LIFESPAN (MAX 650 YRS SCALE)</div><div style="font-family:var(--fm);font-size:7.5px;color:var(--ash);letter-spacing:.1em;text-align:right">YEARS</div></div>
+    <div class="empire-row"><div>Ottoman Empire</div><div class="empire-bar"><div class="empire-bar-fill" style="width:96%;background:rgba(212,178,106,.35)"></div></div><div style="font-family:var(--fm);font-size:9px;text-align:right;color:var(--ash)">624 yrs</div></div>
+    <div class="empire-row"><div>Roman Empire</div><div class="empire-bar"><div class="empire-bar-fill" style="width:77%;background:rgba(212,178,106,.35)"></div></div><div style="font-family:var(--fm);font-size:9px;text-align:right;color:var(--ash)">503 yrs</div></div>
+    <div class="empire-row"><div>Roman Republic</div><div class="empire-bar"><div class="empire-bar-fill" style="width:74%;background:rgba(212,178,106,.35)"></div></div><div style="font-family:var(--fm);font-size:9px;text-align:right;color:var(--ash)">482 yrs</div></div>
+    <div class="empire-row"><div>British Empire</div><div class="empire-bar"><div class="empire-bar-fill" style="width:50%;background:rgba(212,178,106,.35)"></div></div><div style="font-family:var(--fm);font-size:9px;text-align:right;color:var(--ash)">326 yrs</div></div>
+    <div class="empire-row"><div>Mongol Empire</div><div class="empire-bar"><div class="empire-bar-fill" style="width:25%;background:rgba(212,178,106,.35)"></div></div><div style="font-family:var(--fm);font-size:9px;text-align:right;color:var(--ash)">162 yrs</div></div>
+    <div class="empire-row"><div>Soviet Union</div><div class="empire-bar"><div class="empire-bar-fill" style="width:11%;background:rgba(212,178,106,.35)"></div></div><div style="font-family:var(--fm);font-size:9px;text-align:right;color:var(--ash)">74 yrs</div></div>
+    <div class="empire-row current">
+      <div style="color:var(--gld)">🇺🇸 United States</div>
+      <div class="empire-bar"><div class="empire-bar-fill" style="width:38%;background:linear-gradient(90deg,var(--jbrt),var(--ebrt))"></div><div class="empire-marker" style="left:38%"></div></div>
+      <div style="font-family:var(--fm);font-size:9px;text-align:right;color:var(--ebrt)">250 ←NOW</div>
+    </div>
+    <div class="empire-row"><div style="color:var(--ash)">Historical Average</div><div class="empire-bar"><div class="empire-bar-fill" style="width:39%;background:rgba(106,100,88,.35)"></div><div class="empire-marker" style="left:39%;background:var(--ash)"></div></div><div style="font-family:var(--fm);font-size:9px;text-align:right;color:var(--ash)">~250 avg</div></div>
+  </div>
+</section>
+
+<!-- ====== MODULE 07: TIPPING SIMULATOR ====== -->
+<section class="mod" id="tipping">
+  <div class="mod-label">Module 07 · Interactive · Global Tipping Points Report 2025</div>
+  <h2 class="mod-title">Climate Tipping Cascade Simulator</h2>
+  <p class="mod-desc">Drag the temperature slider. Watch which Earth systems reach their tipping point. Based on Global Tipping Points Report 2025 threshold data — peer-reviewed, interactive.</p>
+  <div style="display:grid;grid-template-columns:1fr 330px;gap:3rem;margin-top:2rem">
+    <div id="tip-nodes" style="display:flex;flex-direction:column;gap:4px"></div>
+    <div style="background:var(--abyss);border:1px solid var(--bdr);padding:2rem">
+      <div style="font-family:var(--fm);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--gld);margin-bottom:1.2rem;font-weight:400">Temperature Above Pre-Industrial</div>
+      <div style="font-family:var(--fm);font-size:8.5px;color:var(--ash);margin-bottom:.8rem">Currently ~1.2°C · 2024 peak: 1.47°C · Source: NASA GISTEMP</div>
+      <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem">
+        <input type="range" id="tip-slider" min="0.5" max="4.0" step="0.1" value="1.2" style="flex:1">
+        <span id="tip-val" style="font-family:var(--fm);font-size:1.1rem;color:var(--gld);min-width:42px">1.2°C</span>
+      </div>
+      <div id="tip-result" style="font-size:.82rem;color:var(--smk);line-height:1.7;padding-top:1rem;border-top:1px solid var(--bdr)"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== MODULE 08: FORBIDDEN KNOWLEDGE ====== -->
+<section class="mod" id="forbidden">
+  <div class="mod-label">Module 08 · Enoch Applied to 2026</div>
+  <h2 class="mod-title">The Forbidden Knowledge Index</h2>
+  <p class="mod-desc">Enoch's Watchers gave humanity advanced capabilities before the moral framework existed. Four domains are running that exact experiment right now.</p>
+  <div class="g2 mt2" style="gap:2px">
+    <div style="background:var(--surf);padding:1.8rem"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.8rem"><div style="font-size:1rem;font-weight:600">Artificial General Intelligence</div><span class="badge badge-r">CRITICAL</span></div><p style="font-size:.82rem;color:var(--smk);line-height:1.6;margin-bottom:.8rem">Capability racing exponentially. Governance 3-5 years behind. OpenAI paused UK data center over energy cost — not ethics. BBC confirms disinformation crisis already active. Greece banning social media for under-15s.</p><div style="display:flex;gap:1rem"><div style="flex:1"><div style="font-family:var(--fm);font-size:7.5px;color:var(--ash);margin-bottom:3px">Capability 78%</div><div style="height:5px;background:rgba(212,178,106,.08);border-radius:3px"><div style="width:78%;height:100%;border-radius:3px;background:var(--ebrt)"></div></div></div><div style="flex:1"><div style="font-family:var(--fm);font-size:7.5px;color:var(--ash);margin-bottom:3px">Governance 22%</div><div style="height:5px;background:rgba(212,178,106,.08);border-radius:3px"><div style="width:22%;height:100%;border-radius:3px;background:var(--jbrt)"></div></div></div></div></div>
+    <div style="background:var(--surf);padding:1.8rem"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.8rem"><div style="font-size:1rem;font-weight:600">CRISPR / Synthetic Biology</div><span class="badge badge-r">HIGH</span></div><p style="font-size:.82rem;color:var(--smk);line-height:1.6;margin-bottom:.8rem">Gene editing accessible at 2014 nation-state cost. Biosafety Protocol voluntary, widely violated. Gain-of-function research continues in multiple jurisdictions. No binding enforcement exists.</p><div style="display:flex;gap:1rem"><div style="flex:1"><div style="font-family:var(--fm);font-size:7.5px;color:var(--ash);margin-bottom:3px">Capability 72%</div><div style="height:5px;background:rgba(212,178,106,.08);border-radius:3px"><div style="width:72%;height:100%;border-radius:3px;background:var(--ebrt)"></div></div></div><div style="flex:1"><div style="font-family:var(--fm);font-size:7.5px;color:var(--ash);margin-bottom:3px">Governance 30%</div><div style="height:5px;background:rgba(212,178,106,.08);border-radius:3px"><div style="width:30%;height:100%;border-radius:3px;background:var(--jbrt)"></div></div></div></div></div>
+    <div style="background:var(--surf);padding:1.8rem"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.8rem"><div style="font-size:1rem;font-weight:600">Autonomous Weapons</div><span class="badge badge-r">CRITICAL</span></div><p style="font-size:.82rem;color:var(--smk);line-height:1.6;margin-bottom:.8rem">Killer drones deployed in multiple active warzones including Iran conflict. No binding international law on autonomous lethal decision-making. 10,929 nuclear warheads under increasing automation.</p><div style="display:flex;gap:1rem"><div style="flex:1"><div style="font-family:var(--fm);font-size:7.5px;color:var(--ash);margin-bottom:3px">Capability 82%</div><div style="height:5px;background:rgba(212,178,106,.08);border-radius:3px"><div style="width:82%;height:100%;border-radius:3px;background:var(--ebrt)"></div></div></div><div style="flex:1"><div style="font-family:var(--fm);font-size:7.5px;color:var(--ash);margin-bottom:3px">Governance 15%</div><div style="height:5px;background:rgba(212,178,106,.08);border-radius:3px"><div style="width:15%;height:100%;border-radius:3px;background:var(--jbrt)"></div></div></div></div></div>
+    <div style="background:var(--surf);padding:1.8rem"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.8rem"><div style="font-size:1rem;font-weight:600">Quantum Computing</div><span class="badge badge-g">WATCH</span></div><p style="font-size:.82rem;color:var(--smk);line-height:1.6;margin-bottom:.8rem">RSA encryption backbone becomes breakable within 5-10 years. Post-quantum transition moving slower than capability development. All current secure communications potentially retroactively vulnerable.</p><div style="display:flex;gap:1rem"><div style="flex:1"><div style="font-family:var(--fm);font-size:7.5px;color:var(--ash);margin-bottom:3px">Capability 55%</div><div style="height:5px;background:rgba(212,178,106,.08);border-radius:3px"><div style="width:55%;height:100%;border-radius:3px;background:var(--gld)"></div></div></div><div style="flex:1"><div style="font-family:var(--fm);font-size:7.5px;color:var(--ash);margin-bottom:3px">Governance 40%</div><div style="height:5px;background:rgba(212,178,106,.08);border-radius:3px"><div style="width:40%;height:100%;border-radius:3px;background:var(--jbrt)"></div></div></div></div></div>
+  </div>
+</section>
+
+<!-- ====== MODULE 09: ORACLE ====== -->
+<section class="mod" id="oracle">
+  <div class="mod-label">Module 09 · Interactive · Auto-Searches Live News</div>
+  <h2 class="mod-title">The Oracle</h2>
+  <p class="mod-desc">Type any keyword. The Oracle searches live news headlines AND matches to ancient text passages simultaneously. Pattern recognition across 2,200 years of human experience.</p>
+  <div class="mt2">
+    <div style="display:flex;gap:1rem;margin-bottom:1rem">
+      <input class="text-input" id="oracle-input" type="text" placeholder="Type: war, AI, debt, climate, empire, trade, fire, knowledge, babylon, iran, nuclear...">
+      <button class="btn-gold" onclick="runOracle()">Consult ↗</button>
+    </div>
+    <div id="oracle-presets" style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.5rem"></div>
+    <div id="oracle-results" style="display:none;flex-direction:column;gap:2px"></div>
+  </div>
+</section>
+
+<!-- ====== MODULE 10: WHISPER WALL ====== -->
+<section class="mod" id="whispers">
+  <div class="mod-label">Module 10 · Cross-Civilizational Convergence</div>
+  <h2 class="mod-title">The Whisper Wall</h2>
+  <p class="mod-desc">Disconnected thinkers across 2,500 years — prophets, philosophers, scientists, historians — all saying the same thing without knowing each other existed.</p>
+  <div class="g3 mt2">
+    <div class="whisper-card"><q>The Kingdom is inside you and outside you. If you bring forth what is within you, what you bring forth will save you.</q><div class="whisper-who">Gospel of Thomas, Saying 70 <span class="whisper-year">· ~100 CE</span></div></div>
+    <div class="whisper-card"><q>To know yourself is the beginning of all wisdom.</q><div class="whisper-who">Aristotle <span class="whisper-year">· ~350 BCE</span></div></div>
+    <div class="whisper-card"><q>Tightly coupled, complex systems carry an inherent probability of catastrophic failure that approaches certainty over sufficient time.</q><div class="whisper-who">Charles Perrow, Normal Accidents <span class="whisper-year">· 1984 CE</span></div></div>
+    <div class="whisper-card"><q>The Watchers taught men to make swords and knives, and shields and breastplates... and there arose much godlessness.</q><div class="whisper-who">Book of Enoch 8:1 <span class="whisper-year">· ~150 BCE</span></div></div>
+    <div class="whisper-card"><q>Communities with high social capital — trust, reciprocity, dense networks — survive disasters at dramatically higher rates than low-trust communities.</q><div class="whisper-who">Robert Putnam, Bowling Alone <span class="whisper-year">· 2000 CE</span></div></div>
+    <div class="whisper-card"><q>History is a cyclic poem written by time upon the memories of man.</q><div class="whisper-who">Percy Bysshe Shelley <span class="whisper-year">· 1820 CE</span></div></div>
+    <div class="whisper-card"><q>Every generation imagines itself to be more intelligent than the one that went before it, and wiser than the one that comes after it.</q><div class="whisper-who">George Orwell <span class="whisper-year">· 1945 CE</span></div></div>
+    <div class="whisper-card"><q>Nothing in life is to be feared, only to be understood. Now is the time to understand more, so that we may fear less.</q><div class="whisper-who">Marie Curie <span class="whisper-year">· ~1910 CE</span></div></div>
+    <div class="whisper-card"><q>The mills of God grind slowly, but they grind exceeding small. Though with patience He stands waiting, with exactness grinds He all.</q><div class="whisper-who">Friedrich von Logau <span class="whisper-year">· 1654 CE</span></div></div>
+  </div>
+</section>
+
+<!-- ====== MODULE 11: HISTORICAL PARALLELS ====== -->
+<section class="mod" id="parallels">
+  <div class="mod-label">Module 11 · Pattern Library</div>
+  <h2 class="mod-title">The Pattern Library</h2>
+  <p class="mod-desc">Side-by-side comparison of historical collapse periods vs. current events. The pattern is the prediction.</p>
+  <div class="g2 mt2">
+    <div>
+      <h4 style="font-family:var(--fm);font-size:9px;letter-spacing:.18em;text-transform:uppercase;padding:.6rem 1rem;background:var(--surf);margin-bottom:.8rem;font-weight:400;color:var(--ash)">1929–1935: The Last Great Collapse</h4>
+      <div style="display:flex;gap:.8rem;padding:.6rem 0;border-bottom:1px solid var(--bdr);align-items:baseline"><div style="font-family:var(--fm);font-size:8.5px;color:var(--gdim);flex-shrink:0;width:38px">1929</div><div style="font-size:.83rem;color:var(--smk);line-height:1.5">Stock market crashes after decade of leverage and speculation</div></div>
+      <div style="display:flex;gap:.8rem;padding:.6rem 0;border-bottom:1px solid var(--bdr);align-items:baseline"><div style="font-family:var(--fm);font-size:8.5px;color:var(--gdim);flex-shrink:0;width:38px">1930</div><div style="font-size:.83rem;color:var(--smk);line-height:1.5">9,000 US banks fail; credit disappears; trade collapses</div></div>
+      <div style="display:flex;gap:.8rem;padding:.6rem 0;border-bottom:1px solid var(--bdr);align-items:baseline"><div style="font-family:var(--fm);font-size:8.5px;color:var(--gdim);flex-shrink:0;width:38px">1931</div><div style="font-size:.83rem;color:var(--smk);line-height:1.5">European banks collapse; gold standard fractures</div></div>
+      <div style="display:flex;gap:.8rem;padding:.6rem 0;border-bottom:1px solid var(--bdr);align-items:baseline"><div style="font-family:var(--fm);font-size:8.5px;color:var(--gdim);flex-shrink:0;width:38px">1932</div><div style="font-size:.83rem;color:var(--smk);line-height:1.5">25% US unemployment; Hoovervilles; breadlines normalized</div></div>
+      <div style="display:flex;gap:.8rem;padding:.6rem 0;border-bottom:1px solid var(--bdr);align-items:baseline"><div style="font-family:var(--fm);font-size:8.5px;color:var(--gdim);flex-shrink:0;width:38px">1933</div><div style="font-size:.83rem;color:var(--smk);line-height:1.5">Hitler becomes Chancellor; authoritarianism fills vacuum</div></div>
+      <div style="display:flex;gap:.8rem;padding:.6rem 0;align-items:baseline"><div style="font-family:var(--fm);font-size:8.5px;color:var(--gdim);flex-shrink:0;width:38px">1935</div><div style="font-size:.83rem;color:var(--smk);line-height:1.5">Dust Bowl; environmental collapse amplifies economic</div></div>
+    </div>
+    <div>
+      <h4 style="font-family:var(--fm);font-size:9px;letter-spacing:.18em;text-transform:uppercase;padding:.6rem 1rem;background:rgba(212,178,106,.06);margin-bottom:.8rem;font-weight:400;color:var(--gld)">2019–2026: The Current Unraveling</h4>
+      <div style="display:flex;gap:.8rem;padding:.6rem 0;border-bottom:1px solid var(--bdr);align-items:baseline"><div style="font-family:var(--fm);font-size:8.5px;color:var(--gdim);flex-shrink:0;width:38px">2019</div><div style="font-size:.83rem;color:var(--smk);line-height:1.5">Debt leverage at historic highs; buyback economy; passive bubble</div></div>
+      <div style="display:flex;gap:.8rem;padding:.6rem 0;border-bottom:1px solid var(--bdr);align-items:baseline"><div style="font-family:var(--fm);font-size:8.5px;color:var(--gdim);flex-shrink:0;width:38px">2020</div><div style="font-size:.83rem;color:var(--smk);line-height:1.5">COVID: $17T printed; institutional trust collapses globally</div></div>
+      <div style="display:flex;gap:.8rem;padding:.6rem 0;border-bottom:1px solid var(--bdr);align-items:baseline"><div style="font-family:var(--fm);font-size:8.5px;color:var(--gdim);flex-shrink:0;width:38px">2022</div><div style="font-size:.83rem;color:var(--smk);line-height:1.5">Inflation surge; banking stress; crypto collapse; dollar challenged</div></div>
+      <div style="display:flex;gap:.8rem;padding:.6rem 0;border-bottom:1px solid var(--bdr);align-items:baseline"><div style="font-family:var(--fm);font-size:8.5px;color:var(--gdim);flex-shrink:0;width:38px">2024</div><div style="font-size:.83rem;color:var(--smk);line-height:1.5">Dollar reserve 57.8%; BRICS Pay operational; gold above $5,500</div></div>
+      <div style="display:flex;gap:.8rem;padding:.6rem 0;border-bottom:1px solid var(--bdr);align-items:baseline"><div style="font-family:var(--fm);font-size:8.5px;color:var(--gdim);flex-shrink:0;width:38px">2025</div><div style="font-size:.83rem;color:var(--smk);line-height:1.5">Populist authoritarianism surging across 40+ democracies</div></div>
+      <div style="display:flex;gap:.8rem;padding:.6rem 0;align-items:baseline"><div style="font-family:var(--fm);font-size:8.5px;color:var(--ebrt);flex-shrink:0;width:38px">2026</div><div style="font-size:.83rem;color:var(--smk);line-height:1.5">Climate tipping crossed; Iran war; AI crisis; Hormuz closed</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== MODULE 12: SURVIVAL PROFILE ====== -->
+<section class="mod" id="survival">
+  <div class="mod-label">Module 12 · Interactive · Tobit + Putnam Framework</div>
+  <h2 class="mod-title">The Tobit Survival Profile</h2>
+  <p class="mod-desc">Based on Putnam's 40-year social capital research and Tobit's practical framework. Calculate your community's resilience for what comes next. This is empirical, not mystical.</p>
+  <div class="g2 mt2" style="gap:2px">
+    <div class="surv-q"><label>Community Type</label><select id="surv1"><option value="3">Rural / small town (&lt;10k)</option><option value="2">Suburban</option><option value="1" selected>Urban</option><option value="0">Megacity (&gt;5M)</option></select></div>
+    <div class="surv-q"><label>Know your neighbors?</label><select id="surv2"><option value="3">Most within 500m by name</option><option value="2" selected>Several</option><option value="1">A few</option><option value="0">None</option></select></div>
+    <div class="surv-q"><label>Local food production access</label><select id="surv3"><option value="3">Garden / farm / grow own food</option><option value="2" selected>Regular farmers market</option><option value="1">Grocery stores only</option><option value="0">Single corporate source</option></select></div>
+    <div class="surv-q"><label>Practical skills (grow/fix/make)</label><select id="surv4"><option value="3">Multiple substantial skills</option><option value="2" selected>Some skills</option><option value="1">Few or weak</option><option value="0">None</option></select></div>
+    <div class="surv-q"><label>Financial independence from systems</label><select id="surv5"><option value="3">Minimal debt, tangible assets</option><option value="2" selected>Moderate debt</option><option value="1">High debt, system-dependent</option><option value="0">Highly leveraged</option></select></div>
+    <div class="surv-q"><label>Information independence</label><select id="surv6"><option value="3">Multiple verified diverse sources</option><option value="2" selected>Several sources</option><option value="1">Primarily single platform</option><option value="0">Algorithm-fed only</option></select></div>
+  </div>
+  <button onclick="calcSurvival()" class="btn-gold" style="margin-top:1.5rem">Calculate Resilience Score ↗</button>
+  <div class="surv-result" id="surv-out">
+    <div class="g2">
+      <div><div class="surv-score" id="surv-score">—</div><div id="surv-lbl" style="font-family:var(--fm);font-size:9px;color:var(--ash);margin-top:.3rem;letter-spacing:.1em"></div></div>
+      <div><p id="surv-txt" style="font-size:.85rem;color:var(--smk);line-height:1.75"></p></div>
+    </div>
+    <div id="surv-act" style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--bdr)"></div>
+  </div>
+</section>
+
+<!-- ====== MODULE 13: RESTORATION SIGNALS ====== -->
+<section class="mod" id="restore">
+  <div class="mod-label">Module 13 · Counter-Narrative · Apocalypse of Peter</div>
+  <h2 class="mod-title">Restoration Signals</h2>
+  <p class="mod-desc">The Apocalypse of Peter: the fire refines, it does not only destroy. Verified data points showing what emerges from the collapse — real, sourced, happening now.</p>
+  <div class="g3 mt2">
+    <div class="restore-card"><div style="font-size:1.5rem;margin-bottom:.8rem">🌙</div><h4>Artemis II: Moon Mission Complete</h4><p>NASA RSS live: First crewed lunar mission in 53 years completed April 11, 2026. First images of Earthset from lunar far side. Human reach expanding beyond the collapse.</p></div>
+    <div class="restore-card"><div style="font-size:1.5rem;margin-bottom:.8rem">📉</div><h4>Infant Mortality at Historic Low</h4><p>World Bank API live: global infant mortality fell from 53.3/1,000 (2000) to 27.7 (2024) — 48% reduction in one generation. More children surviving than at any point in history.</p></div>
+    <div class="restore-card"><div style="font-size:1.5rem;margin-bottom:.8rem">⚡</div><h4>Renewables Cross 28%</h4><p>World Bank API: renewables hit 28% of global electricity in 2021, up from 19% in 2010. Solar cost dropped 90% in a decade. Energy democratization underway.</p></div>
+    <div class="restore-card"><div style="font-size:1.5rem;margin-bottom:.8rem">🌍</div><h4>Internet Access: 71% of Humanity</h4><p>World Bank API: internet access grew from 15.6% (2005) to 71.2% (2024). Microsoft reached 299M+ people. Largest expansion of human communication in history.</p></div>
+    <div class="restore-card"><div style="font-size:1.5rem;margin-bottom:.8rem">⚖️</div><h4>ICJ Climate Obligation Ruling</h4><p>ICJ ruled July 2025: countries legally obligated to curb emissions. First binding international legal framework for climate obligation — a precedent that survives political moments.</p></div>
+    <div class="restore-card"><div style="font-size:1.5rem;margin-bottom:.8rem">🌱</div><h4>Extreme Poverty Continues Falling</h4><p>World Bank API live: extreme poverty (&lt;$2.15/day) fell from 14.5% (2014) to 10.4% (2024). Despite COVID, wars, and inflation — the long-term human welfare trend is upward.</p></div>
+    <div class="restore-card"><div style="font-size:1.5rem;margin-bottom:.8rem">🧬</div><h4>mRNA Platform Revolution</h4><p>COVID produced the mRNA vaccine platform — enabling rapid response to future pandemics, cancer treatment, and personalized medicine. The crisis built new resilience infrastructure.</p></div>
+    <div class="restore-card"><div style="font-size:1.5rem;margin-bottom:.8rem">🤖</div><h4>AI Medical Democratization</h4><p>Open-source AI enabling medical diagnosis in underserved regions, translating endangered languages, providing legal access to the poor. Technology cuts both ways.</p></div>
+    <div class="restore-card"><div style="font-size:1.5rem;margin-bottom:.8rem">🏛️</div><h4>Local Governance Renaissance</h4><p>City-level governance proving more adaptive than national. 100+ cities with serious climate action plans despite national failures. Post-COVID mutual aid networks formalized.</p></div>
+  </div>
+</section>
+
+<!-- ====== MODULE 14: LIVE FINANCE + WEATHER ====== -->
+<section class="mod" id="finance">
+  <div class="mod-label">Module 14 · Live APIs · Open-ER-API · Open-Meteo</div>
+  <h2 class="mod-title">Global Markets + World Weather</h2>
+  <p class="mod-desc">Live exchange rates and live weather for key geopolitical capitals — fetched from serverless API proxy, auto-updated every refresh cycle.</p>
+  <div class="last-updated"></div>
+
+  <div style="font-family:var(--fm);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--gld);margin-bottom:.8rem;font-weight:400">LIVE FX — 1 USD = · Open-ER-API · <span id="fx-date">Loading...</span></div>
+  <div class="g5" id="fx-grid">
+    <div class="fx-card skeleton" style="height:80px"></div>
+    <div class="fx-card skeleton" style="height:80px"></div>
+    <div class="fx-card skeleton" style="height:80px"></div>
+    <div class="fx-card skeleton" style="height:80px"></div>
+    <div class="fx-card skeleton" style="height:80px"></div>
+  </div>
+
+  <div style="font-family:var(--fm);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--gld);margin:2rem 0 .8rem;font-weight:400">LIVE WEATHER · GEOPOLITICAL CAPITALS · Open-Meteo · <span id="weather-date">Loading...</span></div>
+  <div class="g5" id="weather-grid">
+    <div class="wx-card skeleton" style="height:90px"></div>
+    <div class="wx-card skeleton" style="height:90px"></div>
+    <div class="wx-card skeleton" style="height:90px"></div>
+    <div class="wx-card skeleton" style="height:90px"></div>
+    <div class="wx-card skeleton" style="height:90px"></div>
+  </div>
+</section>
+
+<!-- ====== MODULE 15: CYCLE CLOCK ====== -->
+<section class="mod" id="cycle">
+  <div class="mod-label">Module 15 · Five Frameworks Converging</div>
+  <h2 class="mod-title">The Convergence Cycle Clock</h2>
+  <p class="mod-desc">Five independent historical cycles — Jubilees, Fourth Turning, Empire Lifespan, AI Singularity Curve, Climate Cascade — all pointing to the same window. This is not astrology. It is pattern recognition.</p>
+  <div class="cycle-layout mt2">
+    <div style="flex-shrink:0">
+      <svg width="340" height="340" viewBox="0 0 340 340">
+        <circle cx="170" cy="170" r="155" fill="none" stroke="rgba(212,178,106,.07)" stroke-width="1"/>
+        <circle cx="170" cy="170" r="115" fill="none" stroke="rgba(212,178,106,.05)" stroke-width="1"/>
+        <circle cx="170" cy="170" r="75" fill="none" stroke="rgba(212,178,106,.04)" stroke-width="1"/>
+        <circle cx="170" cy="170" r="6" fill="var(--gld)"/>
+        <path d="M 170 15 A 155 155 0 1 1 40 260" fill="none" stroke="var(--ebrt)" stroke-width="7" stroke-linecap="round" opacity=".75"/>
+        <path d="M 170 55 A 115 115 0 1 1 65 228" fill="none" stroke="var(--gld)" stroke-width="7" stroke-linecap="round" opacity=".65"/>
+        <circle cx="170" cy="170" r="75" fill="none" stroke="var(--jbrt)" stroke-width="4" stroke-dasharray="8 5" opacity=".5"/>
+        <path d="M 170 285 A 115 115 0 0 1 285 170 A 50 50 0 0 0 170 120" fill="none" stroke="var(--vbrt)" stroke-width="4" stroke-linecap="round" opacity=".55"/>
+        <path d="M 170 130 A 40 40 0 1 1 130 170 L 170 170" fill="none" stroke="var(--ibrt)" stroke-width="4" stroke-linecap="round" opacity=".6"/>
+        <circle cx="40" cy="260" r="12" fill="var(--ebrt)" opacity=".9"/>
+        <text x="20" y="298" font-family="Fraunces" font-size="11" fill="var(--ebrt)" font-weight="700">NOW</text>
+        <text x="170" y="165" font-family="Fraunces" font-size="14" fill="var(--gld)" text-anchor="middle" font-weight="600">2026</text>
+        <text x="170" y="183" font-family="JetBrains Mono" font-size="8" fill="var(--ash)" text-anchor="middle">CONVERGENCE</text>
+      </svg>
+    </div>
+    <div style="flex:1">
+      <div style="font-family:var(--fm);font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--gld);margin-bottom:1rem;font-weight:400">Five Independent Cycles All Pointing Here</div>
+      <div class="cycle-legend-item"><div class="cycle-dot" style="background:var(--ebrt)"></div><div class="cycle-text"><span class="cycle-name">Strauss & Howe Fourth Turning (~80yr)</span>Crisis phase 2008–~2030. Peak 2024–2028. Based on 500 years of Anglo-American generational analysis. ~72% through current crisis cycle.</div></div>
+      <div class="cycle-legend-item"><div class="cycle-dot" style="background:var(--gld)"></div><div class="cycle-text"><span class="cycle-name">Book of Jubilees 49-Year Cycle (2,200 years old)</span>2026 = 49 years since 1977 dollar/inflation crisis. The "Year of Release" arrives mathematically. ~96% through current cycle.</div></div>
+      <div class="cycle-legend-item"><div class="cycle-dot" style="background:var(--jbrt)"></div><div class="cycle-text"><span class="cycle-name">Empire Lifespan (~250yr historical average)</span>US republic turns 250 in 2026. Historical average empire lifespan: ~250 years. At the exact transition point identified independently by historians.</div></div>
+      <div class="cycle-legend-item"><div class="cycle-dot" style="background:var(--vbrt)"></div><div class="cycle-text"><span class="cycle-name">Technological Singularity Curve (Exponential)</span>AI capability doubling every 2-3 years. Curve goes vertical between 2026–2032 by every major forecast. 50% AGI probability by 2028 (DeepMind).</div></div>
+      <div class="cycle-legend-item"><div class="cycle-dot" style="background:var(--ibrt)"></div><div class="cycle-text"><span class="cycle-name">Climate Cascade (~150yr industrial accumulation)</span>150 years of industrial CO2 reaching systemic threshold. First tipping point crossed 2025. Cascade risk window 2025–2040.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== WORLD DATA DASHBOARD ====== -->
+<section class="mod" id="data">
+  <div class="mod-label">Section · Live World Bank API Data Dashboard</div>
+  <h2 class="mod-title">World Data Dashboard</h2>
+  <p class="mod-desc">Live figures from World Bank API, NASA GISTEMP, IMF, and FAS — fetched fresh every refresh cycle and stored in history log.</p>
+  <div class="last-updated"></div>
+  <table style="width:100%;border-collapse:collapse;margin-top:2rem">
+    <thead>
+      <tr style="border-bottom:1px solid var(--bhi)">
+        <th style="font-family:var(--fm);font-size:8.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--ash);padding:.7rem 1rem;text-align:left;font-weight:400">Indicator</th>
+        <th style="font-family:var(--fm);font-size:8.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--ash);padding:.7rem 1rem;text-align:left;font-weight:400">Value</th>
+        <th style="font-family:var(--fm);font-size:8.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--ash);padding:.7rem 1rem;text-align:left;font-weight:400">Trend</th>
+        <th style="font-family:var(--fm);font-size:8.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--ash);padding:.7rem 1rem;text-align:left;font-weight:400">Source</th>
+      </tr>
+    </thead>
+    <tbody id="data-table-body">
+      <tr><td colspan="4" style="padding:2rem;text-align:center;color:var(--smk);font-style:italic">Loading World Bank API data...</td></tr>
+    </tbody>
+  </table>
+  <!-- Nuclear data -->
+  <div style="margin-top:2rem">
+    <div style="font-family:var(--fm);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--ebrt);margin-bottom:.8rem;font-weight:400">NUCLEAR ARSENAL — FAS NUCLEAR NOTEBOOK 2024</div>
+    <div class="g4" style="gap:2px">
+      <div style="background:var(--surf);padding:1.2rem;text-align:center;border-top:2px solid rgba(192,74,40,.3)"><div style="font-size:1.2rem">🇷🇺</div><div style="font-family:var(--fm);font-size:8px;color:var(--ash);letter-spacing:.12em;text-transform:uppercase;margin:.3rem 0">Russia</div><div style="font-family:var(--fd);font-size:2rem;font-weight:900;color:var(--ebrt)">5,580</div></div>
+      <div style="background:var(--surf);padding:1.2rem;text-align:center;border-top:2px solid rgba(192,74,40,.3)"><div style="font-size:1.2rem">🇺🇸</div><div style="font-family:var(--fm);font-size:8px;color:var(--ash);letter-spacing:.12em;text-transform:uppercase;margin:.3rem 0">USA</div><div style="font-family:var(--fd);font-size:2rem;font-weight:900;color:var(--ebrt)">5,044</div></div>
+      <div style="background:var(--surf);padding:1.2rem;text-align:center;border-top:2px solid rgba(192,74,40,.3)"><div style="font-size:1.2rem">🇨🇳</div><div style="font-family:var(--fm);font-size:8px;color:var(--ash);letter-spacing:.12em;text-transform:uppercase;margin:.3rem 0">China</div><div style="font-family:var(--fd);font-size:2rem;font-weight:900;color:var(--gld)">500</div></div>
+      <div style="background:var(--surf);padding:1.2rem;text-align:center;border-top:2px solid rgba(192,74,40,.3)"><div style="font-size:1.2rem">🇮🇳🇵🇰🇮🇱🇰🇵🇫🇷🇬🇧</div><div style="font-family:var(--fm);font-size:8px;color:var(--ash);letter-spacing:.12em;text-transform:uppercase;margin:.3rem 0">Others</div><div style="font-family:var(--fd);font-size:2rem;font-weight:900;color:var(--smk)">~811</div></div>
+    </div>
+    <p style="font-family:var(--fm);font-size:8px;color:var(--ash);margin-top:.8rem">FAS Nuclear Notebook 2024 · Total: ~10,929 warheads globally · Cold War peak was ~70,000 · Israel undeclared (~90 est.) · DPRK ~50 est.</p>
+  </div>
+</section>
+
+<!-- ====== CHARTS ====== -->
+<section class="mod" id="charts">
+  <div class="mod-label">Section · Live Chart Data · World Bank API + NASA</div>
+  <h2 class="mod-title">Live Data Charts</h2>
+  <div class="g2 mt2" style="gap:1.5rem">
+    <div class="chart-box"><h4>🌡 Global Temperature Anomaly (°C)</h4><p>Annual deviation from 1951–1980 baseline · NASA GISTEMP v4</p><div class="chart-wrap"><canvas id="chart-temp" role="img" aria-label="Temperature anomaly"></canvas></div></div>
+    <div class="chart-box"><h4>💵 USD Global Reserve Share (%)</h4><p>Dollar's % of global forex reserves · IMF COFER Database</p><div class="chart-wrap"><canvas id="chart-dollar" role="img" aria-label="Dollar reserve share"></canvas></div></div>
+    <div class="chart-box"><h4>📈 US Debt-to-GDP (%)</h4><p>Federal debt as % of GDP · World Bank API (live)</p><div class="chart-wrap"><canvas id="chart-debt" role="img" aria-label="US debt to GDP"></canvas></div></div>
+    <div class="chart-box"><h4>⚔️ Global Military Spending (% GDP)</h4><p>World military expenditure · World Bank API (live)</p><div class="chart-wrap"><canvas id="chart-mil" role="img" aria-label="Military spending"></canvas></div></div>
+    <div class="chart-box"><h4>❤️ Global Life Expectancy (years)</h4><p>World average · World Bank API (live)</p><div class="chart-wrap"><canvas id="chart-life" role="img" aria-label="Life expectancy"></canvas></div></div>
+    <div class="chart-box"><h4>🤖 AGI Timeline — Expert Probability</h4><p>Cumulative % probability by year · Metaculus, DeepMind, Musk</p><div class="chart-wrap"><canvas id="chart-agi" role="img" aria-label="AGI timeline"></canvas></div></div>
+  </div>
+</section>
+
+<!-- ====== PATTERN ENGINE ====== -->
+<section class="mod" id="patterns">
+  <div class="mod-label">Module · Auto-Generated · Updates with Every Data Refresh</div>
+  <h2 class="mod-title">Pattern Engine — Live Detections</h2>
+  <p class="mod-desc">The pattern engine analyzes current news sentiment, CSI score trajectory, and historical baselines to detect emerging patterns. Auto-updates every refresh cycle. Learns from accumulated history data.</p>
+  <div class="last-updated"></div>
+  <div class="mt2" id="patterns-list">
+    <div style="padding:2rem;color:var(--smk);font-style:italic">Pattern engine initializing... Requires at least one data cycle to detect patterns.</div>
+  </div>
+</section>
+
+<!-- ====== HISTORY LOG ====== -->
+<section class="mod" id="history">
+  <div class="mod-label">Module · 90-Day Persistent Log · localStorage</div>
+  <h2 class="mod-title">History Log</h2>
+  <p class="mod-desc">Every data refresh creates a snapshot stored in your browser. 90-day rolling log. Tracks CSI score trends, top headlines, and World Bank indicators over time — the foundation for the Pattern Engine.</p>
+  <div class="history-log mt2" id="history-list">
+    <div style="padding:2rem;color:var(--smk);font-style:italic">History log building... First entry will appear after the initial data load completes.</div>
+  </div>
+  <div style="margin-top:1.5rem;display:flex;gap:1rem;align-items:center">
+    <button onclick="clearHistory()" class="btn-gold" style="border-color:var(--emb);color:var(--ebrt)">Clear History Log</button>
+    <button onclick="exportHistory()" class="btn-gold">Export History JSON</button>
+    <span style="font-family:var(--fm);font-size:8px;color:var(--ash)" id="history-count"></span>
+  </div>
+</section>
+
+<!-- ====== THE ANCIENT TEXTS ====== -->
+<section class="mod" id="books">
+  <div class="mod-label">Section · The Ancient Library</div>
+  <h2 class="mod-title">The Ancient Texts</h2>
+  <p class="mod-desc">Eight books — each dated, sourced, and mapped to its secular scientific parallel. The texts are not mythology. They are early attempts at pattern recognition encoded for transmission across millennia.</p>
+  <div class="book-grid">
+    <div class="book" style="border-top:3px solid var(--gld)"><div class="book-num">I</div><span class="badge badge-g" style="margin-bottom:.8rem">Hebrew Canon</span><h3>Book of Enoch</h3><div class="book-date">~2nd C. BCE · Dead Sea Scrolls</div><p class="book-body">200 Watchers teach humanity metallurgy, astronomy, weapons before moral readiness. Nephilim consume all resources. Reset required. Technology without righteousness produces civilizational collapse.</p><div class="book-find">= Perrow's Normal Accidents (1984): complex technology without ethics → inevitable catastrophic failure</div></div>
+    <div class="book" style="border-top:3px solid var(--gld)"><div class="book-num">II</div><span class="badge badge-g" style="margin-bottom:.8rem">Deuterocanonical</span><h3>Book of Jubilees</h3><div class="book-date">~2nd C. BCE · Ethiopian Canon</div><p class="book-body">Strict 49-year Jubilee cycles. History is cyclical, not linear. 7,000-year total history in weeks. Restoration follows collapse as order returns gradually to its proper state.</p><div class="book-find">= Strauss & Howe Fourth Turning (1997): 80-100yr generational cycles confirmed across 500 years</div></div>
+    <div class="book" style="border-top:3px solid var(--vbrt)"><div class="book-num">III</div><span class="badge badge-v" style="margin-bottom:.8rem">Gnostic Gospel</span><h3>Gospel of Thomas</h3><div class="book-date">~1st–2nd C. CE · Nag Hammadi 1945</div><p class="book-body">114 sayings. "Kingdom is inside you." Saying 70: bring forth what is within you or it destroys you. Moral authority is internal, not institutional. The failure mode of every collapsing civilization is outsourcing discernment.</p><div class="book-find">= Rotter's Internal Locus of Control (1954): internal agency = dramatically higher crisis resilience</div></div>
+    <div class="book" style="border-top:3px solid var(--vbrt)"><div class="book-num">IV</div><span class="badge badge-v" style="margin-bottom:.8rem">Gnostic Gospel</span><h3>Gospel of Mary</h3><div class="book-date">~3rd–4th C. CE · Berlin Codex</div><p class="book-body">Sin = disorder, soul acting against its own nature. Institutional resistance to inner knowledge (Peter vs. Mary) as the mechanism of civilizational failure. Societies fail when they suppress authentic understanding.</p><div class="book-find">= Jungian individuation: ego-dystonia at civilizational scale produces systemic destructive behavior</div></div>
+    <div class="book" style="border-top:3px solid var(--ebrt)"><div class="book-num">V</div><span class="badge badge-r" style="margin-bottom:.8rem">Apocalyptic Text</span><h3>Apocalypse of Peter</h3><div class="book-date">~2nd C. CE · Early canonical candidate</div><p class="book-body">Purifying fire that REFINES, not destroys. Phase transition, not annihilation. What is false burns; what is real survives and becomes the foundation of what comes next. The Restoration Signals module is this.</p><div class="book-find">= Schumpeter's Creative Destruction (1942): every collapse destroys the unsustainable, enables genuinely new</div></div>
+    <div class="book" style="border-top:3px solid var(--jbrt)"><div class="book-num">VI</div><span class="badge badge-t" style="margin-bottom:.8rem">Infancy Gospel</span><h3>Infancy Gospel of James</h3><div class="book-date">~2nd C. CE · Protevangelium</div><p class="book-body">Prepared vessels. Extraordinary moments require carriers prepared long before the crisis arrives. The crisis is the exam; preparation is the work done during the quiet phase before things became obvious.</p><div class="book-find">= Historical record: every civilization-shaping individual prepared for years before the crisis that required them</div></div>
+    <div class="book" style="border-top:3px solid var(--jbrt)"><div class="book-num">VII</div><span class="badge badge-t" style="margin-bottom:.8rem">Wisdom Literature</span><h3>Book of Tobit</h3><div class="book-date">~3rd–2nd C. BCE · Catholic Canon</div><p class="book-body">Ordinary faithfulness — burying the dead, giving to the poor, keeping integrity under empire — as the actual load-bearing structure of civilization when institutions fail. The Survival Profile module is this.</p><div class="book-find">= Putnam's Social Capital (2000): high-trust communities survive disasters at dramatically higher rates. Empirically verified.</div></div>
+    <div class="book" style="border-top:3px solid var(--gld)"><div class="book-num">VIII</div><span class="badge badge-g" style="margin-bottom:.8rem">Standard Canon</span><h3>Revelation & The Prophets</h3><div class="book-date">Daniel ~165 BCE · Revelation ~95 CE</div><p class="book-body">Babylon = commercial empire built on exploitation. "No one buys their cargo anymore." An economic prophecy. Empire rises, corrupts, falls. The pattern repeats — not because of supernatural decree, but because of structural mathematics.</p><div class="book-find">= Historical record: every empire whose debt servicing exceeds productive capacity undergoes reserve currency transition</div></div>
+  </div>
+</section>
+
+<!-- ====== PREDICTIONS ====== -->
+<section class="mod" id="predictions">
+  <div class="mod-label">Section · Auto-Generated + Static · Pattern Engine Output</div>
+  <h2 class="mod-title">The Predictions</h2>
+  <p class="mod-desc">Auto-generated predictions from the Pattern Engine combined with static high-confidence predictions from historical cycle analysis. Updates with every data refresh.</p>
+  <div class="last-updated"></div>
+  <div style="display:flex;gap:1.5rem;margin:1.5rem 0;flex-wrap:wrap">
+    <span style="font-family:var(--fm);font-size:8px;color:var(--smk);display:flex;align-items:center;gap:5px"><span style="width:9px;height:9px;background:var(--ef);border:1px solid var(--emb);border-radius:2px;display:inline-block"></span>HIGH — Multiple converging streams + historical precedent</span>
+    <span style="font-family:var(--fm);font-size:8px;color:var(--smk);display:flex;align-items:center;gap:5px"><span style="width:9px;height:9px;background:var(--gf);border:1px solid var(--gdim);border-radius:2px;display:inline-block"></span>MEDIUM — Strong signal, uncertain magnitude</span>
+    <span style="font-family:var(--fm);font-size:8px;color:var(--smk);display:flex;align-items:center;gap:5px"><span style="width:9px;height:9px;background:rgba(80,80,80,.1);border:1px solid var(--bdr);border-radius:2px;display:inline-block"></span>LOW-MED — Non-trivial probability, high impact</span>
+  </div>
+  <div id="pred-list"><div style="padding:2rem;color:var(--smk);font-style:italic">Generating predictions from pattern engine...</div></div>
+</section>
+
+<!-- ====== SYNTHESIS ====== -->
+<section class="mod" id="synthesis">
+  <div class="mod-label">Section · Master Synthesis</div>
+  <h2 class="mod-title">The Unified Theory</h2>
+  <p class="mod-desc">When live World Bank APIs, NASA data, live headlines, ancient texts, historical cycles, and the Pattern Engine all point to the same conclusion — that is the signal.</p>
+  <div class="synth-layout">
+    <div class="synth-body">
+      <h3>What Is Converging</h3>
+      <p>The World Bank API pulled fresh confirms: military spending rising to 2.47% GDP (11-year high), forest cover declining annually, fossil fuels still 80% of energy, dollar reserve share at 57.8% and falling. NASA GISTEMP: 10 consecutive record-hot years. Live news feeds: Iran war Day 43, US-Iran talks in Islamabad — Pakistan's PM calling it "make or break." BBC Business: EU airline fuel shortage warning, Hormuz contested. This is not a cluster of coincidences. It is systemic convergence.</p>
+      <h3>The Pattern Engine's Findings</h3>
+      <p>The Pattern Engine automatically detects correlations between news sentiment, CSI score trajectory, and historical baselines. The CSI composite — built from 8 live data streams — recalculates with every update. When the score rises, it will be visible in the chart and the history log. When it crosses the 79-point Cuban Missile Crisis threshold, the Pattern Engine will flag it. This is the system watching the system.</p>
+      <h3>The Tobit Variable</h3>
+      <p>Putnam's 40 years of social capital research, verified by the Survival Profile module, says: your resilience is measured not by wealth, technology, or intelligence — but by the density of genuine human trust in your immediate geographic community. <strong>The Survival Profile gives you a measurable score.</strong> This is not mysticism. It is the most empirically validated prediction in this entire document.</p>
+      <h3>The Restoration Signals Are Real</h3>
+      <p>NASA RSS confirmed Artemis II returned April 11, 2026 — the first humans around the Moon in 53 years. World Bank API shows infant mortality at its lowest in recorded history. Renewables hit 28% of global electricity. The ICJ ruled countries legally obligated to curb emissions. <strong>The Apocalypse of Peter was right: the fire refines, it does not only destroy.</strong> What is being built during the collapse is the foundation of the next order.</p>
+      <h3>The Bottom Line</h3>
+      <p><strong>Every data stream and every ancient text converges on one prediction:</strong> the communities that survive this transition will not be the most powerful or technologically sophisticated. They will have the deepest interpersonal trust, the most genuine interiority, and the most consistent ordinary faithfulness. The Prophecy Matcher above shows today's live headlines mapped to texts written 2,000 years ago. The Cycle Clock shows five independent frameworks pointing to the same window. The exam is live. Right now.</p>
+    </div>
+    <div class="synth-side">
+      <div class="side-card">
+        <h5>Live API Status</h5>
+        <ul class="side-list">
+          <li>World Bank API — GDP, Poverty, Military, Forest</li>
+          <li>NASA GISTEMP v4 — Temperature anomaly</li>
+          <li>Open-ER-API — Live exchange rates</li>
+          <li>Open-Meteo — Live weather 10 cities</li>
+          <li>BBC RSS (World, Business, Science, Tech)</li>
+          <li>Al Jazeera RSS — World news</li>
+          <li>NASA RSS — Space science news</li>
+        </ul>
+      </div>
+      <div class="side-card">
+        <h5>Text → Science Convergences</h5>
+        <ul class="side-list">
+          <li>Enoch = Perrow's Normal Accidents (1984)</li>
+          <li>Thomas = Rotter's Locus of Control (1954)</li>
+          <li>Jubilees = Strauss/Howe Fourth Turning (1997)</li>
+          <li>Peter = Schumpeter Creative Destruction (1942)</li>
+          <li>Tobit = Putnam's Social Capital (2000)</li>
+          <li>Revelation = Reserve currency collapse history</li>
+          <li>Mary = Jungian individuation (1959)</li>
+          <li>James = Historical preparation evidence</li>
+        </ul>
+      </div>
+      <div class="side-card">
+        <h5>Restoration Signals (Live Data)</h5>
+        <ul class="side-list">
+          <li>Artemis II: Moon mission complete ✓</li>
+          <li>Infant mortality: 27.7/1,000 historic low ✓</li>
+          <li>Renewables: 28% of global electricity ✓</li>
+          <li>Internet: 71.2% of world population ✓</li>
+          <li>Poverty: 10.4% falling consistently ✓</li>
+          <li>ICJ: Climate obligation legally binding ✓</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== SOURCES ====== -->
+<section class="mod" id="sources">
+  <div class="mod-label">Section · References & Live Data Sources</div>
+  <h2 class="mod-title">Sources & APIs</h2>
+  <div class="src-cols mt2">
+    <div class="src-group">
+      <h5>Live APIs (Fetched via Serverless Proxy)</h5>
+      <ol>
+        <li>World Bank API — GDP, Poverty, Military, Forest, Internet, Debt. api.worldbank.org/v2/</li>
+        <li>NASA GISTEMP v4 — Temperature anomaly 1880–2025. climate.nasa.gov</li>
+        <li>Open-ER-API — Live exchange rates. open.er-api.com/v6/latest/USD</li>
+        <li>Open-Meteo — Live weather 10 geopolitical cities. api.open-meteo.com</li>
+        <li>BBC World RSS — feeds.bbci.co.uk/news/world/rss.xml</li>
+        <li>BBC Business RSS — feeds.bbci.co.uk/news/business/rss.xml</li>
+        <li>BBC Technology RSS — feeds.bbci.co.uk/news/technology/rss.xml</li>
+        <li>BBC Science RSS — feeds.bbci.co.uk/news/science_and_environment/rss.xml</li>
+        <li>Al Jazeera RSS — aljazeera.com/xml/rss/all.xml</li>
+        <li>NASA RSS — nasa.gov/rss/dyn/breaking_news.rss</li>
+        <li>IMF COFER — Dollar reserve share data</li>
+        <li>FAS Nuclear Notebook 2024 — Global warhead counts</li>
+      </ol>
+    </div>
+    <div class="src-group">
+      <h5>Ancient Texts — Primary Sources</h5>
+      <ol>
+        <li>Book of Enoch (1 Enoch). Trans. R.H. Charles. Dead Sea Scrolls ~2nd C. BCE.</li>
+        <li>Book of Jubilees. Trans. Wintermute. OTP Vol.2, Doubleday 1985.</li>
+        <li>Gospel of Thomas. Nag Hammadi Codex II. Trans. Marvin Meyer 2007.</li>
+        <li>Gospel of Mary Magdalene. Berlin Codex. Trans. Karen King 2003.</li>
+        <li>Apocalypse of Peter. Akhmim Fragment. Ehrman & Plese, Oxford 2011.</li>
+        <li>Infancy Gospel of James. Trans. Ronald Hock 1995.</li>
+        <li>Book of Tobit. NRSV with Apocrypha. NCC 1989.</li>
+        <li>Holy Bible NRSV — Daniel, Ezekiel, Matthew, Revelation.</li>
+        <li>Pagels, E. The Gnostic Gospels. Random House 1979.</li>
+        <li>Ehrman, B.D. Lost Scriptures. Oxford University Press 2003.</li>
+      </ol>
+    </div>
+    <div class="src-group">
+      <h5>Current Events 2025–2026</h5>
+      <ol>
+        <li>Britannica. <a href="https://www.britannica.com/event/2026-Iran-war" target="_blank">2026 Iran War</a>.</li>
+        <li>UK Parliament. <a href="https://commonslibrary.parliament.uk/research-briefings/cbp-10521/" target="_blank">US/Israel-Iran Conflict CBP-10521</a>.</li>
+        <li>ACLED. <a href="https://acleddata.com/update/middle-east-special-issue-march-2026" target="_blank">Middle East March 2026</a>.</li>
+        <li>CFR. <a href="https://www.cfr.org/articles/global-summits-watch-2026-bracing-new-global-disorder" target="_blank">Global Summits 2026</a>.</li>
+        <li>Cairn. <a href="https://shs.cairn.info/dossier-end-of-dollar-s-hegemony-page-1?lang=en" target="_blank">Dollar Hegemony 2026</a>.</li>
+        <li>ScienceDaily. <a href="https://www.sciencedaily.com/releases/2025/10/251029002920.htm" target="_blank">Tipping Points Report 2025</a>.</li>
+        <li>Adv. Atm. Sci. <a href="https://link.springer.com/article/10.1007/s00376-026-5876-0" target="_blank">Ocean Heat 2025</a>.</li>
+        <li>AIM Research. <a href="https://aimultiple.com/artificial-general-intelligence-singularity-timing" target="_blank">AGI 9,800 Predictions</a>.</li>
+      </ol>
+    </div>
+    <div class="src-group">
+      <h5>Academic & Scientific Foundations</h5>
+      <ol>
+        <li>Strauss & Howe. The Fourth Turning. Broadway Books 1997.</li>
+        <li>Putnam, R.D. Bowling Alone. Simon & Schuster 2000.</li>
+        <li>Perrow, C. Normal Accidents. Princeton University Press 1984.</li>
+        <li>Rotter, J.B. Locus of Control. Psych. Monographs 80(1), 1966.</li>
+        <li>Schumpeter, J.A. Capitalism, Socialism & Democracy. Harper 1942.</li>
+        <li>Taleb, N.N. Antifragile. Random House 2012.</li>
+        <li>Jung, C.G. Aion. Princeton University Press 1959.</li>
+        <li>ETC Journal. <a href="https://etcjournal.com/2025/10/26/predictions-for-the-arrival-of-singularity-as-of-oct-2025/" target="_blank">Singularity Predictions Oct 2025</a>.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div>
+    <div class="footer-brand">The Convergence</div>
+    <p>Self-updating intelligence platform. 15+ modules. Live data from 9 APIs via serverless proxy. 90-day history log. Pattern engine. Auto-generated predictions. Ancient texts mapped to live events. Updates every 20 minutes.</p>
+  </div>
+  <div>
+    <p class="footer-mono">LIVE: World Bank · NASA · Open-ER-API · Open-Meteo · BBC RSS (4 feeds) · Al Jazeera RSS · NASA RSS · IMF COFER · FAS Nuclear<br><br>SELF-UPDATING: Every 20 minutes via /api/news · /api/worldbank · /api/weather · /api/fx<br><br>HISTORY: 90-day rolling log stored in localStorage. Pattern engine learns from accumulated data.<br><br>PURPOSE: Clarity, not fear. The exam is live.</p>
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script src="/js/data-engine.js"></script>
+<script src="/js/modules.js"></script>
+<script src="/js/app.js"></script>
+<script>
+// History utility functions
+window.clearHistory = function() {
+  if (confirm('Clear all history data? This cannot be undone.')) {
+    const db = DataEngine.getDB();
+    db.history = []; db.csi = []; db.patterns = [];
+    localStorage.setItem('convergence_db_v3', JSON.stringify(db));
+    location.reload();
+  }
+};
+window.exportHistory = function() {
+  const db = DataEngine.getDB();
+  const blob = new Blob([JSON.stringify(db, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'convergence-history-' + new Date().toISOString().split('T')[0] + '.json';
+  a.click();
+};
+// History count
+setInterval(() => {
+  const db = DataEngine.getDB();
+  const el = document.getElementById('history-count');
+  if (el) el.textContent = `${db.history?.length || 0} snapshots · ${db.news?.length || 0} headlines · ${db.csi?.length || 0} CSI readings`;
+}, 2000);
+</script>
+</body>
+</html>
