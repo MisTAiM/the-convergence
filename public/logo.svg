@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#1c1a13"/>
+      <stop offset="100%" stop-color="#050504"/>
+    </radialGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#d4b26a" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#d4b26a" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#d4b26a" stop-opacity="0.9"/>
+      <stop offset="50%" stop-color="#f0d090" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#8a6e32" stop-opacity="0.7"/>
+    </linearGradient>
+    <linearGradient id="innerRing" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#c04a28" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#8a3018" stop-opacity="0.4"/>
+    </linearGradient>
+    <filter id="softglow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+    <filter id="textglow">
+      <feGaussianBlur stdDeviation="2.5" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- Background circle -->
+  <circle cx="256" cy="256" r="256" fill="url(#bg)"/>
+
+  <!-- Ambient glow -->
+  <circle cx="256" cy="256" r="200" fill="url(#glow)"/>
+
+  <!-- Outer ring - main orbital -->
+  <circle cx="256" cy="256" r="220" fill="none" stroke="url(#ringGrad)" stroke-width="1.5" opacity="0.5"/>
+
+  <!-- Second ring -->
+  <circle cx="256" cy="256" r="190" fill="none" stroke="#d4b26a" stroke-width="0.75" opacity="0.2"/>
+
+  <!-- Arc 1 - Fourth Turning (ember) -->
+  <path d="M 256 36 A 220 220 0 0 1 456 336" fill="none" stroke="#c04a28" stroke-width="5" stroke-linecap="round" opacity="0.85"/>
+
+  <!-- Arc 2 - Jubilees cycle (gold) -->
+  <path d="M 256 66 A 190 190 0 0 1 420 360" fill="none" stroke="#d4b26a" stroke-width="3.5" stroke-linecap="round" opacity="0.75"/>
+
+  <!-- Arc 3 - Empire (teal dashed) -->
+  <circle cx="256" cy="256" r="155" fill="none" stroke="#28b088" stroke-width="2" stroke-dasharray="10 8" opacity="0.45"/>
+
+  <!-- Arc 4 - Singularity (violet) -->
+  <path d="M 256 411 A 155 155 0 0 1 411 256 A 60 60 0 0 0 256 196" fill="none" stroke="#7860c0" stroke-width="2.5" stroke-linecap="round" opacity="0.6"/>
+
+  <!-- Arc 5 - Climate (ice blue) -->
+  <path d="M 256 196 A 60 60 0 1 1 196 256 L 256 256" fill="none" stroke="#4090d8" stroke-width="2" stroke-linecap="round" opacity="0.55"/>
+
+  <!-- Inner sacred geometry - triangle pointing up -->
+  <polygon points="256,130 336,306 176,306" fill="none" stroke="#d4b26a" stroke-width="1.2" opacity="0.35"/>
+
+  <!-- Inner sacred geometry - triangle pointing down -->
+  <polygon points="256,382 176,206 336,206" fill="none" stroke="#d4b26a" stroke-width="1.2" opacity="0.25"/>
+
+  <!-- Center dot ring -->
+  <circle cx="256" cy="256" r="42" fill="none" stroke="#d4b26a" stroke-width="1" opacity="0.4"/>
+
+  <!-- NOW indicator dot on outer arc -->
+  <circle cx="66" cy="350" r="9" fill="#c04a28" opacity="0.95"/>
+  <circle cx="66" cy="350" r="5" fill="#e06040"/>
+
+  <!-- Center golden eye -->
+  <circle cx="256" cy="256" r="30" fill="#0d0c08" stroke="#d4b26a" stroke-width="1.5" opacity="0.9"/>
+  <circle cx="256" cy="256" r="18" fill="#d4b26a" opacity="0.15"/>
+  <circle cx="256" cy="256" r="8" fill="#d4b26a" opacity="0.9"/>
+  <circle cx="256" cy="256" r="4" fill="#f0d090"/>
+
+  <!-- 5 cycle tick marks around outer ring -->
+  <line x1="256" y1="36" x2="256" y2="50" stroke="#d4b26a" stroke-width="2" opacity="0.6"/>
+  <line x1="456" y1="256" x2="442" y2="256" stroke="#d4b26a" stroke-width="2" opacity="0.4"/>
+  <line x1="256" y1="476" x2="256" y2="462" stroke="#d4b26a" stroke-width="2" opacity="0.4"/>
+  <line x1="56" y1="256" x2="70" y2="256" stroke="#d4b26a" stroke-width="2" opacity="0.4"/>
+
+  <!-- Radial spokes (subtle) -->
+  <line x1="256" y1="256" x2="256" y2="66" stroke="#d4b26a" stroke-width="0.5" opacity="0.12"/>
+  <line x1="256" y1="256" x2="430" y2="372" stroke="#d4b26a" stroke-width="0.5" opacity="0.12"/>
+  <line x1="256" y1="256" x2="82" y2="372" stroke="#d4b26a" stroke-width="0.5" opacity="0.12"/>
+
+  <!-- Top text: THE -->
+  <text x="256" y="456" font-family="Georgia, serif" font-size="22" font-weight="700" fill="#d4b26a" text-anchor="middle" letter-spacing="8" opacity="0.9">THE</text>
+
+  <!-- Main text: CONVERGENCE arc at bottom -->
+  <text x="256" y="486" font-family="Georgia, serif" font-size="19" font-weight="400" fill="#8a6e32" text-anchor="middle" letter-spacing="4" opacity="0.8">CONVERGENCE</text>
+
+  <!-- Subtle grain overlay -->
+  <circle cx="256" cy="256" r="256" fill="none" stroke="#d4b26a" stroke-width="1" opacity="0.08"/>
+</svg>

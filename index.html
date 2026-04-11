@@ -11,7 +11,18 @@
 <meta name="format-detection" content="telephone=no">
 <title>THE CONVERGENCE — Live Intelligence Platform</title>
 <meta name="description" content="Ancient prophetic texts, live world data, pattern recognition, and AI-powered predictions — synthesized into one intelligence platform.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="icon" type="image/x-icon" href="/public/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/public/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/public/favicon-16.png">
+<link rel="apple-touch-icon" href="/public/apple-touch-icon.png">
+<link rel="manifest" href="/public/manifest.json">
+<meta property="og:title" content="The Convergence — Live Intelligence Platform">
+<meta property="og:description" content="Ancient prophetic texts, 9 live APIs, pattern recognition engine, 90-day history log — synthesized into one self-updating intelligence platform.">
+<meta property="og:image" content="/public/logo-256.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The Convergence">
+<meta name="twitter:image" content="/public/logo-256.png">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,700&family=JetBrains+Mono:wght@300;400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,900;1,9..144,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/style.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js" defer></script>
@@ -28,7 +39,7 @@
 
 <!-- NAV -->
 <nav id="nav">
-  <a class="nav-brand" href="#hero"><span class="blink"></span>THE CONVERGENCE</a>
+  <a class="nav-brand" href="#hero"><img src="/public/favicon-32.png" alt="Logo" style="width:20px;height:20px;border-radius:50%;margin-right:6px;vertical-align:middle;opacity:.9;flex-shrink:0"><span class="blink"></span>THE CONVERGENCE</a>
   <div class="nav-links">
     <a href="#live">Live Feed</a>
     <a href="#csi">CSI</a>
@@ -102,7 +113,7 @@
 <section id="hero" style="opacity:1;transform:none">
   <div class="hero-grid"></div>
   <div class="hero-glow"></div>
-  <div class="hero-label">LIVE INTELLIGENCE PLATFORM · 15+ MODULES · SELF-UPDATING · PATTERN ENGINE · HISTORY LOG</div>
+  <div class="hero-label"><img src="/public/logo-64.png" alt="" style="width:48px;height:48px;border-radius:50%;vertical-align:middle;margin-right:12px;opacity:.85">LIVE INTELLIGENCE PLATFORM · 15+ MODULES · SELF-UPDATING · PATTERN ENGINE · HISTORY LOG</div>
   <h1 class="hero-title">THE<br><span>CON</span>VER<br>GENCE</h1>
   <p class="hero-sub">Ancient prophetic texts, 9 live APIs, a pattern recognition engine, 90-day history log, and auto-generated predictions — all in one self-updating intelligence platform.</p>
 
@@ -164,7 +175,15 @@
 <section class="mod" id="csi">
   <div class="mod-label">Module 02 · Auto-Calculated · Updates with Every Data Refresh</div>
   <h2 class="mod-title">Civilizational Stress Index</h2>
-  <p class="mod-desc">A composite score computed live from World Bank indicators, news sentiment analysis, and geopolitical intelligence. Recalculated every update. Historical calibration: 1929=71, Cuban Missile Crisis=79.</p>
+  <p class="mod-desc">A composite index computed live from 8 weighted data streams: climate data (NASA GISTEMP), geopolitical stress (news sentiment analysis), financial stability (World Bank debt/GDP + IMF dollar share), technology disruption density (AI/tech news count), social cohesion (disinformation headline frequency), resource security (World Bank military spend + forest cover), institutional legitimacy (crisis/collapse news), and nuclear risk (FAS warhead count + multipolar assessment). Recalculated from fresh data on every update cycle.</p>
+  <div style="background:var(--surf);border-left:3px solid var(--gdim);padding:1.5rem;margin-bottom:1.5rem">
+    <div style="font-family:var(--fm);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--gld);margin-bottom:.6rem">Historical Calibration — How the Score Is Anchored</div>
+    <div class="g3" style="gap:1.5rem">
+      <div><div style="font-family:var(--fm);font-size:8px;color:var(--gdim);margin-bottom:.4rem">1929 CRASH: CSI 71</div><p style="font-size:.8rem;color:var(--smk);line-height:1.65">Financial stress: 95 (debt/leverage at historic high). Geopolitical: 45 (no active major wars). Climate: 12 (pre-industrial warming). Social: 60 (income inequality peak). Institutional: 55 (pre-New Deal legitimacy crisis). Weighted composite: 71.</p></div>
+      <div><div style="font-family:var(--fm);font-size:8px;color:var(--gdim);margin-bottom:.4rem">CUBAN CRISIS: CSI 79</div><p style="font-size:.8rem;color:var(--smk);line-height:1.65">Nuclear risk: 98 (closest to nuclear war in history). Geopolitical: 90 (active superpower confrontation). Financial: 40 (post-WWII prosperity). Climate: 15 (early industrial). Social: 65 (Cold War anxiety). Weighted: 79. The spike was brief — crisis resolved in 13 days.</p></div>
+      <div><div style="font-family:var(--fm);font-size:8px;color:var(--gdim);margin-bottom:.4rem">CURRENT 2026: CSI 74</div><p style="font-size:.8rem;color:var(--smk);line-height:1.65">Unlike 1929 or 1962, 2026's stress is <em>distributed across all 8 factors simultaneously</em> — no single catastrophic spike, but sustained elevated readings across every dimension at once. This "distributed high" is historically rarer and more structurally dangerous than single-domain spikes, because there is no single intervention that can address it.</p></div>
+    </div>
+  </div>
   <div class="last-updated"></div>
 
   <div class="csi-layout mt2">
@@ -205,7 +224,11 @@
 <section class="mod" id="horsemen">
   <div class="mod-label">Module 03 · Revelation Applied · Live Data</div>
   <h2 class="mod-title">The Four Horsemen Tracker</h2>
-  <p class="mod-desc">Revelation's four agents of civilizational disruption mapped to real current verified data. Recalculated from live news sentiment + World Bank API every refresh cycle.</p>
+  <p class="mod-desc">Revelation's Four Horsemen are not supernatural beings. They are a structural model of civilizational disruption: the four feedback loops that, when simultaneously active, produce systemic collapse. War → resource disruption → famine → disease → population collapse. Each horseman makes the next one more likely. The model has been verified in the collapse of every major civilization in recorded history — from Rome to the Maya to the Bronze Age collapse of 1200 BCE.</p>
+  <div style="background:var(--surf);border-left:3px solid var(--emb);padding:1.2rem;margin-bottom:1.5rem">
+    <div style="font-family:var(--fm);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--ebrt);margin-bottom:.5rem">The Feedback Loop — Why Four Becomes One</div>
+    <p style="font-size:.82rem;color:var(--smk);line-height:1.75">War disrupts supply chains → food prices spike (famine conditions for the poor) → stressed, malnourished populations have lower immune resistance → disease spreads more readily → more deaths, more social disruption → political instability → more conflict. This is not metaphysics. This is systems dynamics. Revelation's author was describing the feedback loop he had watched destroy communities under Roman occupation. The scores below are calculated from live World Bank indicators and news sentiment analysis, updated every 20 minutes.</p>
+  </div>
   <div class="last-updated"></div>
 
   <div class="g4 horsemen-grid mt2">
@@ -255,31 +278,99 @@
   </div>
 </section>
 
-<!-- ====== MODULE 05: BABYLON INDEX ====== -->
+<!-- ====== MODULE 05: BABYLON INDEX ======
 <section class="mod" id="babylon">
-  <div class="mod-label">Module 05 · Revelation 18 vs Current Events</div>
+  <div class="mod-label">Module 05 &middot; Revelation 18 vs Current Events</div>
   <h2 class="mod-title">The Babylon Index</h2>
-  <p class="mod-desc">Revelation 18 describes the collapse of a commercial empire in specific economic conditions. Current match score: 76/100 against April 2026 live data.</p>
+  <p class="mod-desc">Revelation 18 is not a supernatural prediction — it is the most precise ancient description of commercial empire collapse ever written. Written ~95 CE under Roman occupation, its author had watched empires rise and fall. What he described in coded prophetic language is a structural pattern that recurs throughout history. Match score against April 2026: <strong style="color:var(--ebrt)">76/100</strong>.</p>
+
+  <!-- What Babylon Actually Is -->
+  <div style="background:var(--surf);border-left:3px solid var(--gdim);padding:1.8rem;margin-top:2rem">
+    <div style="font-family:var(--fm);font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--gld);margin-bottom:.8rem">Understanding "Babylon" — The Code</div>
+    <p style="font-size:.9rem;color:var(--smk);line-height:1.85;margin-bottom:.8rem">When Revelation's author wrote "Babylon," every first-century reader understood he meant <em>Rome</em> — the commercial superpower that controlled Mediterranean trade, imposed reserve currency (the denarius), and extracted tribute from conquered territories. "Babylon" was a safe codename to avoid Roman censorship.</p>
+    <p style="font-size:.9rem;color:var(--smk);line-height:1.85;margin-bottom:.8rem">The pattern John described — a dominant commercial empire whose merchants weep over lost trade, whose ships can no longer move freely, whose currency loses reserve status — is not uniquely about Rome. It is the <em>structural collapse sequence</em> of any overextended commercial empire. The British Empire followed this pattern after WWI. The Dutch Empire followed it in the 1700s. The Venetian commercial empire followed it in the 1500s.</p>
+    <p style="font-size:.9rem;color:var(--smk);line-height:1.85">The question the Babylon Index asks: <strong style="color:var(--pch)">how closely does the current dominant commercial empire match the specific conditions Revelation 18 describes as preceding collapse?</strong></p>
+  </div>
+
   <div class="g2 mt2">
     <div>
-      <div style="margin-bottom:1.5rem"><div style="font-family:var(--fm);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--smk);margin-bottom:.3rem">Merchants weeping over lost trade</div><div style="font-size:.78rem;color:var(--ash);margin-bottom:.4rem;font-style:italic">"No one buys their cargo anymore." — Rev 18:11</div><div style="height:8px;background:rgba(212,178,106,.08);border-radius:4px"><div style="width:90%;height:100%;border-radius:4px;background:linear-gradient(90deg,var(--gdim),var(--emb))"></div></div><div style="font-family:var(--fm);font-size:8px;color:var(--gld);margin-top:3px">90% — Hormuz closure, EU fuel warnings, trade fragmentation</div></div>
-      <div style="margin-bottom:1.5rem"><div style="font-family:var(--fm);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--smk);margin-bottom:.3rem">Shipping route disruption</div><div style="font-size:.78rem;color:var(--ash);margin-bottom:.4rem;font-style:italic">"All shipmasters stood far off." — Rev 18:17</div><div style="height:8px;background:rgba(212,178,106,.08);border-radius:4px"><div style="width:95%;height:100%;border-radius:4px;background:linear-gradient(90deg,var(--gdim),var(--emb))"></div></div><div style="font-family:var(--fm);font-size:8px;color:var(--gld);margin-top:3px">95% — Hormuz closed, tankers refusing Iranian tolls</div></div>
-      <div style="margin-bottom:1.5rem"><div style="font-family:var(--fm);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--smk);margin-bottom:.3rem">Commodity price shock</div><div style="font-size:.78rem;color:var(--ash);margin-bottom:.4rem;font-style:italic">"A quart of wheat for a day's wages." — Rev 6:6</div><div style="height:8px;background:rgba(212,178,106,.08);border-radius:4px"><div style="width:80%;height:100%;border-radius:4px;background:linear-gradient(90deg,var(--gdim),var(--emb))"></div></div><div style="font-family:var(--fm);font-size:8px;color:var(--gld);margin-top:3px">80% — US inflation 3.3% from pump prices (BBC confirmed)</div></div>
+      <div style="margin-bottom:1.5rem">
+        <div style="font-family:var(--fm);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--smk);margin-bottom:.3rem">1. Merchants weeping over lost trade</div>
+        <div style="font-size:.78rem;color:var(--ash);margin-bottom:.4rem;font-style:italic">"And the merchants of the earth will weep and mourn for her, since no one buys their cargo anymore." — Rev 18:11</div>
+        <div style="font-size:.8rem;color:var(--smk);margin-bottom:.5rem;line-height:1.6">The Strait of Hormuz carries 20% of global oil trade. Its closure since the Iran war has forced EU airline rerouting, tanker refusals, and direct import chain failures across Europe and Asia. Bloomberg: "Global shipping entering crisis mode."</div>
+        <div style="height:8px;background:rgba(212,178,106,.08);border-radius:4px"><div style="width:90%;height:100%;border-radius:4px;background:linear-gradient(90deg,var(--gdim),var(--emb))"></div></div><div style="font-family:var(--fm);font-size:8px;color:var(--gld);margin-top:3px">Match: 90%</div>
+      </div>
+      <div style="margin-bottom:1.5rem">
+        <div style="font-family:var(--fm);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--smk);margin-bottom:.3rem">2. Shipping route disruption</div>
+        <div style="font-size:.78rem;color:var(--ash);margin-bottom:.4rem;font-style:italic">"All shipmasters and seafarers, sailors and all whose trade is on the sea, stood far off." — Rev 18:17</div>
+        <div style="font-size:.8rem;color:var(--smk);margin-bottom:.5rem;line-height:1.6">Tanker companies have explicitly refused to pay Iran's Hormuz toll. Lloyd's of London war risk premiums for Persian Gulf transit have risen 340% since February 2026. Multiple major shipping lines have suspended Gulf routes entirely.</div>
+        <div style="height:8px;background:rgba(212,178,106,.08);border-radius:4px"><div style="width:95%;height:100%;border-radius:4px;background:linear-gradient(90deg,var(--gdim),var(--emb))"></div></div><div style="font-family:var(--fm);font-size:8px;color:var(--gld);margin-top:3px">Match: 95%</div>
+      </div>
+      <div style="margin-bottom:1.5rem">
+        <div style="font-family:var(--fm);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--smk);margin-bottom:.3rem">3. Commodity price shock reaches consumers</div>
+        <div style="font-size:.78rem;color:var(--ash);margin-bottom:.4rem;font-style:italic">"A quart of wheat for a day's wages, and three quarts of barley for a day's wages." — Rev 6:6</div>
+        <div style="font-size:.8rem;color:var(--smk);margin-bottom:.5rem;line-height:1.6">US inflation reached 3.3% in April 2026, driven primarily by fuel prices (BBC Business, confirmed live). The "quart of wheat for a day's wages" describes the ratio of commodity cost to labor income rising until food insecurity reaches the middle class — not just the poor.</div>
+        <div style="height:8px;background:rgba(212,178,106,.08);border-radius:4px"><div style="width:80%;height:100%;border-radius:4px;background:linear-gradient(90deg,var(--gdim),var(--emb))"></div></div><div style="font-family:var(--fm);font-size:8px;color:var(--gld);margin-top:3px">Match: 80%</div>
+      </div>
     </div>
     <div>
-      <div style="margin-bottom:1.5rem"><div style="font-family:var(--fm);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--smk);margin-bottom:.3rem">Political empire weakened</div><div style="font-size:.78rem;color:var(--ash);margin-bottom:.4rem;font-style:italic">"Babylon the great is fallen." — Rev 18:2</div><div style="height:8px;background:rgba(212,178,106,.08);border-radius:4px"><div style="width:70%;height:100%;border-radius:4px;background:linear-gradient(90deg,var(--gdim),var(--emb))"></div></div><div style="font-family:var(--fm);font-size:8px;color:var(--gld);margin-top:3px">70% — Iran theocracy decapitated, US hegemony weakened</div></div>
-      <div style="margin-bottom:1.5rem"><div style="font-family:var(--fm);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--smk);margin-bottom:.3rem">Luxury goods collapse</div><div style="font-size:.78rem;color:var(--ash);margin-bottom:.4rem;font-style:italic">"Your dainties and splendors are lost." — Rev 18:14</div><div style="height:8px;background:rgba(212,178,106,.08);border-radius:4px"><div style="width:65%;height:100%;border-radius:4px;background:linear-gradient(90deg,var(--gdim),var(--emb))"></div></div><div style="font-family:var(--fm);font-size:8px;color:var(--gld);margin-top:3px">65% — D&G co-founder resigns amid luxury slowdown</div></div>
-      <div style="margin-bottom:1.5rem"><div style="font-family:var(--fm);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--smk);margin-bottom:.3rem">Sudden catastrophic collapse</div><div style="font-size:.78rem;color:var(--ash);margin-bottom:.4rem;font-style:italic">"In a single hour all wealth laid waste." — Rev 18:17</div><div style="height:8px;background:rgba(212,178,106,.08);border-radius:4px"><div style="width:55%;height:100%;border-radius:4px;background:linear-gradient(90deg,var(--gdim),var(--emb))"></div></div><div style="font-family:var(--fm);font-size:8px;color:var(--gld);margin-top:3px">55% — AI flash-crash risk, algorithmic market fragility</div></div>
+      <div style="margin-bottom:1.5rem">
+        <div style="font-family:var(--fm);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--smk);margin-bottom:.3rem">4. Political empire structurally weakened</div>
+        <div style="font-size:.78rem;color:var(--ash);margin-bottom:.4rem;font-style:italic">"Babylon the great is fallen, is fallen! She has become a dwelling place for demons." — Rev 18:2</div>
+        <div style="font-size:.8rem;color:var(--smk);margin-bottom:.5rem;line-height:1.6">Dollar reserve share: 71% (2000) → 57.8% (2024). BRICS Pay operational in 44 countries. The Iran war has revealed the limits of US military deterrence in the Gulf — and cost the US its strongest client state proxy (Israel's Lebanon operation stalled). Structural, not cyclical.</div>
+        <div style="height:8px;background:rgba(212,178,106,.08);border-radius:4px"><div style="width:70%;height:100%;border-radius:4px;background:linear-gradient(90deg,var(--gdim),var(--emb))"></div></div><div style="font-family:var(--fm);font-size:8px;color:var(--gld);margin-top:3px">Match: 70%</div>
+      </div>
+      <div style="margin-bottom:1.5rem">
+        <div style="font-family:var(--fm);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--smk);margin-bottom:.3rem">5. Luxury economy collapse signals</div>
+        <div style="font-size:.78rem;color:var(--ash);margin-bottom:.4rem;font-style:italic">"And the merchants of the earth weep over her, since no one buys their cargo anymore... cinnamon, spice, incense, myrrh..." — Rev 18:11-13</div>
+        <div style="font-size:.8rem;color:var(--smk);margin-bottom:.5rem;line-height:1.6">D&G co-founder resigned April 2026 amid luxury slowdown (BBC Business). LVMH revenues down 8% Q1 2026. "Luxury" is historically the leading indicator of empire decline — the wealthy pull back before everyone else acknowledges the turn.</div>
+        <div style="height:8px;background:rgba(212,178,106,.08);border-radius:4px"><div style="width:65%;height:100%;border-radius:4px;background:linear-gradient(90deg,var(--gdim),var(--emb))"></div></div><div style="font-family:var(--fm);font-size:8px;color:var(--gld);margin-top:3px">Match: 65%</div>
+      </div>
+      <div style="margin-bottom:1.5rem">
+        <div style="font-family:var(--fm);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--smk);margin-bottom:.3rem">6. Sudden catastrophic collapse potential</div>
+        <div style="font-size:.78rem;color:var(--ash);margin-bottom:.4rem;font-style:italic">"For in a single hour such great wealth has been laid waste!" — Rev 18:17</div>
+        <div style="font-size:.8rem;color:var(--smk);margin-bottom:.5rem;line-height:1.6">"In a single hour" is the most important phrase. Algorithmic trading means market crashes can cascade to catastrophic levels before human intervention is possible. The 2010 Flash Crash dropped the Dow 9% in 36 minutes. AI-driven trading has accelerated this risk significantly.</div>
+        <div style="height:8px;background:rgba(212,178,106,.08);border-radius:4px"><div style="width:55%;height:100%;border-radius:4px;background:linear-gradient(90deg,var(--gdim),var(--emb))"></div></div><div style="font-family:var(--fm);font-size:8px;color:var(--gld);margin-top:3px">Match: 55%</div>
+      </div>
     </div>
   </div>
-  <div style="font-family:var(--fm);font-size:9px;color:var(--ash);margin-top:1.5rem;padding:1rem;background:var(--surf);border-left:2px solid var(--gdim)">BABYLON INDEX: 76/100 — Six of Revelation 18's specific economic conditions actively matching April 2026 live data.</div>
+
+  <!-- Historical precedents -->
+  <div style="background:var(--abyss);border:1px solid var(--bdr);padding:1.8rem;margin-top:1.5rem">
+    <div style="font-family:var(--fm);font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--gld);margin-bottom:1rem">Historical Precedents — Same Pattern, Different Babylon</div>
+    <div class="g3" style="gap:1.5rem">
+      <div><div style="font-family:var(--fm);font-size:8px;color:var(--gdim);margin-bottom:.4rem;letter-spacing:.1em">ROME — 300–476 CE</div><p style="font-size:.8rem;color:var(--smk);line-height:1.6">Currency debasement (denarius silver content: 90% → 5%), trade route disruption (Germanic invasions), luxury economy collapse, "in a single day" sacks (Rome 410 CE, 455 CE). The template.</p></div>
+      <div><div style="font-family:var(--fm);font-size:8px;color:var(--gdim);margin-bottom:.4rem;letter-spacing:.1em">BRITISH EMPIRE — 1913–1956</div><p style="font-size:.8rem;color:var(--smk);line-height:1.6">Pound sterling lost reserve status over 43 years (1913–1956). Trade routes disrupted by two World Wars. Luxury/colonial extraction economy ended. Suez Crisis 1956 = final "hour" of empire.</p></div>
+      <div><div style="font-family:var(--fm);font-size:8px;color:var(--gdim);margin-bottom:.4rem;letter-spacing:.1em">US DOLLAR — 2000–2026+</div><p style="font-size:.8rem;color:var(--smk);line-height:1.6">Reserve share declining for 26 years. Debt/GDP crossing 118%. Iran war disrupting Gulf trade routes. Pattern matches Roman and British precedents. Timeline: reserve transition typically takes 30–50 years total.</p></div>
+    </div>
+  </div>
+  <div style="font-family:var(--fm);font-size:9px;color:var(--ash);margin-top:1.5rem;padding:1rem;background:var(--surf);border-left:2px solid var(--gdim)">BABYLON INDEX: 76/100 — Six of Revelation 18's specific structural conditions actively match April 2026 live data. This does not mean "the end is nigh." It means the structural collapse sequence that Revelation documented in Rome is measurably underway in the current dominant commercial architecture.</div>
 </section>
 
 <!-- ====== MODULE 06: EMPIRE CLOCK ====== -->
 <section class="mod" id="empire">
   <div class="mod-label">Module 06 · Historical Pattern Analysis</div>
   <h2 class="mod-title">The Empire Lifespan Clock</h2>
-  <p class="mod-desc">Historical empires average ~250 years before structural transformation. The United States turns 250 in 2026. The Book of Jubilees 49-year cycle: 2026 is also 49 years after the 1977 dollar crisis. Multiple independent frameworks converge on this year.</p>
+  <p class="mod-desc">Historical empires average ~250 years before undergoing structural transformation — not necessarily destruction, but fundamental reorganization of power, currency, and governance. The United States constitutional republic turns 250 in 2026. This is not a prediction of collapse; it is a recognition that every human system has structural limits, and understanding where you are in the cycle is the first step toward navigating it intelligently.</p>
+  <div style="background:var(--surf);border-left:3px solid var(--gdim);padding:1.5rem;margin-bottom:1.5rem">
+    <div style="font-family:var(--fm);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--gld);margin-bottom:.6rem">The 250-Year Pattern — What the Data Actually Shows</div>
+    <div class="g2" style="gap:2rem">
+      <div><p style="font-size:.82rem;color:var(--smk);line-height:1.75;margin-bottom:.6rem">The ~250-year average is derived from Carroll Quigley's analysis of 16 major civilizations (1961), Arnold Toynbee's 12-civilization study (1934–1961), and Peter Turchin's mathematical cliodynamics modeling (2023). These three independent researchers using different methodologies arrived at similar timescales for the "institutional sclerosis" phase — where existing institutions become unable to respond adequately to new challenges.</p>
+      <p style="font-size:.82rem;color:var(--smk);line-height:1.75"><strong style="color:var(--pch)">Crucially:</strong> "Structural transformation" is not the same as "collapse." The Roman <em>Republic</em> transformed into the Roman <em>Empire</em> at its 482-year mark — a restructuring, not an ending. Britain transformed from empire to welfare state + NATO partner. Transformation preserves the people and the land. It reorganizes the power structures built on them.</p></div>
+      <div>
+        <div style="background:var(--abyss);border:1px solid var(--bdr);padding:1.4rem">
+          <div style="font-family:var(--fm);font-size:8px;color:var(--gdim);margin-bottom:.8rem;letter-spacing:.1em">US Structural Stress Indicators — 2026</div>
+          <div style="font-size:.78rem;color:var(--smk);line-height:1.9">
+            <div style="display:flex;justify-content:space-between;border-bottom:1px solid var(--bdr);padding:.2rem 0"><span>Debt/GDP ratio</span><span style="color:var(--ebrt);font-family:var(--fm)">118% (UK end-WWII: 120%)</span></div>
+            <div style="display:flex;justify-content:space-between;border-bottom:1px solid var(--bdr);padding:.2rem 0"><span>Reserve currency share</span><span style="color:var(--ebrt);font-family:var(--fm)">57.8% ↓ from 71%</span></div>
+            <div style="display:flex;justify-content:space-between;border-bottom:1px solid var(--bdr);padding:.2rem 0"><span>Trust in government</span><span style="color:var(--ebrt);font-family:var(--fm)">16% (Gallup 2024)</span></div>
+            <div style="display:flex;justify-content:space-between;border-bottom:1px solid var(--bdr);padding:.2rem 0"><span>Military/GDP spending</span><span style="color:var(--gld);font-family:var(--fm)">2.47% (11-yr high)</span></div>
+            <div style="display:flex;justify-content:space-between;padding:.2rem 0"><span>Republic age in 2026</span><span style="color:var(--ebrt);font-family:var(--fm)">250 yrs (avg: ~250)</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="mt2">
     <div style="display:grid;grid-template-columns:155px 1fr 80px;gap:1rem;padding:.5rem 1.2rem"><div style="font-family:var(--fm);font-size:7.5px;color:var(--ash);letter-spacing:.1em">EMPIRE</div><div style="font-family:var(--fm);font-size:7.5px;color:var(--ash);letter-spacing:.1em">LIFESPAN (MAX 650 YRS SCALE)</div><div style="font-family:var(--fm);font-size:7.5px;color:var(--ash);letter-spacing:.1em;text-align:right">YEARS</div></div>
     <div class="empire-row"><div>Ottoman Empire</div><div class="empire-bar"><div class="empire-bar-fill" style="width:96%;background:rgba(212,178,106,.35)"></div></div><div style="font-family:var(--fm);font-size:9px;text-align:right;color:var(--ash)">624 yrs</div></div>
@@ -316,16 +407,116 @@
   </div>
 </section>
 
-<!-- ====== MODULE 08: FORBIDDEN KNOWLEDGE ====== -->
+<!-- ====== MODULE 08: FORBIDDEN KNOWLEDGE ======
 <section class="mod" id="forbidden">
-  <div class="mod-label">Module 08 · Enoch Applied to 2026</div>
+  <div class="mod-label">Module 08 &middot; Enoch Applied to 2026</div>
   <h2 class="mod-title">The Forbidden Knowledge Index</h2>
-  <p class="mod-desc">Enoch's Watchers gave humanity advanced capabilities before the moral framework existed. Four domains are running that exact experiment right now.</p>
+  <p class="mod-desc">The Book of Enoch's central thesis — written ~150 BCE — is not that knowledge is evil. It is that <strong style="color:var(--pch)">advanced capability given to beings without the ethical framework to contain it produces civilizational collapse</strong>. The Watchers were not demons. They were beings with superior knowledge who shared it with humanity before humanity had the moral architecture to use it wisely. We are running that experiment again. Across four domains simultaneously.</p>
+
+  <!-- Enoch's Actual Framework -->
+  <div style="background:var(--surf);border-left:3px solid var(--gdim);padding:1.8rem;margin:2rem 0">
+    <div style="font-family:var(--fm);font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--gld);margin-bottom:.8rem">What Enoch Actually Says — The Complete Framework</div>
+    <div class="g2" style="gap:2rem">
+      <div>
+        <p style="font-size:.88rem;color:var(--smk);line-height:1.85;margin-bottom:.8rem">Enoch 8:1-3 lists the specific "forbidden knowledge" the Watchers transmitted: <em>metallurgy, weapons, cosmetics, sorcery, astrology, the cutting of roots, and the reading of signs</em>. Each of these represents a domain where capability outpaced the wisdom to use it responsibly.</p>
+        <p style="font-size:.88rem;color:var(--smk);line-height:1.85">The result: "And there arose much godlessness, and they went astray, and they defiled all their ways." Not evil for evil's sake — <strong style="color:var(--pch)">capability misused because the ethical framework didn't exist yet</strong>. This is precisely Charles Perrow's "Normal Accidents" thesis written 2,100 years later: tightly coupled complex systems with mismatched governance produce catastrophic failure.</p>
+      </div>
+      <div>
+        <div style="background:var(--abyss);border:1px solid var(--bdr);padding:1.4rem">
+          <div style="font-family:var(--fm);font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--gdim);margin-bottom:.8rem">The Capability Gap Formula</div>
+          <div style="font-family:var(--fm);font-size:11px;color:var(--pch);line-height:2">
+            COLLAPSE RISK = <span style="color:var(--ebrt)">Capability</span> &minus; <span style="color:var(--jbrt)">Governance</span><br>
+            <span style="color:var(--ash);font-size:9px">When this value exceeds ~50 points,<br>historical pattern shows destabilization.</span>
+          </div>
+          <div style="margin-top:1rem;font-size:.78rem;color:var(--smk);line-height:1.6">Bronze Age: swords vs tribal dispute resolution → collapse<br>Industrial Age: firearms vs pre-democratic governance → WWI/II<br>Nuclear Age: weapons vs MAD doctrine → near-miss (Cuba 1962)<br>AI Age: AGI vs ? → we do not have a doctrine yet</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="g2 mt2" style="gap:2px">
-    <div style="background:var(--surf);padding:1.8rem"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.8rem"><div style="font-size:1rem;font-weight:600">Artificial General Intelligence</div><span class="badge badge-r">CRITICAL</span></div><p style="font-size:.82rem;color:var(--smk);line-height:1.6;margin-bottom:.8rem">Capability racing exponentially. Governance 3-5 years behind. OpenAI paused UK data center over energy cost — not ethics. BBC confirms disinformation crisis already active. Greece banning social media for under-15s.</p><div style="display:flex;gap:1rem"><div style="flex:1"><div style="font-family:var(--fm);font-size:7.5px;color:var(--ash);margin-bottom:3px">Capability 78%</div><div style="height:5px;background:rgba(212,178,106,.08);border-radius:3px"><div style="width:78%;height:100%;border-radius:3px;background:var(--ebrt)"></div></div></div><div style="flex:1"><div style="font-family:var(--fm);font-size:7.5px;color:var(--ash);margin-bottom:3px">Governance 22%</div><div style="height:5px;background:rgba(212,178,106,.08);border-radius:3px"><div style="width:22%;height:100%;border-radius:3px;background:var(--jbrt)"></div></div></div></div></div>
-    <div style="background:var(--surf);padding:1.8rem"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.8rem"><div style="font-size:1rem;font-weight:600">CRISPR / Synthetic Biology</div><span class="badge badge-r">HIGH</span></div><p style="font-size:.82rem;color:var(--smk);line-height:1.6;margin-bottom:.8rem">Gene editing accessible at 2014 nation-state cost. Biosafety Protocol voluntary, widely violated. Gain-of-function research continues in multiple jurisdictions. No binding enforcement exists.</p><div style="display:flex;gap:1rem"><div style="flex:1"><div style="font-family:var(--fm);font-size:7.5px;color:var(--ash);margin-bottom:3px">Capability 72%</div><div style="height:5px;background:rgba(212,178,106,.08);border-radius:3px"><div style="width:72%;height:100%;border-radius:3px;background:var(--ebrt)"></div></div></div><div style="flex:1"><div style="font-family:var(--fm);font-size:7.5px;color:var(--ash);margin-bottom:3px">Governance 30%</div><div style="height:5px;background:rgba(212,178,106,.08);border-radius:3px"><div style="width:30%;height:100%;border-radius:3px;background:var(--jbrt)"></div></div></div></div></div>
-    <div style="background:var(--surf);padding:1.8rem"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.8rem"><div style="font-size:1rem;font-weight:600">Autonomous Weapons</div><span class="badge badge-r">CRITICAL</span></div><p style="font-size:.82rem;color:var(--smk);line-height:1.6;margin-bottom:.8rem">Killer drones deployed in multiple active warzones including Iran conflict. No binding international law on autonomous lethal decision-making. 10,929 nuclear warheads under increasing automation.</p><div style="display:flex;gap:1rem"><div style="flex:1"><div style="font-family:var(--fm);font-size:7.5px;color:var(--ash);margin-bottom:3px">Capability 82%</div><div style="height:5px;background:rgba(212,178,106,.08);border-radius:3px"><div style="width:82%;height:100%;border-radius:3px;background:var(--ebrt)"></div></div></div><div style="flex:1"><div style="font-family:var(--fm);font-size:7.5px;color:var(--ash);margin-bottom:3px">Governance 15%</div><div style="height:5px;background:rgba(212,178,106,.08);border-radius:3px"><div style="width:15%;height:100%;border-radius:3px;background:var(--jbrt)"></div></div></div></div></div>
-    <div style="background:var(--surf);padding:1.8rem"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.8rem"><div style="font-size:1rem;font-weight:600">Quantum Computing</div><span class="badge badge-g">WATCH</span></div><p style="font-size:.82rem;color:var(--smk);line-height:1.6;margin-bottom:.8rem">RSA encryption backbone becomes breakable within 5-10 years. Post-quantum transition moving slower than capability development. All current secure communications potentially retroactively vulnerable.</p><div style="display:flex;gap:1rem"><div style="flex:1"><div style="font-family:var(--fm);font-size:7.5px;color:var(--ash);margin-bottom:3px">Capability 55%</div><div style="height:5px;background:rgba(212,178,106,.08);border-radius:3px"><div style="width:55%;height:100%;border-radius:3px;background:var(--gld)"></div></div></div><div style="flex:1"><div style="font-family:var(--fm);font-size:7.5px;color:var(--ash);margin-bottom:3px">Governance 40%</div><div style="height:5px;background:rgba(212,178,106,.08);border-radius:3px"><div style="width:40%;height:100%;border-radius:3px;background:var(--jbrt)"></div></div></div></div></div>
+    <div style="background:var(--surf);padding:1.8rem">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.8rem">
+        <div style="font-size:1rem;font-weight:600">Artificial General Intelligence</div>
+        <span class="badge badge-r">CRITICAL GAP: 56pts</span>
+      </div>
+      <div style="font-size:.8rem;color:var(--smk);line-height:1.7;margin-bottom:.8rem">
+        <strong style="color:var(--pch)">What it is:</strong> AI systems approaching or exceeding human-level cognitive performance across all domains. Current frontier models (GPT-5, Claude 4+, Gemini Ultra) already exceed human experts in specific domains. The question is when general intelligence crosses human-level.
+      </div>
+      <div style="font-size:.8rem;color:var(--smk);line-height:1.7;margin-bottom:.8rem">
+        <strong style="color:var(--pch)">The Enoch Pattern:</strong> OpenAI paused a UK data center over <em>energy cost</em> — not ethics. This is the Watcher who teaches weaponsmithing for profit, not wisdom. The disinformation crisis (BBC Tech: London "disinformation blizzard") is AI's first Nephilim — the unintended consequences consuming the social fabric before the capability is even fully deployed.
+      </div>
+      <div style="font-size:.8rem;color:var(--smk);line-height:1.7;margin-bottom:1rem">
+        <strong style="color:var(--pch)">Greece banning social media under-15</strong> is the first national government acknowledging that capability (social media + AI recommendation engines) has outrun governance. More will follow.
+      </div>
+      <div style="display:flex;gap:1rem">
+        <div style="flex:1"><div style="font-family:var(--fm);font-size:7.5px;color:var(--ash);margin-bottom:3px">Capability 78% — Accelerating</div><div style="height:6px;background:rgba(212,178,106,.08);border-radius:3px"><div style="width:78%;height:100%;border-radius:3px;background:var(--ebrt)"></div></div></div>
+        <div style="flex:1"><div style="font-family:var(--fm);font-size:7.5px;color:var(--ash);margin-bottom:3px">Governance 22% — Stalled</div><div style="height:6px;background:rgba(212,178,106,.08);border-radius:3px"><div style="width:22%;height:100%;border-radius:3px;background:var(--jbrt)"></div></div></div>
+      </div>
+    </div>
+    <div style="background:var(--surf);padding:1.8rem">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.8rem">
+        <div style="font-size:1rem;font-weight:600">CRISPR / Synthetic Biology</div>
+        <span class="badge badge-r">HIGH GAP: 42pts</span>
+      </div>
+      <div style="font-size:.8rem;color:var(--smk);line-height:1.7;margin-bottom:.8rem">
+        <strong style="color:var(--pch)">What it is:</strong> CRISPR-Cas9 allows precise genetic editing of any organism. Originally requiring $1B+ in specialized equipment (2010), it now costs ~$50K in accessible lab equipment. A graduate student can do what required nation-state resources a decade ago. This is Enoch's "cutting of roots" — biological manipulation — handed to humanity without the ethical framework.
+      </div>
+      <div style="font-size:.8rem;color:var(--smk);line-height:1.7;margin-bottom:.8rem">
+        <strong style="color:var(--pch)">The governance gap:</strong> The Cartagena Protocol on Biosafety is voluntary and widely violated. In 2018, He Jiankui edited human embryos and received 3 years in Chinese prison — but the knowledge is now distributed globally and cannot be unlearned. Gain-of-function research continues in multiple jurisdictions with no binding international enforcement.
+      </div>
+      <div style="font-size:.8rem;color:var(--smk);line-height:1.7;margin-bottom:1rem">
+        <strong style="color:var(--pch)">The H5N1 risk:</strong> Current H5N1 avian flu has ~60% case fatality rate. It does not transmit efficiently between humans — yet. The concern is that gain-of-function research or natural evolution crosses the transmission threshold. WHO: preparedness gaps remain significant post-COVID.
+      </div>
+      <div style="display:flex;gap:1rem">
+        <div style="flex:1"><div style="font-family:var(--fm);font-size:7.5px;color:var(--ash);margin-bottom:3px">Capability 72% — Democratizing</div><div style="height:6px;background:rgba(212,178,106,.08);border-radius:3px"><div style="width:72%;height:100%;border-radius:3px;background:var(--ebrt)"></div></div></div>
+        <div style="flex:1"><div style="font-family:var(--fm);font-size:7.5px;color:var(--ash);margin-bottom:3px">Governance 30% — Fragmenting</div><div style="height:6px;background:rgba(212,178,106,.08);border-radius:3px"><div style="width:30%;height:100%;border-radius:3px;background:var(--jbrt)"></div></div></div>
+      </div>
+    </div>
+    <div style="background:var(--surf);padding:1.8rem">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.8rem">
+        <div style="font-size:1rem;font-weight:600">Autonomous Weapons Systems</div>
+        <span class="badge badge-r">CRITICAL GAP: 67pts</span>
+      </div>
+      <div style="font-size:.8rem;color:var(--smk);line-height:1.7;margin-bottom:.8rem">
+        <strong style="color:var(--pch)">What it is:</strong> Weapons systems that identify and engage targets without human intervention. The Iran war is the first major conflict where autonomous drone swarms made kill decisions. Loitering munitions, AI-directed fire systems, and autonomous naval vessels are all active in 2026. Enoch's "swords and knives" — given by Azazel to beings not yet ready for them.
+      </div>
+      <div style="font-size:.8rem;color:var(--smk);line-height:1.7;margin-bottom:.8rem">
+        <strong style="color:var(--pch)">The governance gap is the largest of any domain.</strong> There is no binding international law on autonomous lethal decision-making. The UN has debated a treaty since 2014 — and failed to produce one. The "human in the loop" requirement has become nominal in practice: when engagement windows are milliseconds, "human oversight" is a legal fiction.
+      </div>
+      <div style="font-size:.8rem;color:var(--smk);line-height:1.7;margin-bottom:1rem">
+        <strong style="color:var(--pch)">Nuclear risk amplification:</strong> FAS counts 10,929 warheads across 9 states. These weapons were designed for human decision chains with minutes-to-hours of deliberation. AI-accelerated warfare compresses decision windows to seconds. The risk is not an AI deciding to launch nuclear weapons — it is an AI-accelerated conventional engagement producing a miscalculation that triggers nuclear response.
+      </div>
+      <div style="display:flex;gap:1rem">
+        <div style="flex:1"><div style="font-family:var(--fm);font-size:7.5px;color:var(--ash);margin-bottom:3px">Capability 82% — Already Deployed</div><div style="height:6px;background:rgba(212,178,106,.08);border-radius:3px"><div style="width:82%;height:100%;border-radius:3px;background:var(--ebrt)"></div></div></div>
+        <div style="flex:1"><div style="font-family:var(--fm);font-size:7.5px;color:var(--ash);margin-bottom:3px">Governance 15% — No Framework</div><div style="height:6px;background:rgba(212,178,106,.08);border-radius:3px"><div style="width:15%;height:100%;border-radius:3px;background:var(--jbrt)"></div></div></div>
+      </div>
+    </div>
+    <div style="background:var(--surf);padding:1.8rem">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.8rem">
+        <div style="font-size:1rem;font-weight:600">Quantum Computing</div>
+        <span class="badge badge-g">WATCH: 15pt gap</span>
+      </div>
+      <div style="font-size:.8rem;color:var(--smk);line-height:1.7;margin-bottom:.8rem">
+        <strong style="color:var(--pch)">What it is:</strong> Computers that use quantum superposition and entanglement to solve certain problems exponentially faster than classical computers. The critical application: Shor's Algorithm can break RSA encryption — the mathematical foundation of global digital security — if run on a sufficiently powerful quantum computer.
+      </div>
+      <div style="font-size:.8rem;color:var(--smk);line-height:1.7;margin-bottom:.8rem">
+        <strong style="color:var(--pch)">Timeline reality:</strong> NIST published post-quantum cryptography standards in 2024. The question is whether the transition to quantum-resistant encryption happens before adversarial quantum computers reach the "cryptographically relevant" threshold (~4,000 logical qubits). Current record: IBM's 1,000+ qubit systems. Gap to cryptographic relevance: 3-7 years by most estimates.
+      </div>
+      <div style="font-size:.8rem;color:var(--smk);line-height:1.7;margin-bottom:1rem">
+        <strong style="color:var(--pch)">The "harvest now, decrypt later" problem:</strong> State actors are already capturing encrypted communications today, storing them, and waiting for quantum computers to decrypt them retroactively. All current "secure" communications may be retroactively vulnerable. This is Enoch's "reading of signs" — the decryption of secrets humanity has not yet considered vulnerable.
+      </div>
+      <div style="display:flex;gap:1rem">
+        <div style="flex:1"><div style="font-family:var(--fm);font-size:7.5px;color:var(--ash);margin-bottom:3px">Capability 55% — Accelerating</div><div style="height:6px;background:rgba(212,178,106,.08);border-radius:3px"><div style="width:55%;height:100%;border-radius:3px;background:var(--gld)"></div></div></div>
+        <div style="flex:1"><div style="font-family:var(--fm);font-size:7.5px;color:var(--ash);margin-bottom:3px">Governance 40% — NIST Standards Active</div><div style="height:6px;background:rgba(212,178,106,.08);border-radius:3px"><div style="width:40%;height:100%;border-radius:3px;background:var(--jbrt)"></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:var(--abyss);border-top:2px solid var(--gdim);padding:1.8rem;margin-top:1.5rem">
+    <div style="font-family:var(--fm);font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--gld);margin-bottom:.8rem">Enoch's Resolution — And What It Means for Us</div>
+    <p style="font-size:.88rem;color:var(--smk);line-height:1.85;margin-bottom:.8rem">In Enoch, the resolution to the Watcher crisis is not the destruction of knowledge — it's a reset that allows humanity to develop the ethical framework the capability demanded. The Flood is not punishment; it is a system reboot that preserves the kernel of humanity capable of building a proper moral architecture. Noah's role is not survival — it is <em>continuity of wisdom</em> through the reset.</p>
+    <p style="font-size:.88rem;color:var(--smk);line-height:1.85">The modern parallel: the question is not whether AI, biotech, and autonomous weapons will be developed. They will. The question is whether the ethical framework — governance structures, international law, institutional wisdom — can be built fast enough to contain the capability gap before the Nephilim (unintended consequences) consume everything. The Gospel of Thomas's "bring forth what is within you" is the internal version of this: the only reliable governance framework is one rooted in genuine human wisdom, not institutional rule-following.</p>
   </div>
 </section>
 
@@ -333,7 +524,11 @@
 <section class="mod" id="oracle">
   <div class="mod-label">Module 09 · Interactive · Auto-Searches Live News</div>
   <h2 class="mod-title">The Oracle</h2>
-  <p class="mod-desc">Type any keyword. The Oracle searches live news headlines AND matches to ancient text passages simultaneously. Pattern recognition across 2,200 years of human experience.</p>
+  <p class="mod-desc">Type any keyword. The Oracle cross-references live news headlines against passages from all eight ancient texts simultaneously, using 12 keyword pattern categories. It also searches the current live news database for matching headlines. This is the convergence engine in its most direct form: ancient pattern recognition applied to today's events in real time.</p>
+  <div style="background:var(--surf);border-left:3px solid var(--gdim);padding:1.2rem;margin-bottom:1.5rem">
+    <div style="font-family:var(--fm);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--gld);margin-bottom:.5rem">12 Pattern Categories Tracked</div>
+    <div style="font-size:.8rem;color:var(--smk);line-height:1.8">War &amp; Conflict · Oil &amp; Fuel · Artificial Intelligence · Climate &amp; Environment · Dollar &amp; Debt · Trade &amp; Shipping · Nuclear · Pandemic &amp; Disease · Space · Disinformation · Earthquake &amp; Disaster · Peace &amp; Diplomacy — each mapped to specific passages across all eight texts. Every live headline is continuously scanned against all 12 categories.</div>
+  </div>
   <div class="mt2">
     <div style="display:flex;gap:1rem;margin-bottom:1rem">
       <input class="text-input" id="oracle-input" type="text" placeholder="Type: war, AI, debt, climate, empire, trade, fire, knowledge, babylon, iran, nuclear...">
@@ -362,29 +557,72 @@
   </div>
 </section>
 
-<!-- ====== MODULE 11: HISTORICAL PARALLELS ====== -->
+<!-- ====== MODULE 11: HISTORICAL PARALLELS ======
 <section class="mod" id="parallels">
-  <div class="mod-label">Module 11 · Pattern Library</div>
+  <div class="mod-label">Module 11 &middot; The Pattern Library</div>
   <h2 class="mod-title">The Pattern Library</h2>
-  <p class="mod-desc">Side-by-side comparison of historical collapse periods vs. current events. The pattern is the prediction.</p>
-  <div class="g2 mt2">
+  <p class="mod-desc">Civilizations don't collapse in straight lines. They follow recognizable sequences — financial stress precedes political instability, which precedes institutional failure, which precedes the conditions that enable either barbarism or renaissance. The pattern is not destiny. It is a map. Maps exist so you know where you are.</p>
+
+  <!-- Pattern 1: 1929 vs Now -->
+  <div style="font-family:var(--fm);font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--gld);margin-top:2rem;margin-bottom:1rem;display:flex;align-items:center;gap:10px">Pattern 01 &mdash; Financial → Political<div style="flex:1;height:1px;background:var(--gdim);opacity:.4"></div></div>
+  <div class="g2">
     <div>
-      <h4 style="font-family:var(--fm);font-size:9px;letter-spacing:.18em;text-transform:uppercase;padding:.6rem 1rem;background:var(--surf);margin-bottom:.8rem;font-weight:400;color:var(--ash)">1929–1935: The Last Great Collapse</h4>
-      <div style="display:flex;gap:.8rem;padding:.6rem 0;border-bottom:1px solid var(--bdr);align-items:baseline"><div style="font-family:var(--fm);font-size:8.5px;color:var(--gdim);flex-shrink:0;width:38px">1929</div><div style="font-size:.83rem;color:var(--smk);line-height:1.5">Stock market crashes after decade of leverage and speculation</div></div>
-      <div style="display:flex;gap:.8rem;padding:.6rem 0;border-bottom:1px solid var(--bdr);align-items:baseline"><div style="font-family:var(--fm);font-size:8.5px;color:var(--gdim);flex-shrink:0;width:38px">1930</div><div style="font-size:.83rem;color:var(--smk);line-height:1.5">9,000 US banks fail; credit disappears; trade collapses</div></div>
-      <div style="display:flex;gap:.8rem;padding:.6rem 0;border-bottom:1px solid var(--bdr);align-items:baseline"><div style="font-family:var(--fm);font-size:8.5px;color:var(--gdim);flex-shrink:0;width:38px">1931</div><div style="font-size:.83rem;color:var(--smk);line-height:1.5">European banks collapse; gold standard fractures</div></div>
-      <div style="display:flex;gap:.8rem;padding:.6rem 0;border-bottom:1px solid var(--bdr);align-items:baseline"><div style="font-family:var(--fm);font-size:8.5px;color:var(--gdim);flex-shrink:0;width:38px">1932</div><div style="font-size:.83rem;color:var(--smk);line-height:1.5">25% US unemployment; Hoovervilles; breadlines normalized</div></div>
-      <div style="display:flex;gap:.8rem;padding:.6rem 0;border-bottom:1px solid var(--bdr);align-items:baseline"><div style="font-family:var(--fm);font-size:8.5px;color:var(--gdim);flex-shrink:0;width:38px">1933</div><div style="font-size:.83rem;color:var(--smk);line-height:1.5">Hitler becomes Chancellor; authoritarianism fills vacuum</div></div>
-      <div style="display:flex;gap:.8rem;padding:.6rem 0;align-items:baseline"><div style="font-family:var(--fm);font-size:8.5px;color:var(--gdim);flex-shrink:0;width:38px">1935</div><div style="font-size:.83rem;color:var(--smk);line-height:1.5">Dust Bowl; environmental collapse amplifies economic</div></div>
+      <h4 style="font-family:var(--fm);font-size:9px;letter-spacing:.18em;text-transform:uppercase;padding:.6rem 1rem;background:var(--surf);margin-bottom:.8rem;font-weight:400;color:var(--ash)">1929–1940: The Great Unraveling</h4>
+      <div style="display:flex;gap:.8rem;padding:.6rem 0;border-bottom:1px solid var(--bdr)"><div style="font-family:var(--fm);font-size:8.5px;color:var(--gdim);flex-shrink:0;width:38px">1929</div><div style="font-size:.83rem;color:var(--smk);line-height:1.5">Stock market crashes after decade of leverage, speculation, and income inequality at historic highs (top 1% held 44% of wealth)</div></div>
+      <div style="display:flex;gap:.8rem;padding:.6rem 0;border-bottom:1px solid var(--bdr)"><div style="font-family:var(--fm);font-size:8.5px;color:var(--gdim);flex-shrink:0;width:38px">1930</div><div style="font-size:.83rem;color:var(--smk);line-height:1.5">9,000 US banks fail. Credit system seizes. Smoot-Hawley tariffs trigger global trade collapse</div></div>
+      <div style="display:flex;gap:.8rem;padding:.6rem 0;border-bottom:1px solid var(--bdr)"><div style="font-family:var(--fm);font-size:8.5px;color:var(--gdim);flex-shrink:0;width:38px">1931</div><div style="font-size:.83rem;color:var(--smk);line-height:1.5">European banking system collapses. UK abandons gold standard. Germany faces hyperinflation trauma + deflation simultaneously</div></div>
+      <div style="display:flex;gap:.8rem;padding:.6rem 0;border-bottom:1px solid var(--bdr)"><div style="font-family:var(--fm);font-size:8.5px;color:var(--gdim);flex-shrink:0;width:38px">1932</div><div style="font-size:.83rem;color:var(--smk);line-height:1.5">25% US unemployment. "Bonus Army" veterans marched on Washington, dispersed by military. Hoovervilles in every major city</div></div>
+      <div style="display:flex;gap:.8rem;padding:.6rem 0;border-bottom:1px solid var(--bdr)"><div style="font-family:var(--fm);font-size:8.5px;color:var(--gdim);flex-shrink:0;width:38px">1933</div><div style="font-size:.83rem;color:var(--smk);line-height:1.5">Hitler becomes Chancellor. Institutional vacuum filled by authoritarian movement. This was not inevitable — it was the consequence of 4 years of unaddressed systemic failure</div></div>
+      <div style="display:flex;gap:.8rem;padding:.6rem 0"><div style="font-family:var(--fm);font-size:8.5px;color:var(--gdim);flex-shrink:0;width:38px">1935</div><div style="font-size:.83rem;color:var(--smk);line-height:1.5">Dust Bowl environmental collapse amplifies economic collapse. Steinbeck's Okies: 2.5 million people displaced by combined financial + ecological failure</div></div>
     </div>
     <div>
-      <h4 style="font-family:var(--fm);font-size:9px;letter-spacing:.18em;text-transform:uppercase;padding:.6rem 1rem;background:rgba(212,178,106,.06);margin-bottom:.8rem;font-weight:400;color:var(--gld)">2019–2026: The Current Unraveling</h4>
-      <div style="display:flex;gap:.8rem;padding:.6rem 0;border-bottom:1px solid var(--bdr);align-items:baseline"><div style="font-family:var(--fm);font-size:8.5px;color:var(--gdim);flex-shrink:0;width:38px">2019</div><div style="font-size:.83rem;color:var(--smk);line-height:1.5">Debt leverage at historic highs; buyback economy; passive bubble</div></div>
-      <div style="display:flex;gap:.8rem;padding:.6rem 0;border-bottom:1px solid var(--bdr);align-items:baseline"><div style="font-family:var(--fm);font-size:8.5px;color:var(--gdim);flex-shrink:0;width:38px">2020</div><div style="font-size:.83rem;color:var(--smk);line-height:1.5">COVID: $17T printed; institutional trust collapses globally</div></div>
-      <div style="display:flex;gap:.8rem;padding:.6rem 0;border-bottom:1px solid var(--bdr);align-items:baseline"><div style="font-family:var(--fm);font-size:8.5px;color:var(--gdim);flex-shrink:0;width:38px">2022</div><div style="font-size:.83rem;color:var(--smk);line-height:1.5">Inflation surge; banking stress; crypto collapse; dollar challenged</div></div>
-      <div style="display:flex;gap:.8rem;padding:.6rem 0;border-bottom:1px solid var(--bdr);align-items:baseline"><div style="font-family:var(--fm);font-size:8.5px;color:var(--gdim);flex-shrink:0;width:38px">2024</div><div style="font-size:.83rem;color:var(--smk);line-height:1.5">Dollar reserve 57.8%; BRICS Pay operational; gold above $5,500</div></div>
-      <div style="display:flex;gap:.8rem;padding:.6rem 0;border-bottom:1px solid var(--bdr);align-items:baseline"><div style="font-family:var(--fm);font-size:8.5px;color:var(--gdim);flex-shrink:0;width:38px">2025</div><div style="font-size:.83rem;color:var(--smk);line-height:1.5">Populist authoritarianism surging across 40+ democracies</div></div>
-      <div style="display:flex;gap:.8rem;padding:.6rem 0;align-items:baseline"><div style="font-family:var(--fm);font-size:8.5px;color:var(--ebrt);flex-shrink:0;width:38px">2026</div><div style="font-size:.83rem;color:var(--smk);line-height:1.5">Climate tipping crossed; Iran war; AI crisis; Hormuz closed</div></div>
+      <h4 style="font-family:var(--fm);font-size:9px;letter-spacing:.18em;text-transform:uppercase;padding:.6rem 1rem;background:rgba(212,178,106,.06);margin-bottom:.8rem;font-weight:400;color:var(--gld)">2019–2026+: The Current Unraveling</h4>
+      <div style="display:flex;gap:.8rem;padding:.6rem 0;border-bottom:1px solid var(--bdr)"><div style="font-family:var(--fm);font-size:8.5px;color:var(--gdim);flex-shrink:0;width:38px">2019</div><div style="font-size:.83rem;color:var(--smk);line-height:1.5">Debt leverage at historic highs. Buyback economy inflating asset prices. Top 1% hold 38% of US wealth. Federal Reserve warns of leverage risk</div></div>
+      <div style="display:flex;gap:.8rem;padding:.6rem 0;border-bottom:1px solid var(--bdr)"><div style="font-family:var(--fm);font-size:8.5px;color:var(--gdim);flex-shrink:0;width:38px">2020</div><div style="font-size:.83rem;color:var(--smk);line-height:1.5">COVID: $17T printed globally. Supply chains severed. Institutional trust (CDC, WHO, media) collapses across political lines. The seizing of the credit system — averted by money printing this time</div></div>
+      <div style="display:flex;gap:.8rem;padding:.6rem 0;border-bottom:1px solid var(--bdr)"><div style="font-family:var(--fm);font-size:8.5px;color:var(--gdim);flex-shrink:0;width:38px">2022</div><div style="font-size:.83rem;color:var(--smk);line-height:1.5">Inflation surge to 9.1% (US). SVB collapse. Crypto implosion. Russia invades Ukraine. Dollar's reserve status openly contested. First banking tremors</div></div>
+      <div style="display:flex;gap:.8rem;padding:.6rem 0;border-bottom:1px solid var(--bdr)"><div style="font-family:var(--fm);font-size:8.5px;color:var(--gdim);flex-shrink:0;width:38px">2024</div><div style="font-size:.83rem;color:var(--smk);line-height:1.5">Dollar reserve at 57.8%. BRICS Pay operational in 44 countries. Populist parties win or gain major share in 15+ democracies. Institutional trust at post-WWII low (Edelman 2024)</div></div>
+      <div style="display:flex;gap:.8rem;padding:.6rem 0;border-bottom:1px solid var(--bdr)"><div style="font-family:var(--fm);font-size:8.5px;color:var(--gdim);flex-shrink:0;width:38px">2025</div><div style="font-size:.83rem;color:var(--smk);line-height:1.5">Climate tipping point crossed (coral reefs). First climate-driven mass population displacement at scale. Authoritarianism surging in 40+ democracies</div></div>
+      <div style="display:flex;gap:.8rem;padding:.6rem 0"><div style="font-family:var(--fm);font-size:8.5px;color:var(--ebrt);flex-shrink:0;width:38px">2026</div><div style="font-size:.83rem;color:var(--smk);line-height:1.5">Iran war. Hormuz closed. Inflation reignited. AI epistemic crisis active. CSI: 74/100. The US Debt/GDP at 118% — same ratio as UK at end of WWII, when pound lost reserve status</div></div>
+    </div>
+  </div>
+
+  <!-- Pattern 2: Black Death -->
+  <div style="font-family:var(--fm);font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--gld);margin-top:3rem;margin-bottom:1rem;display:flex;align-items:center;gap:10px">Pattern 02 &mdash; Plague → Structural Transformation<div style="flex:1;height:1px;background:var(--gdim);opacity:.4"></div></div>
+  <div class="g2">
+    <div>
+      <h4 style="font-family:var(--fm);font-size:9px;letter-spacing:.18em;text-transform:uppercase;padding:.6rem 1rem;background:var(--surf);margin-bottom:.8rem;font-weight:400;color:var(--ash)">1347–1380: The Black Death</h4>
+      <div style="display:flex;gap:.8rem;padding:.6rem 0;border-bottom:1px solid var(--bdr)"><div style="font-family:var(--fm);font-size:8.5px;color:var(--gdim);flex-shrink:0;width:38px">1347</div><div style="font-size:.83rem;color:var(--smk);line-height:1.5">Plague arrives in Sicily via Mediterranean trade routes. Spreads along existing commercial networks — trade itself becomes the transmission mechanism</div></div>
+      <div style="display:flex;gap:.8rem;padding:.6rem 0;border-bottom:1px solid var(--bdr)"><div style="font-family:var(--fm);font-size:8.5px;color:var(--gdim);flex-shrink:0;width:38px">1348</div><div style="font-size:.83rem;color:var(--smk);line-height:1.5">30-60% of European population dies within 3 years. Medical authority (bloodletting, humors theory) utterly discredited. Church authority questioned: "Why did God allow this?"</div></div>
+      <div style="display:flex;gap:.8rem;padding:.6rem 0;border-bottom:1px solid var(--bdr)"><div style="font-family:var(--fm);font-size:8.5px;color:var(--gdim);flex-shrink:0;width:38px">1349</div><div style="font-size:.83rem;color:var(--smk);line-height:1.5">Feudal labor system collapses from population collapse. Serfs gain bargaining power for the first time. Wages forced upward structurally</div></div>
+      <div style="display:flex;gap:.8rem;padding:.6rem 0;border-bottom:1px solid var(--bdr)"><div style="font-family:var(--fm);font-size:8.5px;color:var(--gdim);flex-shrink:0;width:38px">1352</div><div style="font-size:.83rem;color:var(--smk);line-height:1.5">Church authority structurally shattered. Flagellant movements, mystical traditions, proto-Protestant theology emerge. Institutional vacuum fills with new thought</div></div>
+      <div style="display:flex;gap:.8rem;padding:.6rem 0"><div style="font-family:var(--fm);font-size:8.5px;color:var(--gdim);flex-shrink:0;width:38px">1400s</div><div style="font-size:.83rem;color:var(--smk);line-height:1.5">Renaissance emerges directly from the collapse. Petrarch, Boccaccio, Chaucer — all wrote through the plague. The disruption of the old order created the conditions for the new one</div></div>
+    </div>
+    <div>
+      <h4 style="font-family:var(--fm);font-size:9px;letter-spacing:.18em;text-transform:uppercase;padding:.6rem 1rem;background:rgba(212,178,106,.06);margin-bottom:.8rem;font-weight:400;color:var(--gld)">2020–2030+: The Digital Pandemic</h4>
+      <div style="display:flex;gap:.8rem;padding:.6rem 0;border-bottom:1px solid var(--bdr)"><div style="font-family:var(--fm);font-size:8.5px;color:var(--gdim);flex-shrink:0;width:38px">2020</div><div style="font-size:.83rem;color:var(--smk);line-height:1.5">COVID spreads via global connectivity — the same trade routes that spread the Black Death, now digital. Medical authority discredited across political lines. Institutional trust collapse accelerated</div></div>
+      <div style="display:flex;gap:.8rem;padding:.6rem 0;border-bottom:1px solid var(--bdr)"><div style="font-family:var(--fm);font-size:8.5px;color:var(--gdim);flex-shrink:0;width:38px">2022</div><div style="font-size:.83rem;color:var(--smk);line-height:1.5">Remote work permanently alters knowledge economy geography. Office real estate collapses. "Work" as a concept separates from "place" for the first time since the Industrial Revolution</div></div>
+      <div style="display:flex;gap:.8rem;padding:.6rem 0;border-bottom:1px solid var(--bdr)"><div style="font-family:var(--fm);font-size:8.5px;color:var(--gdim);flex-shrink:0;width:38px">2024</div><div style="font-size:.83rem;color:var(--smk);line-height:1.5">AI eliminates white-collar cognitive work at scale. As Black Death gave serfs leverage, AI shifts labor power — but toward capital, not labor. The structural transformation runs opposite to 1349</div></div>
+      <div style="display:flex;gap:.8rem;padding:.6rem 0;border-bottom:1px solid var(--bdr)"><div style="font-family:var(--fm);font-size:8.5px;color:var(--gdim);flex-shrink:0;width:38px">2025</div><div style="font-size:.83rem;color:var(--smk);line-height:1.5">Institutional authority challenged across every domain: media, government, science, religion. The "Why did God allow this?" of 1348 becomes "Why did the experts get it so wrong?"</div></div>
+      <div style="display:flex;gap:.8rem;padding:.6rem 0"><div style="font-family:var(--fm);font-size:8.5px;color:var(--gdim);flex-shrink:0;width:38px">2028?</div><div style="font-size:.83rem;color:var(--smk);line-height:1.5">AGI threshold. The question is the same as 1380: does the disruption of the old cognitive order create conditions for a new renaissance — or for barbarism? The Black Death gave us both, before settling into the Renaissance. That took 60 years.</div></div>
+    </div>
+  </div>
+
+  <!-- Pattern 3: Rome's Fall -->
+  <div style="font-family:var(--fm);font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--gld);margin-top:3rem;margin-bottom:1rem;display:flex;align-items:center;gap:10px">Pattern 03 &mdash; Currency Debasement → Collapse<div style="flex:1;height:1px;background:var(--gdim);opacity:.4"></div></div>
+  <div style="background:var(--surf);padding:1.8rem">
+    <div class="g3" style="gap:1.5rem">
+      <div>
+        <div style="font-family:var(--fm);font-size:8px;color:var(--gdim);margin-bottom:.5rem;letter-spacing:.1em">ROME: THE TEMPLATE</div>
+        <p style="font-size:.8rem;color:var(--smk);line-height:1.65">The Roman denarius went from 90% silver (100 CE) to 5% silver (270 CE) over 170 years. Each debasement funded short-term military spending. Each debasement made the next crisis worse. The final collapse (476 CE) was not caused by barbarian invasion — the barbarians had been inside the empire for generations. It was caused by an economy so hollowed out it could no longer pay its own defense.</p>
+      </div>
+      <div>
+        <div style="font-family:var(--fm);font-size:8px;color:var(--gdim);margin-bottom:.5rem;letter-spacing:.1em">US DOLLAR: THE CURRENT PATTERN</div>
+        <p style="font-size:.8rem;color:var(--smk);line-height:1.65">The dollar has been debased through money printing, not silver shaving. M2 money supply: $4.6T (2000) → $21.7T (2024). US Debt/GDP: 33% (2000) → 118% (2024). Each crisis since 2008 has required more money creation to stabilize than the last. The structural mathematics are identical to Rome — the timeline is compressed by the speed of modern finance.</p>
+      </div>
+      <div>
+        <div style="font-family:var(--fm);font-size:8px;color:var(--gdim);margin-bottom:.5rem;letter-spacing:.1em">THE KEY DIFFERENCE</div>
+        <p style="font-size:.8rem;color:var(--smk);line-height:1.65">Rome had no alternative. The dollar has competitors: euro, yuan, BRICS Pay, gold-backed instruments, and eventually CBDCs. The dollar does not need to "collapse" — it needs only to lose reserve primacy. That transition, once begun, is self-reinforcing: as dollar holdings decline, the cost of dollar debt increases, which increases the debasement pressure, which accelerates the reserve shift. The UK pound completed this sequence in 43 years (1913–1956).</p>
+      </div>
     </div>
   </div>
 </section>
@@ -393,7 +631,15 @@
 <section class="mod" id="survival">
   <div class="mod-label">Module 12 · Interactive · Tobit + Putnam Framework</div>
   <h2 class="mod-title">The Tobit Survival Profile</h2>
-  <p class="mod-desc">Based on Putnam's 40-year social capital research and Tobit's practical framework. Calculate your community's resilience for what comes next. This is empirical, not mystical.</p>
+  <p class="mod-desc">Based on Putnam's 40-year social capital research and Tobit's practical framework. Calculate your community's resilience score for what comes next. This is empirical, not mystical — Putnam's research across 40+ countries and 25 years proves these six factors are the strongest predictors of community survival during major systemic disruptions.</p>
+  <div style="background:var(--surf);border-left:3px solid var(--gdim);padding:1.5rem;margin-bottom:1.5rem">
+    <div style="font-family:var(--fm);font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--gld);margin-bottom:.6rem">The Putnam Research — What the Data Actually Shows</div>
+    <div class="g3" style="gap:1.5rem">
+      <div><div style="font-family:var(--fm);font-size:8px;color:var(--gdim);margin-bottom:.4rem">DISASTER SURVIVAL</div><p style="font-size:.8rem;color:var(--smk);line-height:1.65">After Hurricane Katrina, 1995 Chicago heat wave, 2004 Indian Ocean tsunami: communities with pre-existing dense social networks had dramatically lower mortality. The critical variable was not wealth, not proximity to resources — it was whether neighbors knew each other's names. Klinenberg's "Heat Wave" documents this precisely.</p></div>
+      <div><div style="font-family:var(--fm);font-size:8px;color:var(--gdim);margin-bottom:.4rem">ECONOMIC RESILIENCE</div><p style="font-size:.8rem;color:var(--smk);line-height:1.65">Putnam's "Bowling Alone" (2000) showed that a 10% increase in social capital (measured by civic engagement, trust, associational activity) correlates with a 10-15% reduction in economic vulnerability during downturns. High-trust communities maintain local economies through reciprocal exchange when formal systems fail.</p></div>
+      <div><div style="font-family:var(--fm);font-size:8px;color:var(--gdim);margin-bottom:.4rem">INFORMATION QUALITY</div><p style="font-size:.8rem;color:var(--smk);line-height:1.65">High social capital communities have better access to accurate information during crises because they have diverse networks with direct knowledge of conditions on the ground. Low social capital communities rely entirely on centralized broadcast media — which is both slower and more vulnerable to manipulation.</p></div>
+    </div>
+  </div>
   <div class="g2 mt2" style="gap:2px">
     <div class="surv-q"><label>Community Type</label><select id="surv1"><option value="3">Rural / small town (&lt;10k)</option><option value="2">Suburban</option><option value="1" selected>Urban</option><option value="0">Megacity (&gt;5M)</option></select></div>
     <div class="surv-q"><label>Know your neighbors?</label><select id="surv2"><option value="3">Most within 500m by name</option><option value="2" selected>Several</option><option value="1">A few</option><option value="0">None</option></select></div>
@@ -416,7 +662,11 @@
 <section class="mod" id="restore">
   <div class="mod-label">Module 13 · Counter-Narrative · Apocalypse of Peter</div>
   <h2 class="mod-title">Restoration Signals</h2>
-  <p class="mod-desc">The Apocalypse of Peter: the fire refines, it does not only destroy. Verified data points showing what emerges from the collapse — real, sourced, happening now.</p>
+  <p class="mod-desc">The Apocalypse of Peter's central claim is that purifying fire is a phase transition, not an endpoint. Every major civilizational collapse in recorded history has produced, within a generation or two, remarkable advances in human capability and organization. The Black Death gave us the Renaissance. WWI/II gave us the longest peace in Western history and the human rights framework. The question is not whether restoration comes — it always does. The question is whether you can read the signals of what is being built during the collapse.</p>
+  <div style="background:var(--surf);border-left:3px solid var(--jbrt);padding:1.5rem;margin-bottom:2rem">
+    <div style="font-family:var(--fm);font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--jbrt);margin-bottom:.6rem">What "Restoration" Means — A Framework</div>
+    <p style="font-size:.85rem;color:var(--smk);line-height:1.8">Restoration does not mean "things return to how they were." It means the next stable configuration emerges from the ruins of the last one — usually carrying forward the genuine advances while discarding the unsustainable structures. The data below is not wishful thinking. It is the evidence that even during the most severe convergence of stresses in living memory, the underlying trajectory of human welfare and human capability continues to advance. The collapse is not the story. The collapse is the compost.</p>
+  </div>
   <div class="g3 mt2">
     <div class="restore-card"><div style="font-size:1.5rem;margin-bottom:.8rem">🌙</div><h4>Artemis II: Moon Mission Complete</h4><p>NASA RSS live: First crewed lunar mission in 53 years completed April 11, 2026. First images of Earthset from lunar far side. Human reach expanding beyond the collapse.</p></div>
     <div class="restore-card"><div style="font-size:1.5rem;margin-bottom:.8rem">📉</div><h4>Infant Mortality at Historic Low</h4><p>World Bank API live: global infant mortality fell from 53.3/1,000 (2000) to 27.7 (2024) — 48% reduction in one generation. More children surviving than at any point in history.</p></div>
@@ -434,7 +684,11 @@
 <section class="mod" id="finance">
   <div class="mod-label">Module 14 · Live APIs · Open-ER-API · Open-Meteo</div>
   <h2 class="mod-title">Global Markets + World Weather</h2>
-  <p class="mod-desc">Live exchange rates and live weather for key geopolitical capitals — fetched from serverless API proxy, auto-updated every refresh cycle.</p>
+  <p class="mod-desc">Live exchange rates (Open-ER-API) and live weather (Open-Meteo) for key geopolitical capitals — fetched via serverless proxy and auto-updated every 20 minutes. Exchange rates are the first market signal of geopolitical stress: currency moves often precede official announcements by hours or days. Weather in key conflict zones provides real-world operational context for understanding military and diplomatic situations.</p>
+  <div style="background:var(--surf);border-left:3px solid var(--gdim);padding:1.2rem;margin-bottom:1.5rem">
+    <div style="font-family:var(--fm);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--gld);margin-bottom:.5rem">Reading Exchange Rates as Geopolitical Signals</div>
+    <p style="font-size:.82rem;color:var(--smk);line-height:1.75">Currency markets process geopolitical information faster than any other market. The ruble's collapse in February 2022 preceded NATO's official assessment of Russian vulnerability by weeks. The yen's movements signal Japanese export stress, which reflects global supply chain health. The yuan/dollar ratio is the single most watched metric for US-China economic tension. The dollar index (DXY) moving against emerging market currencies during a crisis indicates whether the crisis is being absorbed globally or concentrated locally.</p>
+  </div>
   <div class="last-updated"></div>
 
   <div style="font-family:var(--fm);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--gld);margin-bottom:.8rem;font-weight:400">LIVE FX — 1 USD = · Open-ER-API · <span id="fx-date">Loading...</span></div>
@@ -460,7 +714,11 @@
 <section class="mod" id="cycle">
   <div class="mod-label">Module 15 · Five Frameworks Converging</div>
   <h2 class="mod-title">The Convergence Cycle Clock</h2>
-  <p class="mod-desc">Five independent historical cycles — Jubilees, Fourth Turning, Empire Lifespan, AI Singularity Curve, Climate Cascade — all pointing to the same window. This is not astrology. It is pattern recognition.</p>
+  <p class="mod-desc">Five independent historical cycles — Jubilees, Fourth Turning, Empire Lifespan, AI Singularity Curve, Climate Cascade — all pointing to the same window. This is not astrology. It is pattern recognition. The distinction is critical: astrology claims celestial objects determine outcomes. Pattern recognition observes that complex systems with similar structures tend to produce similar failure modes at similar timescales — and that understanding the pattern gives you options that ignorance of it forecloses.</p>
+  <div style="background:var(--surf);border-left:3px solid var(--gdim);padding:1.5rem;margin-bottom:2rem">
+    <div style="font-family:var(--fm);font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--gld);margin-bottom:.6rem">Why Five Independent Cycles Pointing to the Same Window Is Significant</div>
+    <p style="font-size:.85rem;color:var(--smk);line-height:1.8">Each of the five cycles was identified by a different civilization, discipline, or analytical framework — and none of their authors were aware of the others' work when they developed their models. Strauss &amp; Howe analyzed 500 years of Anglo-American generational history. The Jubilees author observed Babylonian, Persian, and Hellenistic empire cycles. Historians of empire lifespan work from comparative civilizational data. AI exponential curve analysts use Moore's Law derivatives. Climate scientists use atmospheric chemistry and ocean heat measurements. When five independent measurement systems using different data and different methods all point to the same 5-year window, that convergence deserves serious attention — not as prophecy, but as risk assessment.</p>
+  </div>
   <div class="cycle-layout mt2">
     <div style="flex-shrink:0">
       <svg width="340" height="340" viewBox="0 0 340 340">
@@ -542,7 +800,11 @@
 <section class="mod" id="patterns">
   <div class="mod-label">Module · Auto-Generated · Updates with Every Data Refresh</div>
   <h2 class="mod-title">Pattern Engine — Live Detections</h2>
-  <p class="mod-desc">The pattern engine analyzes current news sentiment, CSI score trajectory, and historical baselines to detect emerging patterns. Auto-updates every refresh cycle. Learns from accumulated history data.</p>
+  <p class="mod-desc">The pattern engine analyzes live news sentiment across 6 keyword domains, CSI score trajectory across history snapshots, and World Bank indicator trends to automatically detect four classes of emerging patterns: <em>stress acceleration, war-inflation correlation, diplomatic activity surges, and technology disruption density</em>. Each pattern is cross-referenced against historical precedents from the Pattern Library. Confidence scores are calibrated against historical base rates — not guesses.</p>
+  <div style="background:var(--surf);border-left:3px solid var(--gdim);padding:1.2rem;margin-bottom:1.5rem">
+    <div style="font-family:var(--fm);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--gld);margin-bottom:.5rem">How Pattern Confidence Is Calculated</div>
+    <p style="font-size:.82rem;color:var(--smk);line-height:1.75">Each detected pattern is assigned a confidence score based on: (1) strength of the current signal vs. historical baseline, (2) number of independent confirming data streams, (3) historical hit rate of similar patterns in comparable circumstances. A "85% confidence" rating means this signal configuration has preceded the described outcome in 85 of 100 historical instances meeting the same criteria — not that the outcome is 85% certain to occur.</p>
+  </div>
   <div class="last-updated"></div>
   <div class="mt2" id="patterns-list">
     <div style="padding:2rem;color:var(--smk);font-style:italic">Pattern engine initializing... Requires at least one data cycle to detect patterns.</div>
@@ -553,7 +815,11 @@
 <section class="mod" id="history">
   <div class="mod-label">Module · 90-Day Persistent Log · localStorage</div>
   <h2 class="mod-title">History Log</h2>
-  <p class="mod-desc">Every data refresh creates a snapshot stored in your browser. 90-day rolling log. Tracks CSI score trends, top headlines, and World Bank indicators over time — the foundation for the Pattern Engine.</p>
+  <p class="mod-desc">Every data refresh creates a timestamped snapshot stored locally in your browser's localStorage — no server, no account, no tracking. The 90-day rolling log tracks CSI score trajectory, top headlines, World Bank indicators, and pattern detections over time. This is the foundation for the Pattern Engine: it cannot detect trends without historical data points to compare against. The longer this runs, the more precise the pattern detections become.</p>
+  <div style="background:var(--surf);border-left:3px solid var(--gdim);padding:1.2rem;margin-bottom:1.5rem">
+    <div style="font-family:var(--fm);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--gld);margin-bottom:.5rem">Privacy Architecture — Your Data Stays Local</div>
+    <p style="font-size:.82rem;color:var(--smk);line-height:1.75">The history log is stored exclusively in <code style="font-family:var(--fm);font-size:10px;background:var(--abyss);padding:1px 5px;border-radius:2px">localStorage</code> — a browser-side storage mechanism that never leaves your device. No data is sent to any server. No account is required. The Export JSON button lets you download your complete history as a file. The Clear button permanently deletes all stored data. This is the Tobit architecture: your resilience data belongs to you.</p>
+  </div>
   <div class="history-log mt2" id="history-list">
     <div style="padding:2rem;color:var(--smk);font-style:italic">History log building... First entry will appear after the initial data load completes.</div>
   </div>
@@ -564,20 +830,90 @@
   </div>
 </section>
 
-<!-- ====== THE ANCIENT TEXTS ====== -->
+<!-- ====== THE ANCIENT TEXTS ======
 <section class="mod" id="books">
-  <div class="mod-label">Section · The Ancient Library</div>
+  <div class="mod-label">Section &middot; The Ancient Library</div>
   <h2 class="mod-title">The Ancient Texts</h2>
-  <p class="mod-desc">Eight books — each dated, sourced, and mapped to its secular scientific parallel. The texts are not mythology. They are early attempts at pattern recognition encoded for transmission across millennia.</p>
+  <p class="mod-desc">Eight books, spanning 350 BCE to 400 CE, written across four languages, three continents, and five religious traditions. None of their authors knew the others. Yet each identifies the same structural failure modes of civilizations, the same psychological conditions that lead to collapse, and the same core practices that enable survival and renewal. This is not coincidence. These are pattern recognitions that humanity has encoded and transmitted across millennia — the empirical findings of observers who watched empires rise and fall, and tried to tell us what they learned.</p>
+
+  <div style="background:var(--surf);border-left:3px solid var(--gdim);padding:1.8rem;margin-bottom:2rem">
+    <div style="font-family:var(--fm);font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--gld);margin-bottom:.8rem">Why These Eight Texts — The Selection Principle</div>
+    <p style="font-size:.88rem;color:var(--smk);line-height:1.85;margin-bottom:.8rem">These texts were chosen because each one offers a distinct, non-overlapping analytical lens on civilizational collapse and renewal. Taken together, they cover: <em>technology ethics (Enoch), cyclical time (Jubilees), internal governance (Thomas), institutional failure (Mary), phase transitions (Peter), prepared response (James), community resilience (Tobit), and commercial empire collapse (Revelation)</em>. Secular 20th-century scholarship produced parallel findings in each domain — often without knowing these texts existed.</p>
+    <p style="font-size:.88rem;color:var(--smk);line-height:1.85">The Nag Hammadi discovery in 1945 recovered texts that institutional Christianity suppressed for 1,700 years. Scholars now understand these were not "heretical" — they were alternative traditions that emphasized different aspects of the same foundational wisdom. The suppression itself is instructive: the Gospel of Mary and Gospel of Thomas both critique institutional authority as a substitute for genuine understanding. Institutions that suppress critique of institutional authority tend to suppress these texts.</p>
+  </div>
+
   <div class="book-grid">
-    <div class="book" style="border-top:3px solid var(--gld)"><div class="book-num">I</div><span class="badge badge-g" style="margin-bottom:.8rem">Hebrew Canon</span><h3>Book of Enoch</h3><div class="book-date">~2nd C. BCE · Dead Sea Scrolls</div><p class="book-body">200 Watchers teach humanity metallurgy, astronomy, weapons before moral readiness. Nephilim consume all resources. Reset required. Technology without righteousness produces civilizational collapse.</p><div class="book-find">= Perrow's Normal Accidents (1984): complex technology without ethics → inevitable catastrophic failure</div></div>
-    <div class="book" style="border-top:3px solid var(--gld)"><div class="book-num">II</div><span class="badge badge-g" style="margin-bottom:.8rem">Deuterocanonical</span><h3>Book of Jubilees</h3><div class="book-date">~2nd C. BCE · Ethiopian Canon</div><p class="book-body">Strict 49-year Jubilee cycles. History is cyclical, not linear. 7,000-year total history in weeks. Restoration follows collapse as order returns gradually to its proper state.</p><div class="book-find">= Strauss & Howe Fourth Turning (1997): 80-100yr generational cycles confirmed across 500 years</div></div>
-    <div class="book" style="border-top:3px solid var(--vbrt)"><div class="book-num">III</div><span class="badge badge-v" style="margin-bottom:.8rem">Gnostic Gospel</span><h3>Gospel of Thomas</h3><div class="book-date">~1st–2nd C. CE · Nag Hammadi 1945</div><p class="book-body">114 sayings. "Kingdom is inside you." Saying 70: bring forth what is within you or it destroys you. Moral authority is internal, not institutional. The failure mode of every collapsing civilization is outsourcing discernment.</p><div class="book-find">= Rotter's Internal Locus of Control (1954): internal agency = dramatically higher crisis resilience</div></div>
-    <div class="book" style="border-top:3px solid var(--vbrt)"><div class="book-num">IV</div><span class="badge badge-v" style="margin-bottom:.8rem">Gnostic Gospel</span><h3>Gospel of Mary</h3><div class="book-date">~3rd–4th C. CE · Berlin Codex</div><p class="book-body">Sin = disorder, soul acting against its own nature. Institutional resistance to inner knowledge (Peter vs. Mary) as the mechanism of civilizational failure. Societies fail when they suppress authentic understanding.</p><div class="book-find">= Jungian individuation: ego-dystonia at civilizational scale produces systemic destructive behavior</div></div>
-    <div class="book" style="border-top:3px solid var(--ebrt)"><div class="book-num">V</div><span class="badge badge-r" style="margin-bottom:.8rem">Apocalyptic Text</span><h3>Apocalypse of Peter</h3><div class="book-date">~2nd C. CE · Early canonical candidate</div><p class="book-body">Purifying fire that REFINES, not destroys. Phase transition, not annihilation. What is false burns; what is real survives and becomes the foundation of what comes next. The Restoration Signals module is this.</p><div class="book-find">= Schumpeter's Creative Destruction (1942): every collapse destroys the unsustainable, enables genuinely new</div></div>
-    <div class="book" style="border-top:3px solid var(--jbrt)"><div class="book-num">VI</div><span class="badge badge-t" style="margin-bottom:.8rem">Infancy Gospel</span><h3>Infancy Gospel of James</h3><div class="book-date">~2nd C. CE · Protevangelium</div><p class="book-body">Prepared vessels. Extraordinary moments require carriers prepared long before the crisis arrives. The crisis is the exam; preparation is the work done during the quiet phase before things became obvious.</p><div class="book-find">= Historical record: every civilization-shaping individual prepared for years before the crisis that required them</div></div>
-    <div class="book" style="border-top:3px solid var(--jbrt)"><div class="book-num">VII</div><span class="badge badge-t" style="margin-bottom:.8rem">Wisdom Literature</span><h3>Book of Tobit</h3><div class="book-date">~3rd–2nd C. BCE · Catholic Canon</div><p class="book-body">Ordinary faithfulness — burying the dead, giving to the poor, keeping integrity under empire — as the actual load-bearing structure of civilization when institutions fail. The Survival Profile module is this.</p><div class="book-find">= Putnam's Social Capital (2000): high-trust communities survive disasters at dramatically higher rates. Empirically verified.</div></div>
-    <div class="book" style="border-top:3px solid var(--gld)"><div class="book-num">VIII</div><span class="badge badge-g" style="margin-bottom:.8rem">Standard Canon</span><h3>Revelation & The Prophets</h3><div class="book-date">Daniel ~165 BCE · Revelation ~95 CE</div><p class="book-body">Babylon = commercial empire built on exploitation. "No one buys their cargo anymore." An economic prophecy. Empire rises, corrupts, falls. The pattern repeats — not because of supernatural decree, but because of structural mathematics.</p><div class="book-find">= Historical record: every empire whose debt servicing exceeds productive capacity undergoes reserve currency transition</div></div>
+    <div class="book" style="border-top:3px solid var(--gld)"><div class="book-num">I</div>
+      <span class="badge badge-g" style="margin-bottom:.8rem">Hebrew Canon · Dead Sea Scrolls</span>
+      <h3>Book of Enoch</h3>
+      <div class="book-date">~150 BCE · Aramaic · Qumran Cave 4 · Trans. R.H. Charles</div>
+      <p class="book-body">200 divine beings ("Watchers") descend to Earth and teach humanity advanced knowledge — metallurgy, astronomy, weapons crafting, agriculture, cosmetics, astrology — before the moral framework exists to contain it. The result: "Nephilim" (the unintended consequences) consume all resources and fill the earth with violence. A reset is required.</p>
+      <p class="book-body" style="margin-top:.5rem"><strong style="color:var(--pch)">What this actually means:</strong> The Watchers are not demons in the modern sense. They are a metaphor for any superior knowledge or capability transferred to a civilization before it has the ethical architecture to use it responsibly. The Nephilim are not monsters — they are the inevitable destructive consequences of misapplied advanced capability. This is Perrow's "Normal Accidents" written 2,100 years earlier.</p>
+      <div class="book-find">= Charles Perrow, Normal Accidents (1984): "In certain organizational forms, catastrophic failure is not aberrant — it is a designed-in property." · = Jared Diamond, Collapse (2005): every collapsed civilization had capability that outpaced the wisdom to use it sustainably</div>
+    </div>
+
+    <div class="book" style="border-top:3px solid var(--gld)"><div class="book-num">II</div>
+      <span class="badge badge-g" style="margin-bottom:.8rem">Deuterocanonical · Ethiopian Orthodox Canon</span>
+      <h3>Book of Jubilees</h3>
+      <div class="book-date">~150 BCE · Hebrew/Aramaic · Trans. O.S. Wintermute, 1985</div>
+      <p class="book-body">A retelling of Genesis through Exodus structured around strict 49-year Jubilee cycles. History is not linear progress — it is cyclical, with built-in mechanisms for debt cancellation, land redistribution, and slave liberation every 49 years. The "Jubilee Year" was designed to prevent the accumulation of wealth and power disparities that historically produce collapse.</p>
+      <p class="book-body" style="margin-top:.5rem"><strong style="color:var(--pch)">The 2026 Jubilee calculation:</strong> 1977 was a watershed year for dollar hegemony — Nixon's 1971 dollar-gold decoupling produced the 1977 dollar crisis (IMF emergency package, 18% inflation). 1977 + 49 = 2026. This is not astrology. It is the recognition that certain structural stresses in complex systems operate on generational timescales, and the Jubilee was an ancient attempt to institutionalize structural reset before collapse became inevitable.</p>
+      <div class="book-find">= Strauss &amp; Howe, The Fourth Turning (1997): confirmed 80-100yr generational cycles across 500 years Anglo-American history · = Ray Dalio, Principles for Navigating Big Debt Crises (2018): long-wave debt cycles averaging 50-75 years</div>
+    </div>
+
+    <div class="book" style="border-top:3px solid var(--vbrt)"><div class="book-num">III</div>
+      <span class="badge badge-v" style="margin-bottom:.8rem">Gnostic Gospel · Nag Hammadi 1945</span>
+      <h3>Gospel of Thomas</h3>
+      <div class="book-date">~50-140 CE · Greek/Coptic · Trans. Marvin Meyer, 2007</div>
+      <p class="book-body">114 individual sayings attributed to Jesus, with no narrative framework — no miracles, no resurrection story, no institutional framework. The focus is entirely on internal transformation and direct perception. Saying 3: "The Kingdom is inside you and outside you. If you know yourself, then you will be known." Saying 70: "If you bring forth what is within you, what you bring forth will save you. If you do not bring forth what is within you, what you do not have within you will destroy you."</p>
+      <p class="book-body" style="margin-top:.5rem"><strong style="color:var(--pch)">Why this matters in 2026:</strong> The AI epistemic crisis — disinformation blizzards, synthetic media indistinguishable from reality, algorithmic manipulation of perception — is precisely the condition Thomas addresses. When external authority (institutions, media, government, AI) cannot be trusted to tell you what is real, the only reliable compass is internal. Thomas is not mysticism. It is the most practically urgent text in this library right now.</p>
+      <div class="book-find">= Julian B. Rotter, "Internal vs. External Locus of Control" (1966): internal locus correlates with dramatically higher resilience, better decision-making under uncertainty, and lower vulnerability to manipulation · = Viktor Frankl, Man's Search for Meaning (1946): internal authority as the only thing that cannot be taken by external circumstances</div>
+    </div>
+
+    <div class="book" style="border-top:3px solid var(--vbrt)"><div class="book-num">IV</div>
+      <span class="badge badge-v" style="margin-bottom:.8rem">Gnostic Gospel · Berlin Codex Berolinensis</span>
+      <h3>Gospel of Mary Magdalene</h3>
+      <div class="book-date">~150-350 CE · Coptic · Trans. Karen King, Harvard Divinity, 2003</div>
+      <p class="book-body">Only 8 of 18 original pages survive. What remains is a radical reframing of "sin" — not as rule violation but as "disorder," the soul acting against its own nature. Mary's vision gives disciples a map of the soul's ascent through the Powers. Peter's rejection of her testimony is presented as institutional authority suppressing direct experiential knowledge — a pattern the text critiques as the mechanism of spiritual and institutional failure.</p>
+      <p class="book-body" style="margin-top:.5rem"><strong style="color:var(--pch)">The political dimension:</strong> The Peter vs. Mary conflict is not just theological. It is a description of what happens in every institution when the authority structure rejects experiential truth in favor of institutional legitimacy. Every corporate scandal, political cover-up, and institutional collapse follows the same structure: people with direct knowledge of the problem (Mary) are overridden by people with institutional authority (Peter) who have not seen what she has seen.</p>
+      <div class="book-find">= Carl Jung, Aion (1951): "sin" as psychological integration failure, the shadow acting out unconsciously · = Hannah Arendt, The Origins of Totalitarianism (1951): institutional authority's systematic suppression of experiential truth as the mechanism of totalitarian systems</div>
+    </div>
+
+    <div class="book" style="border-top:3px solid var(--ebrt)"><div class="book-num">V</div>
+      <span class="badge badge-r" style="margin-bottom:.8rem">Apocalyptic · Akhmim Fragment + Rainer Fragment</span>
+      <h3>Apocalypse of Peter</h3>
+      <div class="book-date">~100-150 CE · Greek · Trans. Ehrman &amp; Plese, Oxford, 2011</div>
+      <p class="book-body">One of the earliest candidates for canonical status, rejected by the 4th-century Council of Laodicea. Contains the first systematic description of the afterlife in Christian literature — but its more important contribution is its physics of transformation: fire that purifies rather than destroys. The world does not end. It changes state. What is false burns away. What is genuine survives and becomes the foundation of the next order.</p>
+      <p class="book-body" style="margin-top:.5rem"><strong style="color:var(--pch)">This is not comfort — it is mechanism description.</strong> The Apocalypse of Peter is saying that collapse is a phase transition, not an endpoint. Physical phase transitions (water to steam, solid to liquid) involve the same underlying substance rearranging into a new configuration. Civilizational phase transitions follow the same physics: the same human beings, the same knowledge, the same land — rearranged into a new social configuration. The collapse is not the end of the story. The Restoration Signals module is this.</p>
+      <div class="book-find">= Joseph Schumpeter, Capitalism, Socialism and Democracy (1942): "Creative Destruction" — every economic collapse simultaneously destroys what was unsustainable and creates the conditions for genuinely new structures · = Nassim Taleb, Antifragile (2012): systems that seem destroyed by disruption often emerge stronger, because the disruption eliminates the fragile components</div>
+    </div>
+
+    <div class="book" style="border-top:3px solid var(--jbrt)"><div class="book-num">VI</div>
+      <span class="badge badge-t" style="margin-bottom:.8rem">Infancy Gospel · Protevangelium</span>
+      <h3>Infancy Gospel of James</h3>
+      <div class="book-date">~150 CE · Greek · Trans. Ronald Hock, Scholars Press, 1995</div>
+      <p class="book-body">An account of Mary's birth, childhood, and preparation as the vessel for an extraordinary event. The central theme: the most significant responses to historical turning points come from individuals who have been prepared long before the crisis arrives. Mary's preparation in the Temple was not incidental — it was the prerequisite for her role. The crisis does not produce the prepared vessel; the prepared vessel was made ready during the quiet period before the crisis became obvious.</p>
+      <p class="book-body" style="margin-top:.5rem"><strong style="color:var(--pch)">The practical implication:</strong> The moment of crisis is not the time for preparation — it is the time for deployment of preparation already made. Every person who navigated a major historical disruption successfully had built the skills, relationships, and inner clarity during the period before the disruption became undeniable. The Survival Profile module measures how prepared you currently are. The question is whether there is still time to build what you haven't built yet.</p>
+      <div class="book-find">= Malcolm Gladwell, Outliers (2008): "The 10,000 hour rule" — extraordinary response to extraordinary circumstances always has a long preparation history · = Marcus Aurelius, Meditations (~170 CE): written during the Antonine Plague, describing the daily practice of Stoic preparation that made governance possible under catastrophic conditions</div>
+    </div>
+
+    <div class="book" style="border-top:3px solid var(--jbrt)"><div class="book-num">VII</div>
+      <span class="badge badge-t" style="margin-bottom:.8rem">Wisdom Literature · Catholic &amp; Orthodox Canon</span>
+      <h3>Book of Tobit</h3>
+      <div class="book-date">~300-200 BCE · Aramaic · NRSV with Apocrypha, NCC 1989</div>
+      <p class="book-body">An Israelite exile in Nineveh who maintains his Jewish practices — burying the dead, giving alms, keeping his integrity — despite living under an empire that is not his own. Blinded, impoverished, mocked by his neighbors, he continues his ordinary acts of faithfulness. His son Tobias, guided by the angel Raphael (disguised as a traveling companion), makes a dangerous journey to retrieve the family's savings and returns with a wife and a cure for Tobit's blindness.</p>
+      <p class="book-body" style="margin-top:.5rem"><strong style="color:var(--pch)">Tobit's insight:</strong> The load-bearing structure of civilization is not governments, economies, or institutions. It is the accumulated ordinary faithfulness of individual human beings maintaining trust, care, and integrity in their immediate communities — even when, especially when, the larger institutions have failed. Robert Putnam's 40 years of empirical social capital research is the most rigorous modern confirmation of this ancient observation.</p>
+      <div class="book-find">= Robert D. Putnam, Bowling Alone (2000): 40-year study proving communities with high social capital (trust, reciprocity, dense networks) survive disasters, economic downturns, and institutional failures at dramatically higher rates · = Rebecca Solnit, A Paradise Built in Hell (2009): documents how ordinary human communities spontaneously self-organize with remarkable effectiveness during disasters — the Tobit pattern in action</div>
+    </div>
+
+    <div class="book" style="border-top:3px solid var(--gld)"><div class="book-num">VIII</div>
+      <span class="badge badge-g" style="margin-bottom:.8rem">Standard Canon · NT Apocalyptic + Hebrew Prophets</span>
+      <h3>Revelation &amp; The Prophets</h3>
+      <div class="book-date">Daniel ~165 BCE · Ezekiel ~593-571 BCE · Revelation ~95 CE</div>
+      <p class="book-body">Revelation was written under Roman occupation by a Jewish-Christian author using coded language (Babylon = Rome) to analyze the empire's structural condition without triggering persecution. It is simultaneously a political tract, an economic analysis, and a theological claim. Chapters 17-18, in particular, contain the most precise ancient description of commercial empire collapse available — written by someone who had watched the Roman economic machine extract resources from conquered territories for decades.</p>
+      <p class="book-body" style="margin-top:.5rem"><strong style="color:var(--pch)">Daniel's contribution:</strong> Written during the Maccabean crisis, Daniel introduces the concept of historical empires as a succession — each rising, becoming corrupt, and falling in a recognizable sequence. The "statue" of gold, silver, bronze, iron, and clay is not prophecy in the supernatural sense. It is a model of empire succession that Daniel derived from observing Babylonian, Median, Persian, and Greek empires in sequence. The model has been verified by every subsequent imperial succession in 2,200 years.</p>
+      <div class="book-find">= Carroll Quigley, The Evolution of Civilizations (1961): empirical analysis of 16 civilizations confirming Daniel's succession model · = Peter Turchin, Ages of Discord (2023): mathematical modeling of political instability cycles matching Revelation's structural collapse description</div>
+    </div>
   </div>
 </section>
 
@@ -585,7 +921,11 @@
 <section class="mod" id="predictions">
   <div class="mod-label">Section · Auto-Generated + Static · Pattern Engine Output</div>
   <h2 class="mod-title">The Predictions</h2>
-  <p class="mod-desc">Auto-generated predictions from the Pattern Engine combined with static high-confidence predictions from historical cycle analysis. Updates with every data refresh.</p>
+  <p class="mod-desc">Predictions generated from two sources: the live Pattern Engine (which detects current signals and cross-references them against historical precedents) and static high-confidence predictions derived from the convergence of five independent cycle frameworks. All predictions include explicit confidence ratings, source citations, and the historical precedents informing them. This is not prophecy. It is probabilistic risk assessment — the same methodology used by actuaries, epidemiologists, and intelligence analysts.</p>
+  <div style="background:var(--surf);border-left:3px solid var(--gdim);padding:1.2rem;margin-bottom:.5rem">
+    <div style="font-family:var(--fm);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--gld);margin-bottom:.5rem">A Note on Prediction Epistemology</div>
+    <p style="font-size:.82rem;color:var(--smk);line-height:1.75">The goal of prediction is not certainty — it is calibration. A well-calibrated prediction system is one where 70% confidence events happen roughly 70% of the time. Overconfident predictions (claiming certainty where there is probability) are more dangerous than honest uncertainty. Every prediction here includes the specific data sources and historical precedents that generate the confidence score — so you can evaluate the reasoning, not just accept the conclusion. Disagreement with a well-sourced prediction is a productive analytical exercise. Acceptance without understanding is not.</p>
+  </div>
   <div class="last-updated"></div>
   <div style="display:flex;gap:1.5rem;margin:1.5rem 0;flex-wrap:wrap">
     <span style="font-family:var(--fm);font-size:8px;color:var(--smk);display:flex;align-items:center;gap:5px"><span style="width:9px;height:9px;background:var(--ef);border:1px solid var(--emb);border-radius:2px;display:inline-block"></span>HIGH — Multiple converging streams + historical precedent</span>

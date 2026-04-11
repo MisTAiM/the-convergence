@@ -730,3 +730,36 @@ body.menu-open { overflow: hidden; }
 .horsemen-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 2px; }
 @media(max-width:900px) { .horsemen-grid { grid-template-columns: repeat(2,1fr); } }
 @media(max-width:480px) { .horsemen-grid { grid-template-columns: 1fr; } }
+
+/* Nav logo hide on very small */
+@media(max-width:360px) { .nav-brand img { display: none; } }
+
+/* Improved table styles */
+table { border-collapse: collapse; width: 100%; }
+table tr { border-bottom: 1px solid var(--bdr); }
+table tr:hover { background: var(--surf); }
+table th { font-family: var(--fm); font-size: 8.5px; letter-spacing: .15em; text-transform: uppercase; color: var(--ash); padding: .7rem 1rem; text-align: left; font-weight: 400; border-bottom: 1px solid var(--bhi); }
+table td { font-size: .82rem; color: var(--smk); padding: .6rem 1rem; vertical-align: top; line-height: 1.5; }
+
+/* Book grid improvements */
+.book-body + .book-body { margin-top: .5rem; }
+
+/* Scrollbar custom */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--abyss); }
+::-webkit-scrollbar-thumb { background: var(--gdim); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--gld); }
+
+/* Code inline */
+code { font-family: var(--fm); font-size: .85em; background: var(--abyss); padding: 1px 5px; border-radius: 2px; color: var(--gld); }
+
+/* Strong highlights */
+strong.highlight { color: var(--gld); }
+
+/* Section dividers */
+.section-divider { display: flex; align-items: center; gap: 10px; margin: 1.5rem 0; }
+.section-divider span { font-family: var(--fm); font-size: 8px; letter-spacing: .2em; text-transform: uppercase; color: var(--gdim); }
+.section-divider::before, .section-divider::after { content: ''; flex: 1; height: 1px; background: var(--gdim); opacity: .35; }
+
+/* Data table within dashboard */
+#data table td:first-child { color: var(--pch); }

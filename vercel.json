@@ -9,16 +9,10 @@
       ]
     },
     {
-      "source": "/(.*)",
+      "source": "/public/(.*)",
       "headers": [
-        { "key": "X-Content-Type-Options", "value": "nosniff" }
+        { "key": "Cache-Control", "value": "public, max-age=86400" }
       ]
     }
-  ],
-  "rewrites": [
-    { "source": "/api/news", "destination": "/api/news.js" },
-    { "source": "/api/worldbank", "destination": "/api/worldbank.js" },
-    { "source": "/api/weather", "destination": "/api/weather.js" },
-    { "source": "/api/fx", "destination": "/api/fx.js" }
   ]
 }
