@@ -1327,3 +1327,30 @@ section[id] {
   .hero-stats-v2 { grid-template-columns: 1fr 1fr; }
   .ht-main { font-size: 2.2rem; }
 }
+
+/* ============ ABOUT + HOW IT WORKS ============ */
+#about .g2-about {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+}
+@media(max-width:900px) {
+  #about [style*="grid-template-columns: 1fr 1fr"],
+  #how-it-works [style*="grid-template-columns: repeat(3,1fr)"],
+  #how-it-works [style*="grid-template-columns:repeat(4,1fr)"] {
+    grid-template-columns: 1fr !important;
+  }
+}
+@media(max-width:600px) {
+  #how-it-works [style*="padding:4rem"],
+  #about [style*="padding:4rem"] {
+    padding: 2.5rem 1.25rem !important;
+  }
+  #how-it-works [style*="grid-template-columns:repeat(4,1fr)"] {
+    grid-template-columns: 1fr 1fr !important;
+  }
+}
+
+/* ============ FOOTER UPDATES ============ */
+.footer-brand { font-family: var(--fd); font-size: 1.4rem; font-weight: 600; color: var(--gld); margin-bottom: .8rem; }
+.footer-mono { font-family: var(--fm); font-size: 8px; color: var(--ash); line-height: 2.2; letter-spacing: .03em; }
