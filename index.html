@@ -40,36 +40,89 @@
 
 <!-- NAV -->
 <nav id="nav">
-  <a class="nav-brand" href="#hero"><img src="/favicon-32.png" alt="Logo" style="width:20px;height:20px;border-radius:50%;margin-right:6px;vertical-align:middle;opacity:.9;flex-shrink:0"><span class="blink"></span>THE CONVERGENCE</a>
-  <div class="nav-links">
-    <a href="#live">Live Feed</a>
-    <a href="#csi">CSI</a>
-    <a href="#horsemen">Horsemen</a>
-    <a href="#matcher">Prophecy</a>
-    <a href="#babylon">Babylon</a>
-    <a href="#empire">Empires</a>
-    <a href="#tipping">Tipping</a>
-    <a href="#forbidden">Enoch</a>
-    <a href="#oracle">Oracle</a>
-    <a href="#whispers">Whispers</a>
-    <a href="#parallels">Parallels</a>
-    <a href="#survival">Survival</a>
-    <a href="#restore">Restore</a>
-    <a href="#cycle">Cycles</a>
-    <a href="#livevideo">Live TV</a><a href="#globe">Globe</a><a href="#markets">Markets</a><a href="#finance">Finance</a>
-    <a href="#data">Data</a>
-    <a href="#charts">Charts</a>
-    <a href="#patterns">Patterns</a>
-    <a href="#history">History</a>
-    <a href="#books">Texts</a>
-    <a href="#predictions">Predict</a>
-    <a href="#synthesis">Synthesis</a>
-    <a href="#narrative">Lens</a><a href="#aibrief">AI Brief</a><a href="#antifragile">Antifragile</a><a href="#echo">Echo</a><a href="#terminal">Terminal</a><a href="#acceleration">Accel.</a><a href="#deadreckoning">Navigation</a><a href="#lexicon">Lexicon</a><a href="#sources">Sources</a>
+  <a class="nav-brand" href="#hero">
+    <img src="/favicon-32.png" alt="" style="width:18px;height:18px;border-radius:50%;opacity:.9;flex-shrink:0">
+    <span style="font-family:var(--fm);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--gld)">THE CONVERGENCE</span>
+  </a>
+
+  <div class="nav-links" id="nav-links">
+
+    <!-- LIVE DATA dropdown -->
+    <div class="nav-group">
+      <button class="nav-group-btn">Live Data <span class="nav-arrow">▾</span></button>
+      <div class="nav-dropdown">
+        <a href="#live" onclick="revealSection('live')">📡 Live Feed</a>
+        <a href="#livevideo" onclick="revealSection('livevideo')">📺 Live TV — 12 Channels</a>
+        <a href="#globe" onclick="revealSection('globe')">🌍 World Events Globe</a>
+        <a href="#markets" onclick="revealSection('markets')">📈 Markets & Finance</a>
+        <a href="#finance" onclick="revealSection('finance')">💱 FX & Weather</a>
+        <a href="#data" onclick="revealSection('data')">🏛️ World Bank Data</a>
+        <a href="#charts" onclick="revealSection('charts')">📊 Charts</a>
+      </div>
+    </div>
+
+    <!-- THE CRISIS dropdown -->
+    <div class="nav-group">
+      <button class="nav-group-btn">The Crisis <span class="nav-arrow">▾</span></button>
+      <div class="nav-dropdown">
+        <a href="#csi" onclick="revealSection('csi')">⚠️ CSI Score — Live</a>
+        <a href="#horsemen" onclick="revealSection('horsemen')">🐎 Four Horsemen</a>
+        <a href="#babylon" onclick="revealSection('babylon')">🏛️ Babylon Index</a>
+        <a href="#empire" onclick="revealSection('empire')">⏳ Empire Clock</a>
+        <a href="#tipping" onclick="revealSection('tipping')">🌡️ Tipping Points</a>
+        <a href="#cycle" onclick="revealSection('cycle')">🔄 Cycle Clock</a>
+        <a href="#patterns" onclick="revealSection('patterns')">🔺 Patterns</a>
+      </div>
+    </div>
+
+    <!-- INTELLIGENCE dropdown -->
+    <div class="nav-group">
+      <button class="nav-group-btn">Intelligence <span class="nav-arrow">▾</span></button>
+      <div class="nav-dropdown">
+        <a href="#matcher" onclick="revealSection('matcher')">📜 Prophecy Matcher</a>
+        <a href="#oracle" onclick="revealSection('oracle')">🔮 Oracle</a>
+        <a href="#parallels" onclick="revealSection('parallels')">⚖️ Historical Parallels</a>
+        <a href="#history" onclick="revealSection('history')">📋 History Log</a>
+        <a href="#predictions" onclick="revealSection('predictions')">🎯 Predictions</a>
+        <a href="#synthesis" onclick="revealSection('synthesis')">🧠 Synthesis</a>
+      </div>
+    </div>
+
+    <!-- ANCIENT TEXTS dropdown -->
+    <div class="nav-group">
+      <button class="nav-group-btn">Texts <span class="nav-arrow">▾</span></button>
+      <div class="nav-dropdown">
+        <a href="#forbidden" onclick="revealSection('forbidden')">📖 Enoch — Forbidden Knowledge</a>
+        <a href="#books" onclick="revealSection('books')">📚 All Ancient Texts</a>
+        <a href="#whispers" onclick="revealSection('whispers')">💬 Whisper Wall</a>
+        <a href="#restore" onclick="revealSection('restore')">🌱 Restoration Signals</a>
+        <a href="#survival" onclick="revealSection('survival')">🛡️ Survival Profile</a>
+      </div>
+    </div>
+
+    <!-- NEW MODULES dropdown -->
+    <div class="nav-group">
+      <button class="nav-group-btn">Analysis <span class="nav-arrow">▾</span></button>
+      <div class="nav-dropdown">
+        <a href="#narrative" onclick="revealSection('narrative')">📰 Narrative Lens</a>
+        <a href="#aibrief" onclick="revealSection('aibrief')">🤖 AI Intel Brief</a>
+        <a href="#antifragile" onclick="revealSection('antifragile')">💪 Antifragility Score</a>
+        <a href="#echo" onclick="revealSection('echo')">🔁 Historical Echo</a>
+        <a href="#terminal" onclick="revealSection('terminal')">⌨️ Terminal</a>
+        <a href="#acceleration" onclick="revealSection('acceleration')">⚡ Accelerationist</a>
+        <a href="#deadreckoning" onclick="revealSection('deadreckoning')">🧭 Dead Reckoning</a>
+        <a href="#lexicon" onclick="revealSection('lexicon')">📖 Collapse Lexicon</a>
+      </div>
+    </div>
+
+    <a class="nav-solo" href="#sources" onclick="revealSection('sources')">Sources</a>
+
   </div>
+
   <div class="nav-right">
-    <span id="live-clock" style="font-family:var(--fm);font-size:9px;color:var(--ash)"></span>
-    <button id="update-btn" class="btn-gold" style="font-size:8px;padding:2px 10px">↻ Refresh</button>
+    <span id="live-clock" style="font-family:var(--fm);font-size:8.5px;color:var(--ash);letter-spacing:.06em"></span>
     <div class="live-badge"><span class="blink"></span>LIVE</div>
+    <button id="update-btn" class="btn-gold" style="font-size:8px;padding:3px 10px;border-radius:2px">↻</button>
     <button id="hamburger" aria-label="Open menu" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
@@ -116,25 +169,252 @@
 
 <!-- ====== HERO ====== -->
 <section id="hero" style="opacity:1;transform:none">
-  <div class="hero-grid"></div>
-  <div class="hero-glow"></div>
-  <div class="hero-label"><img src="/logo-64.png" alt="" style="width:48px;height:48px;border-radius:50%;vertical-align:middle;margin-right:12px;opacity:.85">LIVE INTELLIGENCE PLATFORM · 15+ MODULES · SELF-UPDATING · PATTERN ENGINE · HISTORY LOG</div>
-  <h1 class="hero-title">THE<br><span>CON</span>VER<br>GENCE</h1>
-  <p class="hero-sub">Ancient prophetic texts, 9 live APIs, a pattern recognition engine, 90-day history log, and auto-generated predictions — all in one self-updating intelligence platform.</p>
 
-  <div class="ticker-wrap">
-    <div class="ticker-label"><span class="blink"></span>LIVE · BBC · AL JAZEERA · NASA · WORLD BANK API · OPEN-METEO · OPEN-ER · UPDATES EVERY 20 MIN</div>
-    <div style="overflow:hidden"><span class="ticker-inner" id="ticker-inner">Loading live feed...</span></div>
+  <!-- ═══ ORBITAL DIAGRAM SVG ═══ -->
+  <div class="hero-orb-wrap" aria-hidden="true">
+    <svg class="hero-orb" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <!-- Glow filters -->
+        <filter id="glow-gold" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+          <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <filter id="glow-ember" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+          <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <filter id="glow-teal" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
+          <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+
+        <!-- Radial gradient for nebula center -->
+        <radialGradient id="nebula" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#d4b26a" stop-opacity="0.08"/>
+          <stop offset="40%" stop-color="#c04a28" stop-opacity="0.04"/>
+          <stop offset="100%" stop-color="#050504" stop-opacity="0"/>
+        </radialGradient>
+
+        <!-- Orbital path gradients -->
+        <linearGradient id="orbit1-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#c04a28" stop-opacity="0"/>
+          <stop offset="50%" stop-color="#c04a28" stop-opacity="0.6"/>
+          <stop offset="100%" stop-color="#c04a28" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="orbit2-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#d4b26a" stop-opacity="0"/>
+          <stop offset="50%" stop-color="#d4b26a" stop-opacity="0.5"/>
+          <stop offset="100%" stop-color="#d4b26a" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+
+      <!-- Nebula background -->
+      <circle cx="300" cy="300" r="290" fill="url(#nebula)"/>
+
+      <!-- Starfield -->
+      <g opacity="0.4">
+        <circle cx="80" cy="60" r="1" fill="#d4b26a"/><circle cx="160" cy="130" r="0.7" fill="#fff"/>
+        <circle cx="520" cy="80" r="1.2" fill="#d4b26a"/><circle cx="470" cy="200" r="0.8" fill="#fff"/>
+        <circle cx="50" cy="380" r="1" fill="#4090d8"/><circle cx="560" cy="420" r="0.7" fill="#fff"/>
+        <circle cx="90" cy="490" r="1.1" fill="#d4b26a"/><circle cx="540" cy="540" r="0.8" fill="#28b088"/>
+        <circle cx="200" cy="30" r="0.7" fill="#fff"/><circle cx="380" cy="20" r="1" fill="#d4b26a"/>
+        <circle cx="30" cy="250" r="0.8" fill="#fff"/><circle cx="570" cy="300" r="1" fill="#7860c0"/>
+        <circle cx="300" cy="570" r="0.9" fill="#d4b26a"/><circle cx="150" cy="560" r="0.7" fill="#fff"/>
+        <circle cx="450" cy="570" r="1" fill="#fff"/>
+      </g>
+
+      <!-- ORBIT 1 — Fourth Turning (250yr) — ember red — outermost -->
+      <circle cx="300" cy="300" r="255" fill="none" stroke="#c04a28" stroke-width="0.6" stroke-opacity="0.2"/>
+      <circle cx="300" cy="300" r="255" fill="none" stroke="#c04a28" stroke-width="1.2" stroke-opacity="0.4"
+        stroke-dasharray="60 1540" stroke-dashoffset="0">
+        <animateTransform attributeName="transform" type="rotate" from="0 300 300" to="360 300 300" dur="80s" repeatCount="indefinite"/>
+      </circle>
+      <!-- Dot on orbit 1 -->
+      <circle r="4" fill="#c04a28" filter="url(#glow-ember)">
+        <animateMotion dur="80s" repeatCount="indefinite">
+          <mpath href="#orbit1-path"/>
+        </animateMotion>
+      </circle>
+      <path id="orbit1-path" d="M 555,300 A 255,255 0 1,1 554.9,300.1" fill="none"/>
+
+      <!-- ORBIT 2 — Empire Cycle (200-250yr) — gold -->
+      <circle cx="300" cy="300" r="215" fill="none" stroke="#d4b26a" stroke-width="0.6" stroke-opacity="0.18"/>
+      <circle cx="300" cy="300" r="215" fill="none" stroke="#d4b26a" stroke-width="1" stroke-opacity="0.35"
+        stroke-dasharray="45 1305" stroke-dashoffset="0">
+        <animateTransform attributeName="transform" type="rotate" from="90 300 300" to="450 300 300" dur="65s" repeatCount="indefinite"/>
+      </circle>
+      <circle r="3.5" fill="#d4b26a" filter="url(#glow-gold)">
+        <animateMotion dur="65s" repeatCount="indefinite" begin="5s">
+          <mpath href="#orbit2-path"/>
+        </animateMotion>
+      </circle>
+      <path id="orbit2-path" d="M 515,300 A 215,215 0 1,1 514.9,300.1" fill="none"/>
+
+      <!-- ORBIT 3 — Jubilee Cycle (49/50yr) — violet -->
+      <circle cx="300" cy="300" r="172" fill="none" stroke="#7860c0" stroke-width="0.6" stroke-opacity="0.2"/>
+      <circle cx="300" cy="300" r="172" fill="none" stroke="#7860c0" stroke-width="0.9" stroke-opacity="0.4"
+        stroke-dasharray="35 1046" stroke-dashoffset="0">
+        <animateTransform attributeName="transform" type="rotate" from="180 300 300" to="540 300 300" dur="50s" repeatCount="indefinite"/>
+      </circle>
+      <circle r="3" fill="#7860c0">
+        <animateMotion dur="50s" repeatCount="indefinite" begin="2s">
+          <mpath href="#orbit3-path"/>
+        </animateMotion>
+      </circle>
+      <path id="orbit3-path" d="M 472,300 A 172,172 0 1,1 471.9,300.1" fill="none"/>
+
+      <!-- ORBIT 4 — Singularity (technology, ~80yr trend) — ice blue -->
+      <circle cx="300" cy="300" r="128" fill="none" stroke="#4090d8" stroke-width="0.6" stroke-opacity="0.2"/>
+      <circle cx="300" cy="300" r="128" fill="none" stroke="#4090d8" stroke-width="0.9" stroke-opacity="0.4"
+        stroke-dasharray="28 776" stroke-dashoffset="0">
+        <animateTransform attributeName="transform" type="rotate" from="270 300 300" to="630 300 300" dur="35s" repeatCount="indefinite"/>
+      </circle>
+      <circle r="2.8" fill="#4090d8">
+        <animateMotion dur="35s" repeatCount="indefinite" begin="3s">
+          <mpath href="#orbit4-path"/>
+        </animateMotion>
+      </circle>
+      <path id="orbit4-path" d="M 428,300 A 128,128 0 1,1 427.9,300.1" fill="none"/>
+
+      <!-- ORBIT 5 — Climate (100yr+ trend) — teal, innermost cycle ring -->
+      <circle cx="300" cy="300" r="82" fill="none" stroke="#28b088" stroke-width="0.6" stroke-opacity="0.2"/>
+      <circle cx="300" cy="300" r="82" fill="none" stroke="#28b088" stroke-width="0.8" stroke-opacity="0.35"
+        stroke-dasharray="20 494" stroke-dashoffset="0">
+        <animateTransform attributeName="transform" type="rotate" from="0 300 300" to="-360 300 300" dur="25s" repeatCount="indefinite"/>
+      </circle>
+      <circle r="2.5" fill="#28b088">
+        <animateMotion dur="25s" repeatCount="indefinite" begin="1s">
+          <mpath href="#orbit5-path"/>
+        </animateMotion>
+      </circle>
+      <path id="orbit5-path" d="M 382,300 A 82,82 0 1,1 381.9,300.1" fill="none"/>
+
+      <!-- ── STAR OF DAVID center ── -->
+      <!-- Triangle 1 (up) -->
+      <polygon points="300,256 329,307 271,307"
+        fill="none" stroke="#d4b26a" stroke-width="0.8" stroke-opacity="0.6"
+        filter="url(#glow-gold)"/>
+      <!-- Triangle 2 (down) -->
+      <polygon points="300,344 329,293 271,293"
+        fill="none" stroke="#d4b26a" stroke-width="0.8" stroke-opacity="0.6"
+        filter="url(#glow-gold)"/>
+
+      <!-- Center eye -->
+      <circle cx="300" cy="300" r="10" fill="none" stroke="#d4b26a" stroke-width="0.8" stroke-opacity="0.5"/>
+      <circle cx="300" cy="300" r="4" fill="#d4b26a" opacity="0.6" filter="url(#glow-gold)">
+        <animate attributeName="opacity" values="0.4;0.9;0.4" dur="3s" repeatCount="indefinite"/>
+        <animate attributeName="r" values="3.5;4.5;3.5" dur="3s" repeatCount="indefinite"/>
+      </circle>
+
+      <!-- NOW marker on orbit 1 (near perihelion of current cycle) -->
+      <g transform="rotate(-35 300 300)">
+        <circle cx="555" cy="300" r="7" fill="none" stroke="#c04a28" stroke-width="1.2" stroke-opacity="0.8"/>
+        <circle cx="555" cy="300" r="3" fill="#c04a28" filter="url(#glow-ember)"/>
+        <text x="567" y="296" font-family="monospace" font-size="8" fill="#c04a28" opacity="0.7">NOW</text>
+      </g>
+
+      <!-- Orbit labels (subtle) -->
+      <text font-family="monospace" font-size="7" fill="#c04a28" opacity="0.45">
+        <textPath href="#orbit1-path" startOffset="52%">FOURTH TURNING · 250yr</textPath>
+      </text>
+      <text font-family="monospace" font-size="7" fill="#d4b26a" opacity="0.4">
+        <textPath href="#orbit2-path" startOffset="15%">EMPIRE CYCLE · 200yr</textPath>
+      </text>
+      <text font-family="monospace" font-size="7" fill="#7860c0" opacity="0.45">
+        <textPath href="#orbit3-path" startOffset="70%">JUBILEE CYCLE · 50yr</textPath>
+      </text>
+      <text font-family="monospace" font-size="7" fill="#4090d8" opacity="0.45">
+        <textPath href="#orbit4-path" startOffset="35%">SINGULARITY · TECH WAVE</textPath>
+      </text>
+      <text font-family="monospace" font-size="7" fill="#28b088" opacity="0.4">
+        <textPath href="#orbit5-path" startOffset="55%">CLIMATE THRESHOLD</textPath>
+      </text>
+
+    </svg>
   </div>
 
-  <div class="hero-stats">
-    <div class="hst"><div class="n nr">1.47°C</div><div class="l">2024 Warming · NASA</div></div>
-    <div class="hst"><div class="n ng">57.8%</div><div class="l">Dollar Reserve · IMF</div></div>
-    <div class="hst"><div class="n">10,929</div><div class="l">Warheads · FAS 2024</div></div>
-    <div class="hst"><div class="n nr" id="hero-csi">74/100</div><div class="l">CSI Score · Live</div></div>
-    <div class="hst"><div class="n ng" id="hero-life">73.5yr</div><div class="l">Life Exp. · WB API</div></div>
-    <div class="hst"><div class="n nv">2028</div><div class="l">50% AGI · DeepMind</div></div>
+  <!-- ═══ HERO CONTENT ═══ -->
+  <div class="hero-content-wrap">
+
+    <div class="hero-eyebrow">
+      <span class="blink" style="width:6px;height:6px;border-radius:50%;background:var(--ebrt);display:inline-block;flex-shrink:0"></span>
+      <span>LIVE INTELLIGENCE PLATFORM</span>
+      <span style="color:var(--bdr)">|</span>
+      <span>30+ MODULES</span>
+      <span style="color:var(--bdr)">|</span>
+      <span>9 LIVE APIs</span>
+      <span style="color:var(--bdr)">|</span>
+      <span>SELF-UPDATING</span>
+    </div>
+
+    <h1 class="hero-title-v2">
+      <span class="ht-the">THE</span>
+      <span class="ht-main">CONVERGENCE</span>
+      <span class="ht-sub-line">
+        <span class="ht-dash">——</span>
+        <span class="ht-year">2026</span>
+        <span class="ht-dash">——</span>
+      </span>
+    </h1>
+
+    <p class="hero-descriptor">Ancient prophetic texts cross-referenced with live geopolitical, climate, and financial data. Pattern recognition. 90-day history. Auto-generated intelligence briefings. Everything that's happening — and what it means.</p>
+
+    <!-- CSI LIVE GAUGE -->
+    <div class="hero-csi-bar">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px">
+        <span style="font-family:var(--fm);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--ash)">Civilizational Stress Index — Live</span>
+        <span style="font-family:var(--fd);font-size:1.4rem;font-weight:700;color:var(--ebrt)" id="hero-csi">74/100</span>
+      </div>
+      <div style="height:3px;background:rgba(212,178,106,.08);border-radius:2px;overflow:hidden">
+        <div id="hero-csi-bar" style="height:100%;width:74%;background:linear-gradient(90deg,var(--jbrt),var(--gld),var(--ebrt));border-radius:2px;transition:width 1s ease"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:7px;color:var(--faint);margin-top:3px">
+        <span>STABLE</span><span>ELEVATED</span><span>HIGH STRESS</span><span>CRITICAL</span>
+      </div>
+    </div>
+
+    <!-- LIVE STATS ROW -->
+    <div class="hero-stats-v2">
+      <div class="hsv2">
+        <div class="hsv2-n" style="color:var(--ebrt)">1.47°C</div>
+        <div class="hsv2-l">2024 Temp. Anomaly</div>
+        <div class="hsv2-src">NASA GISS</div>
+      </div>
+      <div class="hsv2">
+        <div class="hsv2-n" style="color:var(--gld)">57.8%</div>
+        <div class="hsv2-l">Dollar Reserve</div>
+        <div class="hsv2-src">IMF COFER</div>
+      </div>
+      <div class="hsv2">
+        <div class="hsv2-n">10,929</div>
+        <div class="hsv2-l">Nuclear Warheads</div>
+        <div class="hsv2-src">FAS 2024</div>
+      </div>
+      <div class="hsv2">
+        <div class="hsv2-n" style="color:var(--vbrt)" id="hero-life">73.5yr</div>
+        <div class="hsv2-l">Life Expectancy</div>
+        <div class="hsv2-src">World Bank API</div>
+      </div>
+      <div class="hsv2">
+        <div class="hsv2-n" style="color:var(--ibrt)">118%</div>
+        <div class="hsv2-l">US Debt/GDP</div>
+        <div class="hsv2-src">World Bank API</div>
+      </div>
+      <div class="hsv2">
+        <div class="hsv2-n" style="color:var(--vbrt)">2028</div>
+        <div class="hsv2-l">50% AGI Prob.</div>
+        <div class="hsv2-src">DeepMind/Legg</div>
+      </div>
+    </div>
+
+    <!-- TICKER -->
+    <div class="ticker-wrap" style="margin-top:1.5rem">
+      <div class="ticker-label"><span class="blink"></span>LIVE · BBC · AL JAZEERA · NASA · WORLD BANK · OPEN-METEO · UPDATES EVERY 20MIN</div>
+      <div style="overflow:hidden"><span class="ticker-inner" id="ticker-inner">Loading live feed...</span></div>
+    </div>
+
   </div>
+
 </section>
 
 <!-- ====== MODULE 01: LIVE FEED ====== -->
