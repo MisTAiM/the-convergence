@@ -56,7 +56,7 @@
     <a href="#survival">Survival</a>
     <a href="#restore">Restore</a>
     <a href="#cycle">Cycles</a>
-    <a href="#globe">Globe</a><a href="#markets">Markets</a><a href="#finance">Finance</a>
+    <a href="#livevideo">Live TV</a><a href="#globe">Globe</a><a href="#markets">Markets</a><a href="#finance">Finance</a>
     <a href="#data">Data</a>
     <a href="#charts">Charts</a>
     <a href="#patterns">Patterns</a>
@@ -995,6 +995,70 @@
         </div>
       </div>
     </div>
+  </div>
+</section>
+
+
+<!-- ====== LIVE VIDEO INTELLIGENCE ======
+     12 international news channels
+     YouTube RSS feeds → live video IDs
+     Thumbnail-first onclick pattern (VAULT.GG method)
+     youtube-nocookie.com embeds for cloud IP compatibility
+     ============================================================ -->
+<section class="mod" id="livevideo">
+  <div class="mod-label">Module · Live Video Intelligence · 12 Channels · 4 Regions · Auto-updates</div>
+  <h2 class="mod-title">Live Video Intelligence</h2>
+  <p class="mod-desc">Twelve international news channels spanning 4 geopolitical regions — pulled fresh from YouTube RSS feeds every 10 minutes. Each card shows the channel's latest video with its real thumbnail. Click to launch the embed. For live 24/7 streams, click the LIVE button on any card. Built with the thumbnail-first onclick pattern — fully compatible with all browsers and mobile.</p>
+
+  <!-- REGION FILTER -->
+  <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin:.8rem 0;align-items:center" id="yt-filters">
+    <span style="font-family:var(--fm);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--ash)">Filter:</span>
+    <button class="gf-btn active" data-filter="all" onclick="setYTFilter(this)">All Channels</button>
+    <button class="gf-btn" data-filter="europe" onclick="setYTFilter(this)">🇪🇺 Europe</button>
+    <button class="gf-btn" data-filter="asia" onclick="setYTFilter(this)">🌏 Asia</button>
+    <button class="gf-btn" data-filter="mideast" onclick="setYTFilter(this)">🕌 Middle East</button>
+    <button class="gf-btn" data-filter="finance" onclick="setYTFilter(this)">📈 Finance</button>
+    <button class="gf-btn" data-filter="space" onclick="setYTFilter(this)">🚀 Space</button>
+  </div>
+
+  <!-- STATUS BAR -->
+  <div style="font-family:var(--fm);font-size:8px;color:var(--ash);margin-bottom:1rem;display:flex;align-items:center;gap:8px">
+    <span class="blink" style="width:5px;height:5px;border-radius:50%;background:var(--jbrt);display:inline-block;flex-shrink:0;animation:bk 1.5s infinite"></span>
+    <span id="yt-status">Loading YouTube RSS feeds...</span>
+  </div>
+
+  <!-- CHANNEL GRID -->
+  <div class="g3" id="yt-grid" style="gap:2px">
+    <!-- Skeleton placeholders -->
+    <div class="skeleton" style="height:200px;border-radius:2px"></div>
+    <div class="skeleton" style="height:200px;border-radius:2px"></div>
+    <div class="skeleton" style="height:200px;border-radius:2px"></div>
+    <div class="skeleton" style="height:200px;border-radius:2px"></div>
+    <div class="skeleton" style="height:200px;border-radius:2px"></div>
+    <div class="skeleton" style="height:200px;border-radius:2px"></div>
+  </div>
+
+  <!-- LIVE PLAYER (expands when a channel is selected) -->
+  <div id="yt-player-wrap" style="display:none;margin-top:1rem">
+    <div style="background:var(--abyss);border:1px solid var(--bhi);border-radius:4px;overflow:hidden">
+      <div style="background:var(--raised);padding:.8rem 1.2rem;display:flex;justify-content:space-between;align-items:center">
+        <div style="font-family:var(--fm);font-size:9px;letter-spacing:.15em;color:var(--gld)" id="yt-player-label">NOW PLAYING</div>
+        <button onclick="closeYTPlayer()" style="font-family:var(--fm);font-size:8px;color:var(--ash);background:none;border:1px solid var(--bdr);cursor:pointer;padding:3px 10px;border-radius:2px;letter-spacing:.1em">✕ CLOSE</button>
+      </div>
+      <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden">
+        <iframe id="yt-player-iframe"
+          src=""
+          style="position:absolute;top:0;left:0;width:100%;height:100%;border:none"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen>
+        </iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- DISCLAIMER -->
+  <div style="font-family:var(--fm);font-size:8px;color:var(--ash);margin-top:1rem;padding:.6rem 1rem;background:var(--surf);border-left:2px solid var(--bdr)">
+    Note: Some live streams may be region-restricted. If a channel shows a black screen, try the LATEST VIDEO button instead. YouTube embeds use youtube-nocookie.com for privacy. Live stream availability depends on the channel's YouTube broadcast schedule.
   </div>
 </section>
 

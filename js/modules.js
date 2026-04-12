@@ -1397,3 +1397,147 @@ function drawLargeSparkline(canvas, data) {
   });
   ctx.stroke();
 }
+
+/* ============================================================
+   LIVE VIDEO INTELLIGENCE — YouTube Module
+   VAULT.GG pattern: thumbnail-first onclick → youtube-nocookie embed
+   12 channels, RSS-fed video IDs, region filter
+   ============================================================ */
+
+let ytData = null;
+let ytFilter = 'all';
+let ytInited = false;
+
+window.setYTFilter = function(btn) {
+  document.querySelectorAll('#yt-filters .gf-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  ytFilter = btn.dataset.filter;
+  if (ytData) renderYTGrid(ytData);
+};
+
+window.closeYTPlayer = function() {
+  const wrap = document.getElementById('yt-player-wrap');
+  const iframe = document.getElementById('yt-player-iframe');
+  if (iframe) iframe.src = '';  // Stop video
+  if (wrap) wrap.style.display = 'none';
+};
+
+function launchYTEmbed(embedUrl, label) {
+  const wrap = document.getElementById('yt-player-wrap');
+  const iframe = document.getElementById('yt-player-iframe');
+  const labelEl = document.getElementById('yt-player-label');
+  if (!wrap || !iframe) return;
+  if (labelEl) labelEl.textContent = '▶ ' + label;
+  iframe.src = embedUrl;
+  wrap.style.display = 'block';
+  // Smooth scroll to player
+  wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function buildYTCard(ch) {
+  const accentColor = ch.color || '#d4b26a';
+  const hasVideo = ch.latestVideoId && ch.latestThumb;
+  const videoEmbed = hasVideo
+    ? `https://www.youtube-nocookie.com/embed/${ch.latestVideoId}?autoplay=1&rel=0&modestbranding=1`
+    : null;
+  const liveEmbed = `https://www.youtube-nocookie.com/embed/live_stream?channel=${ch.id}&autoplay=1&rel=0&modestbranding=1`;
+
+  // Thumb image or branded fallback
+  const thumbSection = hasVideo
+    ? `<div class="yt-thumb-wrap" onclick="launchYTEmbed('${videoEmbed}','${ch.icon} ${ch.name} — ${(ch.latestTitle||'').replace(/'/g,"\\'")}')">
+        <img
+          src="${ch.latestThumb}"
+          alt="${ch.name}"
+          loading="lazy"
+          onerror="this.onerror=null;this.src='https://img.youtube.com/vi/${ch.latestVideoId}/mqdefault.jpg'"
+          style="width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s"
+        >
+        <div class="yt-play-overlay">
+          <div class="yt-play-btn">▶</div>
+        </div>
+        <div class="yt-thumb-title">${(ch.latestTitle || '').slice(0, 60)}${(ch.latestTitle||'').length > 60 ? '...' : ''}</div>
+      </div>`
+    : `<div class="yt-thumb-wrap yt-thumb-fallback" style="background:linear-gradient(135deg,${accentColor}22,#000)" onclick="launchYTEmbed('${liveEmbed}','${ch.icon} ${ch.name} — Live Stream')">
+        <div class="yt-fallback-icon">${ch.icon}</div>
+        <div class="yt-fallback-name">${ch.name}</div>
+        <div class="yt-fallback-desc">${ch.desc}</div>
+        <div class="yt-play-overlay"><div class="yt-play-btn">▶ LIVE</div></div>
+      </div>`;
+
+  const pubDate = ch.latestPublished ? `<span style="color:var(--ash)">${ch.latestPublished}</span>` : '';
+
+  return `
+    <div class="yt-card" data-region="${ch.region}" style="--ch-color:${accentColor}">
+      <div class="yt-card-header" style="background:${accentColor}18;border-bottom:2px solid ${accentColor}">
+        <span class="yt-icon">${ch.icon}</span>
+        <div class="yt-channel-info">
+          <div class="yt-channel-name">${ch.name}</div>
+          <div class="yt-channel-region" style="color:${accentColor}">${ch.region.toUpperCase()} · ${ch.tags?.slice(0,2).join(' · ')}</div>
+        </div>
+        <div class="yt-live-dot"></div>
+      </div>
+      ${thumbSection}
+      <div class="yt-card-footer">
+        <button class="yt-btn-latest" onclick="launchYTEmbed('${videoEmbed || liveEmbed}','${ch.icon} ${ch.name}')" ${!hasVideo?'disabled':''}>
+          ${hasVideo ? '▶ Latest' : '📡 Feed'}
+        </button>
+        <button class="yt-btn-live" onclick="launchYTEmbed('${liveEmbed}','${ch.icon} ${ch.name} — LIVE')">
+          🔴 LIVE
+        </button>
+        <a href="https://www.youtube.com/channel/${ch.id}/live" target="_blank" class="yt-btn-out">↗</a>
+      </div>
+    </div>`;
+}
+
+function renderYTGrid(data) {
+  const grid = document.getElementById('yt-grid');
+  if (!grid) return;
+  const channels = data.channels.filter(ch => ytFilter === 'all' || ch.region === ytFilter);
+  if (!channels.length) { grid.innerHTML = '<div style="padding:2rem;color:var(--smk);font-style:italic">No channels match this filter.</div>'; return; }
+  grid.innerHTML = channels.map(buildYTCard).join('');
+
+  // Update status
+  const statusEl = document.getElementById('yt-status');
+  if (statusEl) {
+    const withVideos = data.channels.filter(c => c.latestVideoId).length;
+    statusEl.textContent = `${withVideos}/${data.channels.length} channels loaded · Last fetched ${new Date(data.fetchedAt).toLocaleTimeString()} · ${channels.length} showing`;
+  }
+}
+
+async function initYouTube() {
+  if (ytInited) return;
+  ytInited = true;
+  try {
+    const resp = await fetch('/api/youtube');
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    ytData = await resp.json();
+    renderYTGrid(ytData);
+  } catch(e) {
+    console.warn('YouTube API error:', e);
+    // Render fallback cards without video IDs
+    const statusEl = document.getElementById('yt-status');
+    if (statusEl) statusEl.textContent = 'Using channel live streams (RSS unavailable)';
+    // Build fallback data
+    ytData = {
+      fetchedAt: new Date().toISOString(),
+      channels: [
+        { name:'DW News', id:'UCknLrEdhRCp1aegoMqRaCZg', color:'#C5102E', icon:'🇩🇪', region:'europe', desc:"Germany's international broadcaster 24/7.", tags:['world','europe'], latestVideoId:null },
+        { name:'France 24', id:'UCQfwfsi5VrQ8yKZ-UWmAEFg', color:'#003F87', icon:'🇫🇷', region:'europe', desc:"France's 24/7 English news channel.", tags:['world','europe'], latestVideoId:null },
+        { name:'Sky News', id:'UCoMdktPbSTixAyNGwb-UYkQ', color:'#E4003B', icon:'🇬🇧', region:'europe', desc:"UK breaking news around the clock.", tags:['uk','world'], latestVideoId:null },
+        { name:'Bloomberg', id:'UCIALMKvObZNtJ6AmdCLP7Lg', color:'#5C5CFF', icon:'📈', region:'finance', desc:"Global financial news and markets.", tags:['finance','markets'], latestVideoId:null },
+        { name:'NASA TV', id:'UCLA_DiR1FfKNvjuUpBHmylQ', color:'#0B3D91', icon:'🚀', region:'space', desc:"Space missions, ISS live, launches.", tags:['space','science'], latestVideoId:null },
+        { name:'CNA', id:'UCLgOAd9oU1ICQN5JdivQs7g', color:'#E30713', icon:'🌏', region:'asia', desc:"Asia-Pacific news from Singapore.", tags:['asia','singapore'], latestVideoId:null },
+        { name:'CGTN', id:'UChjNX55Y7F64VnLM4ld71uA', color:'#D40010', icon:'🇨🇳', region:'asia', desc:"China Global TV Network, English.", tags:['china','asia'], latestVideoId:null },
+        { name:'WION', id:'UCp7KGFbMPthqnpMRKFvA2WA', color:'#F26722', icon:'🇮🇳', region:'asia', desc:"India's global news network.", tags:['india','asia'], latestVideoId:null },
+        { name:'TRT World', id:'UC7fWeaHhqgM4Ry-RMpM2YYw', color:'#E31E24', icon:'🇹🇷', region:'mideast', desc:"Turkey's international broadcaster.", tags:['turkey','mideast'], latestVideoId:null },
+        { name:'i24 NEWS', id:'UCLHRdqHAEjhFCu6VJT2PCQQ', color:'#0066B3', icon:'🇮🇱', region:'mideast', desc:"Israel-based Middle East coverage.", tags:['israel','mideast'], latestVideoId:null },
+        { name:'Euronews', id:'UCg4QGMrFOh9FBnEp7RTVeRw', color:'#003399', icon:'🇪🇺', region:'europe', desc:"Pan-European multilingual news.", tags:['europe','eu'], latestVideoId:null },
+        { name:'Arirang', id:'UCeoiYd6MDHoGiNmBnCxOG0Q', color:'#00AEEF', icon:'🇰🇷', region:'asia', desc:"South Korea international news.", tags:['korea','asia'], latestVideoId:null },
+      ]
+    };
+    renderYTGrid(ytData);
+  }
+}
+
+// Refresh every 10 minutes
+setInterval(() => { ytInited = false; initYouTube(); }, 10 * 60 * 1000);

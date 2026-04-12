@@ -263,3 +263,24 @@ setTimeout(initMarkets, 1500);
 
 // Repeat markets every 5 minutes for price freshness
 setInterval(() => { renderMarkets().catch(() => {}); }, 5 * 60 * 1000);
+
+/* ============ YOUTUBE INIT ============ */
+// Initialize YouTube section when it becomes visible
+(function() {
+  const ytSection = document.getElementById('livevideo');
+  if (!ytSection) return;
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        initYouTube();
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.05 });
+  io.observe(ytSection);
+
+  // Also init if direct URL hash
+  if (location.hash === '#livevideo') {
+    setTimeout(initYouTube, 500);
+  }
+})();

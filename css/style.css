@@ -938,3 +938,117 @@ section[id] {
 
 /* Globe spin (loading) */
 @keyframes spin { to { transform: rotate(360deg); } }
+
+/* ============ YOUTUBE VIDEO CARDS ============ */
+.yt-card {
+  background: var(--surf);
+  border-radius: 3px;
+  overflow: hidden;
+  transition: box-shadow .2s, transform .15s;
+  display: flex;
+  flex-direction: column;
+}
+.yt-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,.5), 0 0 0 1px var(--ch-color, var(--bhi)); transform: translateY(-1px); }
+
+.yt-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: .6rem .9rem;
+}
+.yt-icon { font-size: 1.1rem; flex-shrink: 0; }
+.yt-channel-info { flex: 1; min-width: 0; }
+.yt-channel-name { font-size: .88rem; font-weight: 600; color: var(--pch); line-height: 1.2; }
+.yt-channel-region { font-family: var(--fm); font-size: 7px; letter-spacing: .12em; text-transform: uppercase; margin-top: 1px; }
+.yt-live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--jbrt); animation: bk 1.8s infinite; flex-shrink: 0; }
+
+/* THUMBNAIL */
+.yt-thumb-wrap {
+  position: relative;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  cursor: pointer;
+  background: #000;
+  flex-shrink: 0;
+}
+.yt-thumb-wrap img { transition: transform .35s; width: 100%; height: 100%; object-fit: cover; }
+.yt-thumb-wrap:hover img { transform: scale(1.04); }
+
+.yt-play-overlay {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0);
+  transition: background .2s;
+}
+.yt-thumb-wrap:hover .yt-play-overlay { background: rgba(0,0,0,.35); }
+.yt-play-btn {
+  width: 52px; height: 52px; border-radius: 50%;
+  background: rgba(255,0,0,.85);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; color: #fff; font-weight: 700;
+  transform: scale(0.8); opacity: 0;
+  transition: transform .2s, opacity .2s;
+  box-shadow: 0 2px 16px rgba(0,0,0,.5);
+}
+.yt-thumb-wrap:hover .yt-play-btn { transform: scale(1); opacity: 1; }
+
+.yt-thumb-title {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: linear-gradient(transparent, rgba(0,0,0,.85));
+  padding: 1.2rem .7rem .5rem;
+  font-size: .74rem; color: var(--pch); line-height: 1.4;
+  transform: translateY(100%); transition: transform .2s;
+}
+.yt-thumb-wrap:hover .yt-thumb-title { transform: translateY(0); }
+
+/* FALLBACK (no video loaded yet) */
+.yt-thumb-fallback {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: .5rem; padding: 1.5rem;
+  min-height: 140px;
+}
+.yt-fallback-icon { font-size: 2rem; }
+.yt-fallback-name { font-family: var(--fd); font-size: 1rem; font-weight: 600; color: var(--pch); }
+.yt-fallback-desc { font-size: .75rem; color: var(--smk); text-align: center; line-height: 1.5; }
+
+/* FOOTER BUTTONS */
+.yt-card-footer {
+  display: flex;
+  gap: 2px;
+  padding: .5rem;
+  background: var(--raised);
+  flex-shrink: 0;
+  margin-top: auto;
+}
+.yt-btn-latest, .yt-btn-live {
+  flex: 1;
+  background: transparent;
+  border: 1px solid var(--bdr);
+  color: var(--smk);
+  font-family: var(--fm);
+  font-size: 7.5px;
+  letter-spacing: .1em;
+  padding: 5px 4px;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all .15s;
+  text-transform: uppercase;
+}
+.yt-btn-latest:hover:not(:disabled) { background: var(--gf); border-color: var(--gld); color: var(--gld); }
+.yt-btn-live:hover { background: rgba(255,0,0,.1); border-color: #ff0000; color: #ff4444; }
+.yt-btn-latest:disabled { opacity: .35; cursor: default; }
+.yt-btn-out {
+  background: transparent; border: 1px solid var(--bdr); color: var(--ash);
+  font-family: var(--fm); font-size: 10px; padding: 5px 8px; cursor: pointer;
+  border-radius: 2px; text-decoration: none; display: flex; align-items: center;
+  transition: all .15s;
+}
+.yt-btn-out:hover { border-color: var(--gld); color: var(--gld); }
+
+/* PLAYER */
+#yt-player-wrap { transition: opacity .3s; }
+
+/* Mobile YouTube grid */
+@media(max-width:900px) { #yt-grid { grid-template-columns: repeat(2,1fr) !important; } }
+@media(max-width:480px) { #yt-grid { grid-template-columns: 1fr !important; } }
