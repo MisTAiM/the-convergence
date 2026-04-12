@@ -1509,11 +1509,75 @@
   <div>
     <div class="footer-brand">The Convergence</div>
     <p>Self-updating intelligence platform. 15+ modules. Live data from 9 APIs via serverless proxy. 90-day history log. Pattern engine. Auto-generated predictions. Ancient texts mapped to live events. Updates every 20 minutes.</p>
+
+    <!-- DISCORD WIDGET -->
+    <div id="discord-widget" style="margin-top:1.5rem;background:#1E1F22;border-radius:8px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);max-width:320px">
+      <!-- Banner -->
+      <div style="height:52px;background:linear-gradient(135deg,#0d0c08,#1a1208 40%,#1c1408 70%,#0a0908);position:relative;overflow:hidden">
+        <div style="position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 8px,rgba(212,178,106,.025) 8px,rgba(212,178,106,.025) 16px)"></div>
+        <div style="position:absolute;right:.8rem;top:50%;transform:translateY(-50%);font-family:var(--fm);font-size:7px;letter-spacing:.3em;text-transform:uppercase;color:rgba(212,178,106,.4)">THE BLACK BULLS DEN</div>
+      </div>
+      <!-- Avatar row -->
+      <div style="padding:0 12px;position:relative;height:38px;display:flex;align-items:flex-end;gap:10px">
+        <div id="dw-avatar-wrap" style="position:absolute;top:-26px;left:12px;width:56px;height:56px;background:#1E1F22;border-radius:50%;padding:3px">
+          <div id="dw-avatar" style="width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#4752C4,#1a1a2e);display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:700;color:#fff;overflow:hidden">M</div>
+          <div id="dw-status" style="position:absolute;bottom:2px;right:2px;width:14px;height:14px;border-radius:50%;background:#80848E;border:2px solid #1E1F22"></div>
+        </div>
+        <div style="margin-left:auto;margin-bottom:4px;display:flex;align-items:center;gap:6px">
+          <a href="https://discord.com/users/348354392178688010" target="_blank"
+            style="background:#5865F2;color:#fff;border:none;border-radius:4px;padding:5px 14px;font-family:var(--fm);font-size:8px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;text-decoration:none;display:flex;align-items:center;gap:6px;transition:background .15s"
+            onmouseover="this.style.background='#4752C4'" onmouseout="this.style.background='#5865F2'">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057.1 18.08.114 18.1.136 18.116a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
+            ADD ON DISCORD
+          </a>
+        </div>
+      </div>
+      <!-- Name + info -->
+      <div style="padding:4px 12px 12px">
+        <div id="dw-name" style="font-family:'JetBrains Mono',monospace;font-size:.85rem;font-weight:700;color:#DBDEE1;margin-bottom:1px">Morpheus</div>
+        <div id="dw-handle" style="font-family:'JetBrains Mono',monospace;font-size:.7rem;color:#80848E">morpheus_online</div>
+        <div id="dw-activity" style="font-family:'JetBrains Mono',monospace;font-size:.68rem;color:#80848E;margin-top:4px;display:none"></div>
+      </div>
+    </div>
+
   </div>
   <div>
     <p class="footer-mono">LIVE: World Bank · NASA · Open-ER-API · Open-Meteo · BBC RSS (4 feeds) · Al Jazeera RSS · NASA RSS · IMF COFER · FAS Nuclear<br><br>SELF-UPDATING: Every 20 minutes via /api/news · /api/worldbank · /api/weather · /api/fx<br><br>HISTORY: 90-day rolling log stored in localStorage. Pattern engine learns from accumulated data.<br><br>PURPOSE: Clarity, not fear. The exam is live.</p>
   </div>
 </footer>
+
+<script>
+/* FOOTER DISCORD WIDGET — Mini Lanyard */
+(async function() {
+  const STATUS_COLORS = { online:'#23A55A', idle:'#F0B232', dnd:'#F23F43', offline:'#80848E' };
+  try {
+    const r = await fetch('https://api.lanyard.rest/v1/users/348354392178688010');
+    const data = await r.json();
+    if (!data.success) return;
+    const d = data.data;
+    const u = d.discord_user;
+    // Avatar
+    if (u.avatar) {
+      const ext = u.avatar.startsWith('a_') ? 'gif' : 'png';
+      const avEl = document.getElementById('dw-avatar');
+      avEl.innerHTML = `<img src="https://cdn.discordapp.com/avatars/${u.id}/${u.avatar}.${ext}?size=128" style="width:100%;height:100%;border-radius:50%;object-fit:cover" onerror="this.parentNode.textContent='M'">`;
+    }
+    // Status dot
+    const dot = document.getElementById('dw-status');
+    dot.style.background = STATUS_COLORS[d.discord_status] || STATUS_COLORS.offline;
+    // Name
+    if (u.global_name) document.getElementById('dw-name').textContent = u.global_name;
+    if (u.username) document.getElementById('dw-handle').textContent = u.username;
+    // Activity
+    const game = d.activities?.find(a => a.type === 0);
+    const custom = d.activities?.find(a => a.type === 4);
+    const actEl = document.getElementById('dw-activity');
+    if (game) { actEl.style.display='block'; actEl.textContent = '🎮 Playing ' + game.name; }
+    else if (d.listening_to_spotify && d.spotify) { actEl.style.display='block'; actEl.textContent = '🎵 ' + d.spotify.song; }
+    else if (custom?.state) { actEl.style.display='block'; actEl.textContent = (custom.emoji?.name||'') + ' ' + custom.state; }
+  } catch(e) { /* silent fail */ }
+})();
+</script>
 
 <!-- SCRIPTS -->
 <script src="/js/data-engine.js"></script>
