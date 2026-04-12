@@ -92,41 +92,35 @@ body::after {
 #update-btn.spinning { animation: spin 1s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* ============ HERO ============ */
+/* ============ HERO v2 — grid layout, orbital diagram ============ */
 #hero {
-  min-height: 100vh; display: flex; flex-direction: column; justify-content: flex-end;
-  padding: 7rem 3.5rem 4rem; position: relative; overflow: hidden;
+  position: relative;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  overflow: hidden;
+  padding: 72px 0 60px;
   border-bottom: 1px solid var(--bdr);
+  background:
+    radial-gradient(ellipse 55% 60% at 20% 50%, rgba(212,178,106,.035) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 50% at 85% 70%, rgba(192,74,40,.025) 0%, transparent 55%);
 }
-.hero-grid {
-  position: absolute; inset: 0;
-  background: linear-gradient(var(--bdr) 1px, transparent 1px), linear-gradient(90deg, var(--bdr) 1px, transparent 1px);
-  background-size: 80px 80px;
-  mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black 30%, transparent 100%);
-  opacity: .5;
-}
-.hero-glow {
-  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-  width: 1400px; height: 700px;
-  background: radial-gradient(ellipse, rgba(212,178,106,.05) 0%, rgba(192,74,40,.025) 35%, transparent 65%);
-  pointer-events: none;
-}
-.hero-label { font-family: var(--fm); font-size: 9px; letter-spacing: .3em; color: var(--gld); opacity: .6; margin-bottom: 2rem; text-transform: uppercase; }
-.hero-title { font-family: var(--fd); font-size: clamp(4.5rem, 11vw, 10.5rem); font-weight: 900; line-height: .87; letter-spacing: -.03em; }
-.hero-title span { color: var(--gld); font-style: italic; }
-.hero-sub { max-width: 560px; margin-top: 1.8rem; font-size: 1.05rem; font-style: italic; color: var(--smk); line-height: 1.7; font-weight: 300; }
+/* Legacy classes — kept as no-ops so no JS errors */
+.hero-grid, .hero-glow { display: none; }
+.hero-label, .hero-title, .hero-sub, .hero-stats, .hst { display: none; }
+
+/* Ticker still used in new hero */
 .ticker-wrap {
-  margin-top: 2.5rem;
-  background: rgba(192,74,40,.07); border: 1px solid rgba(192,74,40,.25); border-left: 3px solid var(--emb);
-  padding: .9rem 1.2rem; overflow: hidden;
+  background: rgba(192,74,40,.07);
+  border: 1px solid rgba(192,74,40,.25);
+  border-left: 3px solid var(--emb);
+  padding: .9rem 1.2rem;
+  overflow: hidden;
 }
 .ticker-label { font-family: var(--fm); font-size: 8px; letter-spacing: .25em; color: var(--ebrt); margin-bottom: .4rem; display: flex; align-items: center; gap: 5px; }
 .ticker-inner { display: inline-block; white-space: nowrap; font-family: var(--fm); font-size: 10px; color: var(--smk); letter-spacing: .04em; animation: tick 80s linear infinite; }
 @keyframes tick { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
-.hero-stats { display: flex; gap: 2.5rem; margin-top: 2.5rem; flex-wrap: wrap; align-items: flex-end; }
-.hst .n { font-family: var(--fd); font-size: 2.5rem; font-weight: 900; line-height: 1; }
-.hst .ng{color:var(--gld)} .hst .nr{color:var(--ebrt)} .hst .nt{color:var(--jbrt)} .hst .nv{color:var(--vbrt)} .hst .ni{color:var(--ibrt)}
-.hst .l { font-family: var(--fm); font-size: 8px; letter-spacing: .12em; text-transform: uppercase; color: var(--ash); margin-top: 4px; }
 
 /* ============ SECTIONS ============ */
 .mod {
@@ -478,16 +472,12 @@ footer p { font-size: .78rem; color: var(--smk); line-height: 1.7; }
   #status-bar { padding: 4px 1rem; font-size: 7.5px; }
   #status-bar .status-dot { flex-shrink: 0; }
 
-  /* HERO */
-  #hero { padding: 72px 1.25rem 3.5rem; min-height: auto; padding-bottom: 100px; }
-  .hero-label { font-size: 7.5px; letter-spacing: .15em; margin-bottom: 1.2rem; }
-  .hero-title { font-size: clamp(3.2rem, 16vw, 5.5rem); letter-spacing: -.02em; line-height: .88; }
-  .hero-sub { font-size: .9rem; margin-top: 1.2rem; }
-  .ticker-wrap { margin-top: 1.5rem; padding: .7rem 1rem; }
+  /* HERO v2 — tablet */
+  #hero { padding: 72px 1.5rem 2rem; min-height: auto; }
+  .hero-content-wrap { padding: 0; }
+  .hero-orb-wrap { display: none; }
+  .ticker-wrap { padding: .7rem 1rem; }
   .ticker-inner { font-size: 9px; }
-  .hero-stats { gap: 1rem 1.5rem; margin-top: 1.5rem; }
-  .hst .n { font-size: 1.6rem; }
-  .hst .l { font-size: 7px; }
 
   /* SECTIONS */
   .mod { padding: 2.5rem 1.25rem; }
@@ -597,11 +587,10 @@ footer p { font-size: .78rem; color: var(--smk); line-height: 1.7; }
 
 /* Small phones */
 @media(max-width:420px) {
-  .hero-title { font-size: clamp(2.8rem, 18vw, 4rem); }
-  .hero-stats { gap: .75rem 1rem; }
-  .hst .n { font-size: 1.4rem; }
+  .ht-main { font-size: clamp(2.2rem, 14vw, 3.5rem); }
+  .hero-stats-v2 { grid-template-columns: 1fr 1fr; }
   .mod { padding: 2rem 1rem; }
-  #hero { padding: 68px 1rem 3rem; }
+  #hero { padding: 68px 1rem 2rem; }
   .g5 { grid-template-columns: repeat(2,1fr); }
   .empire-row { grid-template-columns: 100px 1fr 50px; font-size: .8rem; }
   .chart-wrap { height: 160px; }
@@ -615,8 +604,7 @@ footer p { font-size: .78rem; color: var(--smk); line-height: 1.7; }
 
 /* Landscape phones */
 @media(max-width:768px) and (orientation:landscape) {
-  #hero { min-height: auto; padding-top: 68px; }
-  .hero-title { font-size: clamp(2.5rem, 10vw, 4rem); }
+  #hero { min-height: auto; padding-top: 68px; grid-template-columns: 1fr; }
   .mod { padding: 2rem 1.5rem; }
 }
 
@@ -645,10 +633,7 @@ footer p { font-size: .78rem; color: var(--smk); line-height: 1.7; }
 /* Nuclear grid */
 @media(max-width:480px) { #data .g4 { grid-template-columns: repeat(2,1fr); } }
 
-/* Hero stats wrap nicely */
-@media(max-width:480px) {
-  .hero-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; }
-}
+/* hero-stats-v2 handled in hero v2 responsive block above */
 
 /* Forbidden knowledge grid */
 @media(max-width:600px) { #forbidden .g2 { grid-template-columns: 1fr; } }
@@ -683,10 +668,7 @@ footer p { font-size: .78rem; color: var(--smk); line-height: 1.7; }
   padding-left: max(1.5rem, env(safe-area-inset-left));
   padding-right: max(1.5rem, env(safe-area-inset-right));
 }
-#hero {
-  padding-left: max(3.5rem, env(safe-area-inset-left));
-  padding-right: max(3.5rem, env(safe-area-inset-right));
-}
+/* hero safe-area handled per breakpoint */
 @media(max-width:768px) {
   #hero {
     padding-left: max(1.25rem, env(safe-area-inset-left));
@@ -1185,16 +1167,7 @@ section[id] {
    HERO v2 — ORBITAL DIAGRAM + REDESIGNED LAYOUT
 ══════════════════════════════════════════════════ */
 
-#hero {
-  position: relative;
-  min-height: 100vh;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: center;
-  gap: 0;
-  overflow: hidden;
-  padding: 80px 0 60px;
-}
+/* #hero styles defined above — grid 2-col with orbital diagram */
 
 /* Orbital diagram — left column */
 .hero-orb-wrap {
