@@ -37,8 +37,21 @@ function initObserver() {
     entries.forEach(e => {
       if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
     });
-  }, { threshold: .05 });
+  }, { threshold: .01, rootMargin: '0px 0px -5% 0px' });
   document.querySelectorAll('.mod').forEach(m => io.observe(m));
+}
+
+// Force-reveal a section immediately (for anchor nav + direct URL load)
+function revealSection(id) {
+  const el = id ? document.getElementById(id) : null;
+  if (!el) return;
+  el.classList.add('visible');
+  // Also reveal all sections above it (they should be visible too)
+  document.querySelectorAll('.mod').forEach(m => {
+    if (m.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING) {
+      m.classList.add('visible');
+    }
+  });
 }
 
 /* ---------- PREDICTION BAR ANIMATIONS ---------- */
@@ -62,6 +75,8 @@ function animatePredBars() {
 function initNav() {
   const links = document.querySelectorAll('.nav-links a');
   const sections = document.querySelectorAll('.mod, #hero, section');
+
+  // Active state via IntersectionObserver
   const io = new IntersectionObserver(entries => {
     entries.forEach(e => {
       if (e.isIntersecting) {
@@ -70,8 +85,33 @@ function initNav() {
         });
       }
     });
-  }, { threshold: .3 });
+  }, { threshold: .1 });
   sections.forEach(s => io.observe(s));
+
+  // On every nav link click: immediately reveal target section
+  links.forEach(link => {
+    link.addEventListener('click', () => {
+      const hash = link.getAttribute('href');
+      if (hash && hash.startsWith('#')) {
+        revealSection(hash.slice(1));
+      }
+    });
+  });
+
+  // On direct URL load with hash — reveal that section immediately
+  if (location.hash) {
+    // Small delay so DOM is painted first
+    setTimeout(() => {
+      revealSection(location.hash.slice(1));
+      const el = document.getElementById(location.hash.slice(1));
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 200);
+  }
+
+  // Handle browser back/forward hash changes
+  window.addEventListener('hashchange', () => {
+    if (location.hash) revealSection(location.hash.slice(1));
+  });
 }
 
 /* ---------- MAIN INIT ---------- */

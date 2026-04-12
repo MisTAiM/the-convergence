@@ -79,36 +79,36 @@
 <!-- MOBILE MENU -->
 <div id="mobile-menu" role="navigation" aria-label="Mobile navigation">
   <div class="mobile-menu-section">Live Data</div>
-  <a href="#live" onclick="closeMobileMenu()">Live Feed</a>
-  <a href="#csi" onclick="closeMobileMenu()">CSI Score</a>
-  <a href="#horsemen" onclick="closeMobileMenu()">Horsemen</a>
-  <a href="#finance" onclick="closeMobileMenu()">Markets & Weather</a>
+  <a href="#live" onclick="closeMobileMenu();revealSection('live')">Live Feed</a>
+  <a href="#csi" onclick="closeMobileMenu();revealSection('csi')">CSI Score</a>
+  <a href="#horsemen" onclick="closeMobileMenu();revealSection('horsemen')">Horsemen</a>
+  <a href="#finance" onclick="closeMobileMenu();revealSection('finance')">Markets & Weather</a>
   <div class="mobile-menu-section">Analysis</div>
-  <a href="#matcher" onclick="closeMobileMenu()">Prophecy Matcher</a>
-  <a href="#babylon" onclick="closeMobileMenu()">Babylon Index</a>
-  <a href="#empire" onclick="closeMobileMenu()">Empire Clock</a>
-  <a href="#tipping" onclick="closeMobileMenu()">Tipping Simulator</a>
-  <a href="#forbidden" onclick="closeMobileMenu()">Forbidden Knowledge</a>
-  <a href="#cycle" onclick="closeMobileMenu()">Cycle Clock</a>
+  <a href="#matcher" onclick="closeMobileMenu();revealSection('matcher')">Prophecy Matcher</a>
+  <a href="#babylon" onclick="closeMobileMenu();revealSection('babylon')">Babylon Index</a>
+  <a href="#empire" onclick="closeMobileMenu();revealSection('empire')">Empire Clock</a>
+  <a href="#tipping" onclick="closeMobileMenu();revealSection('tipping')">Tipping Simulator</a>
+  <a href="#forbidden" onclick="closeMobileMenu();revealSection('forbidden')">Forbidden Knowledge</a>
+  <a href="#cycle" onclick="closeMobileMenu();revealSection('cycle')">Cycle Clock</a>
   <div class="mobile-menu-section">Intelligence</div>
-  <a href="#patterns" onclick="closeMobileMenu()">Pattern Engine</a>
-  <a href="#history" onclick="closeMobileMenu()">History Log</a>
-  <a href="#predictions" onclick="closeMobileMenu()">Predictions</a>
-  <a href="#oracle" onclick="closeMobileMenu()">Oracle</a>
+  <a href="#patterns" onclick="closeMobileMenu();revealSection('patterns')">Pattern Engine</a>
+  <a href="#history" onclick="closeMobileMenu();revealSection('history')">History Log</a>
+  <a href="#predictions" onclick="closeMobileMenu();revealSection('predictions')">Predictions</a>
+  <a href="#oracle" onclick="closeMobileMenu();revealSection('oracle')">Oracle</a>
   <div class="mobile-menu-section">Foundations</div>
-  <a href="#whispers" onclick="closeMobileMenu()">Whisper Wall</a>
-  <a href="#parallels" onclick="closeMobileMenu()">Pattern Library</a>
-  <a href="#survival" onclick="closeMobileMenu()">Survival Profile</a>
-  <a href="#restore" onclick="closeMobileMenu()">Restoration Signals</a>
-  <a href="#books" onclick="closeMobileMenu()">Ancient Texts</a>
-  <a href="#charts" onclick="closeMobileMenu()">Charts</a>
-  <a href="#data" onclick="closeMobileMenu()">World Data</a>
-  <a href="#synthesis" onclick="closeMobileMenu()">Synthesis</a>
+  <a href="#whispers" onclick="closeMobileMenu();revealSection('whispers')">Whisper Wall</a>
+  <a href="#parallels" onclick="closeMobileMenu();revealSection('parallels')">Pattern Library</a>
+  <a href="#survival" onclick="closeMobileMenu();revealSection('survival')">Survival Profile</a>
+  <a href="#restore" onclick="closeMobileMenu();revealSection('restore')">Restoration Signals</a>
+  <a href="#books" onclick="closeMobileMenu();revealSection('books')">Ancient Texts</a>
+  <a href="#charts" onclick="closeMobileMenu();revealSection('charts')">Charts</a>
+  <a href="#data" onclick="closeMobileMenu();revealSection('data')">World Data</a>
+  <a href="#synthesis" onclick="closeMobileMenu();revealSection('synthesis')">Synthesis</a>
   <div class="mobile-menu-section">New Concepts</div>
-  <a href="#acceleration" onclick="closeMobileMenu()">Accelerationist Index</a>
-  <a href="#deadreckoning" onclick="closeMobileMenu()">Dead Reckoning</a>
-  <a href="#lexicon" onclick="closeMobileMenu()">Collapse Lexicon</a>
-  <a href="#sources" onclick="closeMobileMenu()">Sources</a>
+  <a href="#acceleration" onclick="closeMobileMenu();revealSection('acceleration')">Accelerationist Index</a>
+  <a href="#deadreckoning" onclick="closeMobileMenu();revealSection('deadreckoning')">Dead Reckoning</a>
+  <a href="#lexicon" onclick="closeMobileMenu();revealSection('lexicon')">Collapse Lexicon</a>
+  <a href="#sources" onclick="closeMobileMenu();revealSection('sources')">Sources</a>
   <div style="padding:1rem 1.5rem .5rem;display:flex;gap:.8rem;align-items:center">
     <button onclick="DataEngine.forceUpdate();closeMobileMenu();" style="background:transparent;border:1px solid var(--gld);color:var(--gld);font-family:var(--fm);font-size:9px;letter-spacing:.15em;padding:.6rem 1.2rem;cursor:pointer;min-height:44px">↻ REFRESH DATA</button>
   </div>

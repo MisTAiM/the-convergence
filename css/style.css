@@ -894,3 +894,18 @@ footer p { font-size: .88rem !important; line-height: 1.8 !important; }
   #markets .g2 { grid-template-columns: 1fr; }
   #markets .g3 { grid-template-columns: 1fr; }
 }
+
+/* ============================================================
+   ANCHOR NAV FIX — scroll-margin compensates for fixed 50px nav
+   Also ensures #hash navigation from URL works on direct load
+   ============================================================ */
+.mod,
+section[id] {
+  scroll-margin-top: 62px;
+}
+
+/* Sections should never be invisible after anchor navigation */
+.mod:target {
+  opacity: 1 !important;
+  transform: none !important;
+}
