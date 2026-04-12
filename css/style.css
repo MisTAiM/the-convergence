@@ -763,3 +763,102 @@ strong.highlight { color: var(--gld); }
 
 /* Data table within dashboard */
 #data table td:first-child { color: var(--pch); }
+
+/* ============================================================
+   FONT SIZE INCREASES — readability pass
+   ============================================================ */
+
+/* Primary body/description text */
+.mod-desc { font-size: 1.05rem !important; line-height: 1.85 !important; }
+
+/* All paragraph text inside modules */
+.mod p,
+.mod li,
+.mod .book-body,
+.mod .hist-data { font-size: .95rem; line-height: 1.85; }
+
+/* Bordered box body text — the "info boxes" */
+.mod [style*="border-left"] p,
+.mod [style*="background:var(--surf)"] p,
+.mod [style*="background:var(--abyss)"] p {
+  font-size: .93rem !important;
+  line-height: 1.9 !important;
+}
+
+/* Grid info boxes inside bordered panels */
+.mod .g2 p,
+.mod .g3 p,
+.mod .g3 > div p,
+.mod .g2 > div p { font-size: .9rem !important; line-height: 1.85 !important; }
+
+/* Prediction content */
+.pred-content p { font-size: .92rem !important; line-height: 1.8 !important; }
+
+/* Survival profile text */
+.surv-result p { font-size: .95rem !important; }
+
+/* Whisper wall quotes */
+.whisper-card q { font-size: 1.05rem !important; line-height: 1.8 !important; }
+
+/* Oracle / Matcher text */
+.match-news { font-size: .95rem !important; line-height: 1.6 !important; }
+.match-text  { font-size: .93rem !important; line-height: 1.7 !important; }
+.oracle-event   { font-size: .95rem !important; }
+.oracle-passage { font-size: .92rem !important; line-height: 1.7 !important; }
+
+/* News feed */
+.news-title { font-size: 1rem !important; line-height: 1.5 !important; }
+.news-desc  { font-size: .87rem !important; line-height: 1.65 !important; }
+
+/* Pattern card body */
+.pattern-card p { font-size: .9rem !important; line-height: 1.8 !important; }
+
+/* Book descriptions */
+.book-body { font-size: .88rem !important; line-height: 1.75 !important; }
+.book-find { font-size: .85rem !important; line-height: 1.6 !important; }
+
+/* Side list */
+.side-list li { font-size: .88rem !important; }
+
+/* Horsemen */
+#horsemen p { font-size: .88rem !important; line-height: 1.65 !important; }
+
+/* Cycle clock */
+.cycle-text { font-size: .92rem !important; line-height: 1.7 !important; }
+
+/* Empire rows */
+.empire-row { font-size: .93rem; }
+
+/* History entries */
+.history-data { font-size: .9rem !important; line-height: 1.7 !important; }
+
+/* Data table */
+table td { font-size: .9rem !important; line-height: 1.6 !important; }
+
+/* Sources lists */
+.src-group li { font-size: .88rem !important; line-height: 1.6 !important; }
+
+/* FX / Weather */
+.fx-card, .wx-card { font-size: .88rem; }
+.wx-detail { font-size: .82rem !important; }
+
+/* Footer */
+footer p { font-size: .88rem !important; line-height: 1.8 !important; }
+.footer-mono { font-size: .82rem !important; line-height: 2 !important; }
+
+/* Survival profile labels */
+.surv-q label { font-size: .88rem !important; }
+
+/* AGI chart taller for legend */
+#charts .chart-wrap { height: 260px !important; }
+/* Only AGI chart needs the extra height for legend */
+
+/* Mobile font bumps */
+@media(max-width:768px) {
+  .mod-desc { font-size: 1rem !important; }
+  .mod p, .mod li { font-size: .92rem !important; }
+  .mod [style*="border-left"] p { font-size: .9rem !important; }
+  .news-title { font-size: .95rem !important; }
+  .book-body { font-size: .88rem !important; }
+  .whisper-card q { font-size: .97rem !important; }
+}

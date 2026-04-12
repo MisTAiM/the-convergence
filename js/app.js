@@ -168,3 +168,23 @@ function renderHeroStats(db) {
 }
 
 window.addEventListener('DOMContentLoaded', initApp);
+
+// Extend renderAll for new modules
+const _baseRenderAll = renderAll;
+window.renderAll = function(db) {
+  _baseRenderAll(db);
+  try { renderDeadReckoning(db); } catch(e) { console.error('deadreckoning', e); }
+};
+
+// Save survival score to sessionStorage when calculated
+const _baseSurv = window.calcSurvival;
+window.calcSurvival = function() {
+  if (_baseSurv) _baseSurv();
+  const vals = [1,2,3,4,5,6].map(i => parseInt(document.getElementById('surv'+i)?.value || 1));
+  const tot = vals.reduce((a,b) => a+b, 0);
+  const pct = Math.round(tot/18*100);
+  sessionStorage.setItem('convergence_surv_score', pct);
+  // Re-render dead reckoning with updated score
+  const db = DataEngine.getDB();
+  try { renderDeadReckoning(db); } catch(e) {}
+};

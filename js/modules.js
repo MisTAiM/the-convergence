@@ -409,9 +409,7 @@ function renderCharts(db) {
       { borderColor: '#28b088', backgroundColor: 'rgba(40,176,136,0.07)', borderWidth: 2, tension: .4, fill: true, pointRadius: 3, pointBackgroundColor: '#28b088' });
   }
 
-  // AGI timeline
-  mkChart('chart-agi', 'line', ['2026','2027','2028','2029','2030','2032','2035','2040'],
-    null, {}); // multi-dataset, handle separately
+  // AGI timeline — multi-dataset, must NOT call mkChart first (would corrupt the canvas)
   const agiEl = document.getElementById('chart-agi');
   if (agiEl) {
     try {
@@ -420,14 +418,79 @@ function renderCharts(db) {
         data: {
           labels: ['2026','2027','2028','2029','2030','2032','2035','2040'],
           datasets: [
-            { label: 'Musk/Aggressive', data: [45,65,78,86,91,95,98,99], borderColor: '#c04a28', borderWidth: 1.5, borderDash: [4,3], tension: .4, pointRadius: 3, fill: false },
-            { label: 'DeepMind/Legg', data: [10,28,50,65,76,88,95,98], borderColor: '#d4b26a', backgroundColor: 'rgba(212,178,106,0.07)', borderWidth: 2.5, tension: .4, fill: true, pointRadius: 5, pointBackgroundColor: '#d4b26a' },
-            { label: 'Metaculus', data: [9,18,33,47,60,78,90,96], borderColor: '#7860c0', borderWidth: 1.5, borderDash: [2,3], tension: .4, pointRadius: 3, fill: false },
+            {
+              label: 'Musk/Aggressive (2026)',
+              data: [45,65,78,86,91,95,98,99],
+              borderColor: '#c04a28',
+              borderWidth: 2,
+              borderDash: [5,4],
+              tension: .4,
+              pointRadius: 4,
+              pointBackgroundColor: '#c04a28',
+              fill: false
+            },
+            {
+              label: 'DeepMind/Legg (50% by 2028)',
+              data: [10,28,50,65,76,88,95,98],
+              borderColor: '#d4b26a',
+              backgroundColor: 'rgba(212,178,106,0.08)',
+              borderWidth: 3,
+              tension: .4,
+              fill: true,
+              pointRadius: 5,
+              pointBackgroundColor: '#d4b26a',
+              pointBorderColor: '#d4b26a'
+            },
+            {
+              label: 'Metaculus Community',
+              data: [9,18,33,47,60,78,90,96],
+              borderColor: '#7860c0',
+              borderWidth: 2,
+              borderDash: [3,3],
+              tension: .4,
+              pointRadius: 4,
+              pointBackgroundColor: '#7860c0',
+              fill: false
+            },
           ]
         },
-        options: { ...CDef, scales: { ...CDef.scales, y: { ...CDef.scales.y, min: 0, max: 100, ticks: { ...CDef.scales.y.ticks, callback: v => v + '%' } } }, plugins: { legend: { display: false } } }
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: true,
+              position: 'bottom',
+              labels: {
+                color: '#a09880',
+                font: { family: "'JetBrains Mono'", size: 9 },
+                boxWidth: 24,
+                padding: 12,
+                usePointStyle: true
+              }
+            },
+            tooltip: {
+              callbacks: {
+                label: ctx => `${ctx.dataset.label}: ${ctx.raw}% probability`
+              }
+            }
+          },
+          scales: {
+            x: {
+              ticks: { color: '#6a6458', font: { family: "'JetBrains Mono'", size: 9 } },
+              grid: { color: 'rgba(212,178,106,0.06)' },
+              border: { color: 'rgba(212,178,106,0.1)' }
+            },
+            y: {
+              min: 0, max: 100,
+              ticks: { color: '#6a6458', font: { family: "'JetBrains Mono'", size: 9 }, callback: v => v + '%' },
+              grid: { color: 'rgba(212,178,106,0.07)' },
+              border: { color: 'rgba(212,178,106,0.1)' }
+            }
+          }
+        }
       });
-    } catch(e) {}
+    } catch(e) { console.error('AGI chart error:', e); }
   }
 
   // CSI history chart
@@ -600,3 +663,79 @@ function initOracle(db) {
 
   document.getElementById('oracle-input')?.addEventListener('keydown', e => { if (e.key === 'Enter') runOracle(); });
 }
+
+/* ============ DEAD RECKONING ENGINE ============ */
+function renderDeadReckoning(db) {
+  const posEl = document.getElementById('dr-position');
+  const headEl = document.getElementById('dr-heading');
+  if (!posEl || !headEl) return;
+
+  const csi = db.csi[0];
+  const history = db.history || [];
+  const patterns = db.patterns || [];
+  const wb = db.worldbank || {};
+
+  // Need survival data from session storage (set when user runs calcSurvival)
+  const survData = sessionStorage.getItem('convergence_surv_score');
+  const survScore = survData ? parseInt(survData) : null;
+
+  // Calculate CSI trajectory
+  const csiScore = csi ? csi.composite : 74;
+  const csiTrend = history.length > 1 ? (history[0].csi || 74) - (history[Math.min(4, history.length-1)].csi || 72) : 0;
+  const csiLabel = csiScore >= 80 ? 'CRITICAL' : csiScore >= 70 ? 'HIGH STRESS' : csiScore >= 55 ? 'ELEVATED' : 'MODERATE';
+
+  // Build position assessment
+  const warNews = (db.news || []).filter(n => ['war','attack','missiles','conflict'].some(w => n.title.toLowerCase().includes(w))).length;
+  const lifeExp = DataEngine.getLatest(wb.lifeExpectancy) || 73.5;
+
+  posEl.innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:1rem">
+      <div style="display:flex;justify-content:space-between;border-bottom:1px solid var(--bdr);padding-bottom:.8rem">
+        <span style="font-family:var(--fm);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ash)">CSI Score (Now)</span>
+        <span style="font-family:var(--fm);color:${csiScore >= 70 ? 'var(--ebrt)' : 'var(--gld)'}"><strong>${csiScore}/100</strong> — ${csiLabel}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;border-bottom:1px solid var(--bdr);padding-bottom:.8rem">
+        <span style="font-family:var(--fm);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ash)">CSI Trajectory</span>
+        <span style="color:${csiTrend > 0 ? 'var(--ebrt)' : csiTrend < 0 ? 'var(--jbrt)' : 'var(--ash)'};font-family:var(--fm)">${csiTrend > 0 ? '↑ Rising +' + csiTrend.toFixed(1) : csiTrend < 0 ? '↓ Falling ' + csiTrend.toFixed(1) : '→ Stable'}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;border-bottom:1px solid var(--bdr);padding-bottom:.8rem">
+        <span style="font-family:var(--fm);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ash)">Active Conflict Headlines</span>
+        <span style="font-family:var(--fm);color:${warNews >= 5 ? 'var(--ebrt)' : warNews >= 2 ? 'var(--gld)' : 'var(--jbrt)'}">${warNews} in current feed</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;border-bottom:1px solid var(--bdr);padding-bottom:.8rem">
+        <span style="font-family:var(--fm);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ash)">Patterns Detected</span>
+        <span style="font-family:var(--fm);color:var(--gld)">${patterns.length} active pattern${patterns.length !== 1 ? 's' : ''}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between">
+        <span style="font-family:var(--fm);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ash)">Your Resilience Score</span>
+        <span style="font-family:var(--fm);color:${!survScore ? 'var(--ash)' : survScore >= 70 ? 'var(--jbrt)' : survScore >= 50 ? 'var(--gld)' : 'var(--ebrt)'}">${survScore ? survScore + '%' : 'Run Survival Profile ↑'}</span>
+      </div>
+    </div>
+  `;
+
+  // Build heading recommendation
+  const highStress = csiScore >= 70;
+  const rising = csiTrend > 2;
+  const communityWeak = survScore && survScore < 50;
+  const communityStrong = survScore && survScore >= 70;
+
+  let heading = '';
+  if (communityStrong && !rising) {
+    heading = `<div style="color:var(--jbrt);font-size:1rem;font-weight:600;margin-bottom:.8rem">✓ Maintain & Extend</div>
+      <p style="font-size:.92rem;color:var(--smk);line-height:1.85">Your resilience profile is strong. The Pattern Engine shows elevated but stable stress. Your heading for the next 12 months: <strong style="color:var(--pch)">deepen what you have built and begin extending your network outward</strong>. Identify three people in your community with lower resilience scores and begin building genuine relationships with them. The Thomas principle: you cannot bring forth what you haven't cultivated. In a high-resilience position, cultivation means community expansion.</p>`;
+  } else if (highStress && rising && communityWeak) {
+    heading = `<div style="color:var(--ebrt);font-size:1rem;font-weight:600;margin-bottom:.8rem">⚠ Immediate Course Correction</div>
+      <p style="font-size:.92rem;color:var(--smk);line-height:1.85">CSI is high and rising. Your resilience profile shows significant vulnerabilities. Your heading for the next 12 months: <strong style="color:var(--pch)">treat community building as your primary project, not a secondary one</strong>. The Pattern Engine's war-inflation correlation makes the next 6 months a critical window for building the relationships that function as your actual safety net. One concrete action this week: introduce yourself to five neighbors you don't know by name.</p>`;
+  } else if (rising) {
+    heading = `<div style="color:var(--gld);font-size:1rem;font-weight:600;margin-bottom:.8rem">→ Consolidate & Prepare</div>
+      <p style="font-size:.92rem;color:var(--smk);line-height:1.85">The CSI trend is rising. The Pattern Engine has detected active stress patterns. Your heading: <strong style="color:var(--pch)">focus on consolidation over expansion for the next 12 months</strong>. Reduce financial leverage where possible. Strengthen the relationships you already have before building new ones. Add at least one practical skill to your repertoire. The Jubilees principle: preparation during the rising period, not during the crisis itself.</p>`;
+  } else {
+    heading = `<div style="color:var(--gld);font-size:1rem;font-weight:600;margin-bottom:.8rem">→ Build Systematically</div>
+      <p style="font-size:.92rem;color:var(--smk);line-height:1.85">The CSI score is elevated but the pattern engine shows no acute acceleration. Your heading: <strong style="color:var(--pch)">use this window to build deliberately</strong>. This is the Infancy Gospel of James period — the quiet preparation before the crisis makes preparation necessary. Identify your three largest vulnerabilities from the Survival Profile and address one per quarter over the next year.</p>`;
+  }
+
+  headEl.innerHTML = heading;
+}
+
+// Hook into renderAll
+const _origRenderAll = window.renderAll;
