@@ -242,14 +242,13 @@ function initGlobeWhenReady(db) {
     setTimeout(() => initGlobeWhenReady(db), 500);
     return;
   }
-  initGlobe(db);
-  renderGlobeEventList(db);
+  initGlobe(db).catch(e => console.error('Globe init error:', e));
 }
 
 // Hook into main data cycle
 DataEngine.on('updated', db => {
-  // Globe pins update with every news refresh
-  if (globeInitialized) updateGlobePins(db);
+  // Globe — refresh live data + pins
+  if (globeInitialized) refreshGlobeData(db).catch(() => {});
   else initGlobeWhenReady(db);
   // Markets refresh
   renderMarkets().catch(e => console.error('Markets update:', e));

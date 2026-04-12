@@ -741,211 +741,474 @@ function renderDeadReckoning(db) {
 const _origRenderAll = window.renderAll;
 
 /* ============================================================
-   WORLD EVENTS GLOBE — Globe.gl 3D
+   WORLD EVENTS GLOBE v2 — LIVE DATA
+   Sources: USGS Earthquakes + NASA EONET + GDACS + News Feed
+   Globe.gl + Three.js
    ============================================================ */
+
 let globeInstance = null;
 let globeInitialized = false;
+let globeAllEvents = []; // all events (static + live)
+let globeCurrentFilter = 'all';
+let globeAutoRotate = true;
+let globeLiveData = null; // cached /api/globe response
 
-// Static known event locations — always shown
-const STATIC_EVENTS = [
-  { lat: 35.69, lng: 51.39, name: 'Tehran', event: 'Iran War Epicenter — Day 43', type: 'war', size: 1.2, note: 'US/Israel strikes Feb 28. Khamenei killed. Ceasefire talks ongoing in Islamabad.' },
-  { lat: 33.68, lng: 73.05, name: 'Islamabad', event: 'Iran-US Peace Talks', type: 'diplomacy', size: 1.0, note: 'Day 43 ceasefire negotiations. Pakistan PM: "make or break" moment.' },
-  { lat: 50.45, lng: 30.52, name: 'Kyiv', event: 'Ukraine War — Easter Truce', type: 'war', size: 0.9, note: 'Russia-Ukraine Orthodox Easter ceasefire active April 2026.' },
-  { lat: 31.52, lng: 34.46, name: 'Gaza Strip', event: 'Active Conflict Zone', type: 'war', size: 0.9, note: 'Ongoing humanitarian crisis. 2.3M population under siege.' },
-  { lat: 15.50, lng: 32.56, name: 'Khartoum', event: 'Sudan Civil War', type: 'war', size: 0.9, note: 'Worst humanitarian crisis globally. RSF vs SAF. 25M+ displaced.' },
-  { lat: 26.57, lng: 56.25, name: 'Strait of Hormuz', event: 'Global Oil Chokepoint — Closed', type: 'economic', size: 1.3, note: '20% of global oil passes through Hormuz. Iranian toll system. EU fuel shortage warning.' },
-  { lat: 37.77, lng: -122.43, name: 'San Francisco', event: 'AGI Development Hub', type: 'tech', size: 0.9, note: 'OpenAI, Anthropic, Google DeepMind. AI capability curve at steepest in history.' },
-  { lat: 51.50, lng: -0.13, name: 'London', event: 'Disinformation Crisis', type: 'tech', size: 0.8, note: 'Mayor warns of disinformation blizzard targeting city. AI-generated synthetic content.' },
-  { lat: 37.75, lng: 29.05, name: 'Cape Canaveral', event: 'Artemis II Return', type: 'climate', size: 0.8, note: 'First crewed Moon mission in 53 years returned April 11, 2026.' },
-  { lat: 23.69, lng: -12.89, name: 'Atlantic Ocean', event: 'AMOC Weakening', type: 'climate', size: 1.1, note: 'Atlantic Meridional Overturning Circulation at weakest in 1,000 years. Tipping point risk: 2.0°C.' },
-  { lat: -1.00, lng: -51.00, name: 'Amazon Basin', event: 'Dieback Risk Zone', type: 'climate', size: 1.1, note: 'Amazon dieback tipping point: 2.0°C. Eastern Amazon already shifting to savanna.' },
-  { lat: 72.00, lng: -42.00, name: 'Greenland Ice Sheet', event: 'Destabilization Zone', type: 'climate', size: 1.0, note: 'Tipping point: 1.5°C. Crossed in 2024 peak year. Irreversible ice loss now occurring.' },
-  { lat: 39.90, lng: 116.41, name: 'Beijing', event: 'BRICS Pay Coordination', type: 'economic', size: 0.9, note: 'Yuan becoming reserve currency alternative. BRICS Pay operational in 44 countries.' },
-  { lat: 55.75, lng: 37.62, name: 'Moscow', event: 'Ruble-Yuan Settlement', type: 'economic', size: 0.8, note: 'Russia conducting 90%+ of trade in non-dollar currencies since 2022.' },
-  { lat: 40.71, lng: -74.01, name: 'New York', event: 'US Debt Clock — $36T', type: 'economic', size: 0.9, note: 'Federal debt at 118% GDP. Fastest growing debt in peacetime US history.' },
-  { lat: 32.08, lng: 34.78, name: 'Tel Aviv', event: 'Lebanon Negotiations', type: 'diplomacy', size: 0.7, note: 'Lebanon-Israel officials meeting Tuesday in Washington.' },
-  { lat: -33.87, lng: 151.21, name: 'Great Barrier Reef', event: 'First Tipping Point Crossed', type: 'climate', size: 1.0, note: 'Coral reef systems declared past tipping point. Global Tipping Points Report 2025.' },
-  { lat: 28.61, lng: 77.21, name: 'New Delhi', event: 'India: Alternative Reserve', type: 'economic', size: 0.8, note: 'India accelerating rupee internationalization. Digital rupee CBDC launched.' },
-];
+/* ─── COLOR SYSTEM ─────────────────────────────── */
+const GLOBE_COLORS = {
+  // Geopolitical
+  war:       '#c04a28',
+  economic:  '#d4b26a',
+  climate:   '#28b088',
+  tech:      '#7860c0',
+  diplomacy: '#4090d8',
+  // Natural
+  earthquake_red:    '#FF2222',
+  earthquake_orange: '#FF8800',
+  earthquake_yellow: '#FFD700',
+  earthquake_green:  '#44CC66',
+  wildfire:  '#FF4500',
+  storm:     '#8B5CF6',
+  cyclone:   '#8B5CF6',
+  volcano:   '#FF6B00',
+  flood:     '#06B6D4',
+  tsunami:   '#0EA5E9',
+  drought:   '#F59E0B',
+  ice:       '#BAE6FD',
+  landslide: '#92400E',
+  disaster:  '#F97316',
+  snow:      '#E0F2FE',
+  event:     '#d4b26a',
+};
 
-// Map news keywords to geo-locations
-const NEWS_GEOCODE = [
-  { keywords: ['iran','tehran','khamenei','hormuz'], lat: 35.69, lng: 51.39, name: 'Iran', type: 'war' },
-  { keywords: ['islamabad','pakistan'], lat: 33.68, lng: 73.05, name: 'Islamabad', type: 'diplomacy' },
-  { keywords: ['ukraine','kyiv','kiev','russia'], lat: 50.45, lng: 30.52, name: 'Ukraine', type: 'war' },
-  { keywords: ['gaza','hamas','west bank'], lat: 31.52, lng: 34.46, name: 'Gaza', type: 'war' },
-  { keywords: ['sudan','khartoum','rsf'], lat: 15.50, lng: 32.56, name: 'Sudan', type: 'war' },
-  { keywords: ['london','uk','britain','bbc'], lat: 51.50, lng: -0.13, name: 'London', type: 'tech' },
-  { keywords: ['openai','ai','artificial intelligence','chatgpt','anthropic'], lat: 37.77, lng: -122.43, name: 'Silicon Valley', type: 'tech' },
-  { keywords: ['fed','federal reserve','wall street','nasdaq','s&p'], lat: 40.71, lng: -74.01, name: 'New York', type: 'economic' },
-  { keywords: ['china','beijing','yuan','brics'], lat: 39.90, lng: 116.41, name: 'Beijing', type: 'economic' },
-  { keywords: ['nasa','space','moon','artemis','rocket'], lat: 28.52, lng: -80.68, name: 'Cape Canaveral', type: 'climate' },
-  { keywords: ['climate','temperature','warming','flood','wildfire'], lat: -1.00, lng: 20.00, name: 'Climate Zone', type: 'climate' },
-  { keywords: ['amazon','brazil'], lat: -3.47, lng: -62.22, name: 'Amazon', type: 'climate' },
-  { keywords: ['inflation','oil','fuel','energy','prices'], lat: 26.57, lng: 56.25, name: 'Hormuz Region', type: 'economic' },
-];
-
-function getEventColor(type) {
-  return { war: '#c04a28', economic: '#d4b26a', climate: '#28b088', tech: '#7860c0', diplomacy: '#4090d8' }[type] || '#a09880';
+function getEventColor(event) {
+  const type = event.type || '';
+  const sev = event.severity || '';
+  if (type === 'earthquake') {
+    const mag = event.magnitude || 4.5;
+    if (mag >= 7) return GLOBE_COLORS.earthquake_red;
+    if (mag >= 6) return GLOBE_COLORS.earthquake_orange;
+    if (mag >= 5.5) return GLOBE_COLORS.earthquake_yellow;
+    return GLOBE_COLORS.earthquake_green;
+  }
+  return GLOBE_COLORS[type] || GLOBE_COLORS[sev] || GLOBE_COLORS.event;
 }
 
-function initGlobe(db) {
-  if (globeInitialized) { updateGlobePins(db); return; }
-  const container = document.getElementById('globeViz');
-  if (!container || typeof Globe === 'undefined') {
-    setTimeout(() => initGlobe(db), 1000);
-    return;
+function getEventSize(event) {
+  if (event.type === 'earthquake') {
+    const mag = event.magnitude || 4.5;
+    return Math.max(0.25, Math.min(2.8, (mag - 4) * 0.65));
+  }
+  return event.size || 0.5;
+}
+
+function getEventAltitude(event) {
+  if (event.type === 'earthquake') {
+    const mag = event.magnitude || 4.5;
+    return Math.max(0.02, Math.min(0.18, (mag - 4) * 0.03));
+  }
+  if (['war', 'economic'].includes(event.type)) return 0.06;
+  return 0.04;
+}
+
+/* ─── STATIC GEOPOLITICAL EVENTS ───────────────── */
+const STATIC_EVENTS = [
+  // Active conflicts
+  { lat:35.69, lng:51.39, name:'Tehran', event:'🔴 Iran War Epicenter', type:'war', size:1.3, desc:'US/Israel strikes Feb 28, 2026. 900+ strikes in 12 hours. Khamenei killed. Day 43 — ceasefire talks in Islamabad.', source:'Britannica 2026' },
+  { lat:33.68, lng:73.05, name:'Islamabad', event:'🔵 Iran-US Peace Talks', type:'diplomacy', size:1.0, desc:'Day 43 ceasefire negotiations. Pakistan PM: "make or break." Senior officials from 6 nations present.', source:'Al Jazeera Live' },
+  { lat:50.45, lng:30.52, name:'Kyiv', event:'⚔️ Ukraine War — Easter Truce', type:'war', size:0.9, desc:'Russia-Ukraine Orthodox Easter ceasefire active. 800+ days of full-scale war. 204M+ under armed group control globally (ICRC).', source:'BBC World Live' },
+  { lat:31.52, lng:34.46, name:'Gaza Strip', event:'⚔️ Active Conflict Zone', type:'war', size:0.95, desc:'2.3M population. Ongoing humanitarian crisis. IHL violations documented by UN.', source:'UN OCHA 2026' },
+  { lat:15.50, lng:32.56, name:'Khartoum', event:'🔴 Sudan Civil War', type:'war', size:0.95, desc:'Worst humanitarian crisis globally. RSF vs SAF. 25M+ displaced — largest displacement crisis on Earth.', source:'ACLED March 2026' },
+  { lat:34.00, lng:36.00, name:'Lebanon', event:'⚔️ Lebanon-Israel Tensions', type:'war', size:0.7, desc:'Lebanon-Israel officials meeting in Washington. Fragile ceasefire holding. Reconstruction talks ongoing.', source:'BBC World' },
+  { lat:15.55, lng:44.00, name:'Sanaa', event:'⚔️ Yemen Conflict Zone', type:'war', size:0.7, desc:'Houthi drone/missile campaign active. Red Sea shipping disrupted. Coalition operations ongoing.', source:'UN Security Council 2026' },
+  { lat:9.03, lng:38.74, name:'Addis Ababa', event:'⚔️ Horn of Africa Conflict', type:'war', size:0.65, desc:'Ethiopia-Sudan border tensions. Tigray post-conflict reconstruction. AU-mediated negotiations.', source:'AU 2026' },
+
+  // Economic chokepoints
+  { lat:26.57, lng:56.25, name:'Strait of Hormuz', event:'💰 Global Oil Chokepoint — CONTESTED', type:'economic', size:1.4, desc:'20% of global oil transits here. Iranian toll system. EU aviation fuel shortage warning. Tankers refusing Iranian levies. Trump: "reopening soon."', source:'BBC Business Live' },
+  { lat:12.50, lng:43.35, name:'Bab el-Mandeb', event:'💰 Red Sea Chokepoint', type:'economic', size:1.0, desc:'Houthi attacks forcing rerouting around Africa. 12% of global trade. Container shipping rates +300% since Jan 2024.', source:'Lloyd\'s List 2026' },
+  { lat:30.00, lng:32.57, name:'Suez Canal', event:'💰 Trade Route Stress', type:'economic', size:0.9, desc:'Traffic down 42% from Houthi attacks in Red Sea. Egypt losing $2B+ monthly in canal revenue.', source:'Suez Canal Authority 2026' },
+  { lat:9.35, lng:-79.92, name:'Panama Canal', event:'💰 Drought Restrictions', type:'economic', size:0.8, desc:'Record low water levels 2024 forced traffic restrictions. Climate change threatens long-term viability of this 6% global trade route.', source:'ACP 2026' },
+
+  // Geopolitical hubs
+  { lat:40.71, lng:-74.01, name:'New York', event:'📊 US Debt Clock — $36T', type:'economic', size:0.9, desc:'Federal debt at 118% GDP. Fastest peacetime debt growth in US history. Dollar reserve share at 57.8% (down from 71% in 2000).', source:'World Bank API Live' },
+  { lat:39.90, lng:116.41, name:'Beijing', event:'📊 BRICS Pay + Yuan Reserve Push', type:'economic', size:0.95, desc:'Yuan reserve share rising. BRICS Pay operational in 44 countries. China buying gold at record pace. Dollar reserve dominance structurally challenged.', source:'IMF COFER 2026' },
+  { lat:55.75, lng:37.62, name:'Moscow', event:'📊 Non-Dollar Trade Hub', type:'economic', size:0.8, desc:'Russia conducting 90%+ of trade in non-dollar currencies. Ruble-yuan settlement expanding. Sanctions accelerating global dedollarization.', source:'Bank of Russia 2026' },
+  { lat:28.61, lng:77.21, name:'New Delhi', event:'📊 India: Alternative Reserve', type:'economic', size:0.8, desc:'Rupee internationalization accelerating. Digital rupee CBDC launched. India now largest global oil buyer, negotiating in non-dollar terms.', source:'RBI 2026' },
+  { lat:-23.55, lng:-46.63, name:'São Paulo', event:'📊 BRICS+ Financial Hub', type:'economic', size:0.75, desc:'Brazil hosting BRICS+ summit 2026. G20 presidency pushing "global south" financial architecture. Dollar alternative settlement systems expanding.', source:'BRICS 2026' },
+
+  // Technology / AI
+  { lat:37.42, lng:-122.09, name:'Mountain View', event:'🤖 AGI Development Race', type:'tech', size:1.0, desc:'Google DeepMind HQ. 50% AGI probability by 2028 (Shane Legg). AI capability doubling every 18 months. Governance 3-5 years behind.', source:'DeepMind/Legg Jan 2026' },
+  { lat:37.78, lng:-122.40, name:'San Francisco', event:'🤖 OpenAI + Anthropic Hub', type:'tech', size:0.95, desc:'OpenAI paused UK data center over energy costs (BBC Tech Apr 9). AI epistemic crisis active. First cities banning social media for minors.', source:'BBC Tech Live' },
+  { lat:51.50, lng:-0.13, name:'London', event:'🤖 Disinformation Blizzard', type:'tech', size:0.85, desc:'Mayor warns of targeted disinformation campaign portraying city "in decline." AI-generated synthetic content at city scale. Greece banned social media under-15.', source:'BBC Tech Live' },
+  { lat:37.57, lng:127.00, name:'Seoul', event:'🤖 Korea AI Semiconductor Hub', type:'tech', size:0.75, desc:'Samsung + SK Hynix dominate HBM memory critical for AI training. Korea controls 60%+ of global HBM market. AI supply chain chokepoint.', source:'KITA 2026' },
+  { lat:24.80, lng:120.97, name:'Hsinchu', event:'🤖 TSMC — AI Chip Monopoly', type:'tech', size:1.0, desc:'TSMC fabricates 90%+ of advanced AI chips. Geopolitical flashpoint — US+China both dependent on Taiwan. Existential supply chain vulnerability.', source:'SIA 2026' },
+
+  // Climate critical zones
+  { lat:-18.00, lng:-52.00, name:'Amazon Basin', event:'🌡️ Dieback Risk Zone', type:'climate', size:1.1, desc:'Eastern Amazon already shifting to savanna. Tipping point: 2.0°C. 10% already deforested beyond recovery threshold. Ecosystem collapse would release 90GT CO2.', source:'Global Tipping Points 2025' },
+  { lat:72.00, lng:-42.00, name:'Greenland', event:'🌡️ Ice Sheet Tipping Point', type:'climate', size:1.0, desc:'Tipping point crossed at 1.5°C (2024 peak: 1.47°C). Irreversible ice loss now occurring. Full melt = 7m sea level rise over centuries.', source:'Global Tipping Points 2025' },
+  { lat:-60.00, lng:-65.00, name:'West Antarctica', event:'🌡️ Ice Sheet Destabilization', type:'climate', size:0.95, desc:'Thwaites "Doomsday Glacier" — unstable. Full collapse = 65cm sea level rise. Process now likely irreversible at current temperatures.', source:'BAS/NSIDC 2025' },
+  { lat:0.00, lng:-28.00, name:'Atlantic (AMOC)', event:'🌡️ Ocean Circulation Weakening', type:'climate', size:1.1, desc:'AMOC at weakest in 1,600 years. Tipping point at 2.0°C. Collapse would cool Europe dramatically, disrupt global rainfall patterns.', source:'Nature Climate Change 2025' },
+  { lat:-18.00, lng:147.00, name:'Great Barrier Reef', event:'🌡️ First Tipping Point Crossed', type:'climate', size:1.0, desc:'Warm-water coral reefs declared past tipping point. 91% bleaching event 2024. Global Tipping Points Report 2025: first irreversible system loss.', source:'Global Tipping Points 2025' },
+  { lat:64.00, lng:-19.00, name:'Iceland', event:'🌋 Volcanic Activity', type:'volcano', size:0.8, desc:'Reykjanes Peninsula eruptions ongoing since 2021. Multiple fissures. Disrupting European air travel periodically. Grindavik evacuated repeatedly.', source:'IMO Iceland 2026' },
+  { lat:60.00, lng:150.00, name:'North Pacific', event:'🌡️ Permafrost Thaw Zone', type:'climate', size:0.95, desc:'Boreal permafrost abrupt thaw tipping point: 1.5°C. Methane release could accelerate global warming by 0.3-0.5°C. Carbon time bomb.', source:'Global Tipping Points 2025' },
+
+  // Space
+  { lat:28.52, lng:-80.65, name:'Cape Canaveral', event:'🚀 Artemis II — Returned Apr 11', type:'climate', size:0.85, desc:'NASA Artemis II: First crewed Moon mission in 53 years completed April 11, 2026. First Earthset images from lunar far side. Human reach expanding beyond collapse.', source:'NASA RSS Live' },
+  { lat:5.23, lng:-52.77, name:'Kourou', event:'🚀 Ariane 6 Launch Site', type:'climate', size:0.65, desc:'European Space Agency launch facility. Ariane 6 rocket operational 2024. European space sovereignty — independent of US/Russia/China launch providers.', source:'ESA 2026' },
+
+  // Nuclear
+  { lat:34.05, lng:131.86, name:'Hiroshima', event:'☢️ Nuclear Memory Site', type:'war', size:0.6, desc:'FAS Nuclear Notebook 2024: 10,929 warheads globally. Russia: 5,580. USA: 5,044. 9 nuclear states. Multipolar deterrence increasingly unstable.', source:'FAS Nuclear Notebook 2024' },
+  { lat:37.60, lng:127.15, name:'Seoul', event:'☢️ Nuclear Proximity Zone', type:'war', size:0.75, desc:'DPRK estimated 50 nuclear warheads. Intercontinental range achieved. Seoul 35km from border. Densest nuclear standoff zone outside Europe.', source:'FAS 2024' },
+  { lat:30.00, lng:70.00, name:'Pakistan-India Border', event:'☢️ Nuclear Flashpoint', type:'war', size:0.85, desc:'India: 180 warheads, Pakistan: 170. Both modernizing rapidly. Kashmir tensions perennial. Only nuclear-armed states with active territorial dispute and documented near-exchanges.', source:'FAS Nuclear Notebook 2024' },
+
+  // Diplomacy / Recovery
+  { lat:46.95, lng:7.45, name:'Bern', event:'🔵 Swiss Neutrality Hub', type:'diplomacy', size:0.65, desc:'Switzerland hosting multiple track-2 diplomacy channels. Iran backchannels. Ukraine peace initiative. Neutral ground increasingly rare in multipolar world.', source:'FDFA Switzerland 2026' },
+  { lat:48.85, lng:2.35, name:'Paris', event:'🔵 COP30 Preparation', type:'diplomacy', size:0.7, desc:'France coordinating post-COP29 climate implementation. ICJ ruling July 2025 legally binding on emissions. First binding international climate obligation.', source:'UNFCCC 2026' },
+];
+
+/* ─── NEWS → GEO MAPPING ────────────────────────── */
+const NEWS_GEO = [
+  { kw:['iran','tehran','khamenei'], lat:35.69, lng:51.39, type:'war' },
+  { kw:['islamabad','pakistan'], lat:33.68, lng:73.05, type:'diplomacy' },
+  { kw:['ukraine','kyiv','kiev'], lat:50.45, lng:30.52, type:'war' },
+  { kw:['gaza','hamas','west bank','palestine'], lat:31.52, lng:34.46, type:'war' },
+  { kw:['sudan','khartoum','rsf'], lat:15.50, lng:32.56, type:'war' },
+  { kw:['hormuz','straits','tanker','oil price'], lat:26.57, lng:56.25, type:'economic' },
+  { kw:['red sea','houthi','suez','shipping'], lat:13.00, lng:44.00, type:'economic' },
+  { kw:['openai','anthropic','chatgpt','agi'], lat:37.78, lng:-122.40, type:'tech' },
+  { kw:['london','uk','britain','bbc'], lat:51.50, lng:-0.13, type:'tech' },
+  { kw:['fed','wall street','nasdaq','s&p','dow'], lat:40.71, lng:-74.01, type:'economic' },
+  { kw:['china','beijing','yuan','brics','ccp'], lat:39.90, lng:116.41, type:'economic' },
+  { kw:['russia','moscow','putin','ruble'], lat:55.75, lng:37.62, type:'war' },
+  { kw:['nasa','space','moon','artemis','webb'], lat:28.52, lng:-80.65, type:'climate' },
+  { kw:['climate','temperature','warming','flood','wildfire'], lat:-1.00, lng:20.00, type:'climate' },
+  { kw:['amazon','brazil','deforestation'], lat:-3.47, lng:-62.22, type:'climate' },
+  { kw:['taiwan','tsmc','chip'], lat:25.04, lng:121.56, type:'tech' },
+  { kw:['inflation','interest rate','fed','treasury'], lat:40.71, lng:-74.01, type:'economic' },
+  { kw:['india','modi','rupee'], lat:28.61, lng:77.21, type:'economic' },
+  { kw:['north korea','dprk','kim'], lat:39.03, lng:125.75, type:'war' },
+  { kw:['europe','eu','brussels'], lat:50.85, lng:4.35, type:'diplomacy' },
+];
+
+/* ─── FILTER ────────────────────────────────────── */
+window.setGlobeFilter = function(btn) {
+  document.querySelectorAll('.gf-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  globeCurrentFilter = btn.dataset.filter;
+  applyGlobeFilter();
+};
+
+window.resetGlobeView = function() {
+  if (globeInstance) globeInstance.pointOfView({ lat: 25, lng: 15, altitude: 2.8 }, 1200);
+};
+
+window.toggleGlobeRotate = function() {
+  if (!globeInstance) return;
+  globeAutoRotate = !globeAutoRotate;
+  globeInstance.controls().autoRotate = globeAutoRotate;
+  document.getElementById('rotate-btn').textContent = globeAutoRotate ? '⏸ Pause' : '▶ Resume';
+};
+
+function matchesFilter(event) {
+  if (globeCurrentFilter === 'all') return true;
+  const filters = globeCurrentFilter.split(',');
+  return filters.some(f => event.type === f || (event.subtype || '') === f);
+}
+
+function applyGlobeFilter() {
+  if (!globeInstance) return;
+  const filtered = globeAllEvents.filter(matchesFilter);
+  globeInstance.pointsData(filtered);
+  renderGlobeEventList(filtered);
+}
+
+/* ─── BUILD EVENT LIST ───────────────────────────── */
+function buildAllEvents(db, liveData) {
+  const events = [...STATIC_EVENTS];
+  const seen = new Set(events.map(e => e.name + e.type));
+
+  // Add live API events (earthquakes, EONET, GDACS)
+  if (liveData?.events) {
+    for (const e of liveData.events) {
+      const key = `${e.lat.toFixed(1)},${e.lng.toFixed(1)},${e.type}`;
+      if (!seen.has(key)) {
+        seen.add(key);
+        events.push(e);
+      }
+    }
   }
 
+  // Add news-derived events
+  const news = db.news || [];
+  news.slice(0, 50).forEach(item => {
+    const title = (item.title + ' ' + (item.description || '')).toLowerCase();
+    for (const rule of NEWS_GEO) {
+      if (rule.kw.some(k => title.includes(k))) {
+        const key = `${rule.lat},${rule.lng},news`;
+        if (!seen.has(key)) {
+          seen.add(key);
+          events.push({
+            lat: rule.lat + (Math.random() - 0.5) * 0.3,
+            lng: rule.lng + (Math.random() - 0.5) * 0.3,
+            name: item.source,
+            event: item.title.slice(0, 80),
+            title: item.title.slice(0, 80),
+            desc: `[${item.source}] ${(item.description || '').slice(0, 150)}`,
+            detail: `Published: ${item.pubDate || 'Recent'} · Source: ${item.source}`,
+            type: rule.type,
+            size: 0.5,
+            isLive: true,
+            url: item.link,
+            source: item.source,
+          });
+        }
+        break;
+      }
+    }
+  });
+
+  return events;
+}
+
+/* ─── GLOBE INIT ────────────────────────────────── */
+async function initGlobe(db) {
+  if (globeInitialized) { await refreshGlobeData(db); return; }
+
+  const container = document.getElementById('globeViz');
+  if (!container || typeof Globe === 'undefined') {
+    setTimeout(() => initGlobe(db), 600);
+    return;
+  }
   globeInitialized = true;
 
-  // Build initial points
-  const points = buildGlobePoints(db);
+  // Update loading text
+  const loadText = document.getElementById('globe-load-text');
+  const loadSub = document.getElementById('globe-load-sub');
+  if (loadText) loadText.textContent = 'Fetching Live Events';
+  if (loadSub) loadSub.textContent = 'USGS Earthquakes · NASA EONET · GDACS Disasters...';
+
+  // Fetch live data
+  try {
+    const resp = await fetch('/api/globe');
+    if (resp.ok) {
+      globeLiveData = await resp.json();
+      updateGlobeStats(globeLiveData.stats);
+    }
+  } catch(e) { console.warn('Globe API failed, using static data'); }
+
+  if (loadText) loadText.textContent = 'Rendering Globe';
+  if (loadSub) loadSub.textContent = 'Building 3D scene...';
+
+  globeAllEvents = buildAllEvents(db, globeLiveData);
+  const filtered = globeAllEvents.filter(matchesFilter);
+
+  // ARCS — geopolitical connections
+  const ARCS = [
+    { startLat:40.71, startLng:-74.01, endLat:35.69, endLng:51.39, color:'rgba(192,74,40,0.7)', label:'🇺🇸 US strikes → Iran', dash:0.4 },
+    { startLat:35.69, startLng:51.39, endLat:33.68, endLng:73.05, color:'rgba(64,144,216,0.7)', label:'🕊️ Iran → Islamabad talks', dash:0.6 },
+    { startLat:26.57, startLng:56.25, endLat:51.50, endLng:-0.13, color:'rgba(212,178,106,0.7)', label:'⛽ Hormuz → EU fuel crisis', dash:0.4 },
+    { startLat:39.90, startLng:116.41, endLat:40.71, endLng:-74.01, color:'rgba(120,96,192,0.6)', label:'🀄 China → USD reserve challenge', dash:0.3 },
+    { startLat:55.75, startLng:37.62, endLat:50.45, endLng:30.52, color:'rgba(192,74,40,0.5)', label:'🇷🇺 Russia → Ukraine war', dash:0.5 },
+    { startLat:25.04, startLng:121.56, endLat:37.42, endLng:-122.09, color:'rgba(120,96,192,0.5)', label:'💾 TSMC → Silicon Valley AI chips', dash:0.5 },
+    { startLat:26.57, startLng:56.25, endLat:28.61, endLng:77.21, color:'rgba(212,178,106,0.5)', label:'🛢️ Oil → India (non-dollar)', dash:0.4 },
+    { startLat:28.52, startLng:-80.65, endLat:0, endLng:0, color:'rgba(40,176,136,0.4)', label:'🚀 Artemis II Moon mission return', dash:0.6 },
+    { startLat:13.00, startLng:44.00, endLat:51.50, endLng:-0.13, color:'rgba(212,178,106,0.4)', label:'🚢 Red Sea → EU shipping disruption', dash:0.3 },
+  ];
+
+  // RINGS — critical hotspots
+  const RINGS = [
+    { lat:26.57, lng:56.25, maxR:5, color:'#d4b26a', speed:3, repeat:1000 },
+    { lat:35.69, lng:51.39, maxR:4, color:'#c04a28', speed:2.5, repeat:900 },
+    { lat:-18.00, lng:147.00, maxR:3.5, color:'#28b088', speed:2, repeat:1400 },
+    { lat:50.45, lng:30.52, maxR:3, color:'#c04a28', speed:2, repeat:1100 },
+    { lat:15.50, lng:32.56, maxR:3, color:'#c04a28', speed:1.8, repeat:1300 },
+    { lat:72.00, lng:-42.00, maxR:3, color:'#4090d8', speed:1.5, repeat:1800 },
+    { lat:0.00, lng:-28.00, maxR:3, color:'#4090d8', speed:1.5, repeat:2000 },
+    { lat:25.04, lng:121.56, maxR:2.5, color:'#7860c0', speed:2, repeat:1200 },
+  ];
+
+  // Add earthquake rings for M6+
+  if (globeLiveData?.events) {
+    for (const e of globeLiveData.events) {
+      if (e.type === 'earthquake' && e.magnitude >= 6) {
+        RINGS.push({ lat:e.lat, lng:e.lng, maxR: e.magnitude - 3, color:'#FF4444', speed:2.5, repeat:1500 });
+      }
+    }
+  }
 
   const globe = Globe()
     .globeImageUrl('https://unpkg.com/three-globe@2.32.0/example/img/earth-blue-marble.jpg')
     .bumpImageUrl('https://unpkg.com/three-globe@2.32.0/example/img/earth-topology.png')
     .backgroundImageUrl('https://unpkg.com/three-globe@2.32.0/example/img/night-sky.png')
     .atmosphereColor('#d4b26a')
-    .atmosphereAltitude(0.18)
-    .pointsData(points)
-    .pointColor(d => getEventColor(d.type))
-    .pointRadius(d => d.size * 0.4)
-    .pointAltitude(d => 0.04 + (d.size - 0.7) * 0.06)
-    .pointLabel(d => `
-      <div style="background:rgba(5,5,4,.92);border:1px solid ${getEventColor(d.type)};padding:.7rem 1rem;max-width:220px;font-family:'JetBrains Mono',monospace">
-        <div style="font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:${getEventColor(d.type)};margin-bottom:.3rem">${d.name}</div>
-        <div style="font-size:11px;color:#e4dcc8;margin-bottom:.4rem">${d.event}</div>
-        <div style="font-size:10px;color:#a09880;line-height:1.5">${d.note || ''}</div>
-      </div>
-    `)
+    .atmosphereAltitude(0.22)
+
+    // POINTS
+    .pointsData(filtered)
+    .pointColor(d => getEventColor(d))
+    .pointRadius(d => getEventSize(d) * 0.42)
+    .pointAltitude(d => getEventAltitude(d))
+    .pointLabel(d => buildGlobeTooltip(d))
     .onPointClick(d => showGlobeDetail(d))
     .onPointHover(d => { container.style.cursor = d ? 'pointer' : 'grab'; })
+
+    // ARCS
+    .arcsData(ARCS)
+    .arcColor('color')
+    .arcDashLength('dash')
+    .arcDashGap(0.15)
+    .arcDashAnimateTime(d => 1500 + Math.random() * 1000)
+    .arcStroke(0.55)
+    .arcAltitude(0.22)
+    .arcLabel('label')
+
+    // RINGS
+    .ringsData(RINGS)
+    .ringColor(d => t => {
+      const hex = d.color;
+      const alpha = Math.round((1 - t) * 200).toString(16).padStart(2, '0');
+      return hex + alpha;
+    })
+    .ringMaxRadius('maxR')
+    .ringPropagationSpeed('speed')
+    .ringRepeatPeriod('repeat')
+
     (container);
 
   globeInstance = globe;
 
-  // Auto-rotate
+  // Controls
   globe.controls().autoRotate = true;
-  globe.controls().autoRotateSpeed = 0.35;
+  globe.controls().autoRotateSpeed = 0.28;
   globe.controls().enableZoom = true;
   globe.controls().zoomSpeed = 0.8;
-  globe.controls().minDistance = 150;
-  globe.controls().maxDistance = 600;
+  globe.controls().minDistance = 130;
+  globe.controls().maxDistance = 700;
 
   // Pause on interaction
-  container.addEventListener('mousedown', () => { globe.controls().autoRotate = false; });
-  container.addEventListener('touchstart', () => { globe.controls().autoRotate = false; });
-  container.addEventListener('mouseup', () => { setTimeout(() => { globe.controls().autoRotate = true; }, 3000); });
-  container.addEventListener('touchend', () => { setTimeout(() => { globe.controls().autoRotate = true; }, 3000); });
+  ['mousedown','touchstart'].forEach(ev =>
+    container.addEventListener(ev, () => { globe.controls().autoRotate = false; }, { passive: true })
+  );
+  ['mouseup','touchend'].forEach(ev =>
+    container.addEventListener(ev, () => { setTimeout(() => { if (globeAutoRotate) globe.controls().autoRotate = true; }, 4000); }, { passive: true })
+  );
 
-  // Start pointing at Middle East (most active zone)
-  globe.pointOfView({ lat: 30, lng: 45, altitude: 2.5 }, 1500);
+  // Start view: Middle East / global view
+  globe.pointOfView({ lat: 25, lng: 40, altitude: 2.6 }, 1800);
 
-  // Add arcs for key connections
-  const arcs = [
-    { startLat: 35.69, startLng: 51.39, endLat: 33.68, endLng: 73.05, color: '#4090d8', label: 'Iran → Islamabad talks' },
-    { startLat: 40.71, startLng: -74.01, endLat: 35.69, endLng: 51.39, color: '#c04a28', label: 'US → Iran war' },
-    { startLat: 26.57, startLng: 56.25, endLat: 51.50, endLng: -0.13, color: '#d4b26a', label: 'Hormuz → EU fuel crisis' },
-    { startLat: 39.90, startLng: 116.41, endLat: 40.71, endLng: -74.01, color: '#7860c0', label: 'China → USD reserve' },
-  ];
-
-  globe.arcsData(arcs)
-    .arcColor('color')
-    .arcDashLength(0.4)
-    .arcDashGap(0.15)
-    .arcDashAnimateTime(2000)
-    .arcStroke(0.6)
-    .arcAltitude(0.25)
-    .arcLabel('label');
-
-  // Add rings at critical zones
-  const rings = [
-    { lat: 26.57, lng: 56.25, maxR: 4, color: '#d4b26a', propagationSpeed: 3, repeatPeriod: 1200 },
-    { lat: 35.69, lng: 51.39, maxR: 3, color: '#c04a28', propagationSpeed: 2.5, repeatPeriod: 1000 },
-    { lat: -33.87, lng: 151.21, maxR: 2.5, color: '#28b088', propagationSpeed: 2, repeatPeriod: 1500 },
-  ];
-
-  globe.ringsData(rings)
-    .ringColor(d => t => { const c = d.color; return c + Math.round((1-t)*180).toString(16).padStart(2,'0'); })
-    .ringMaxRadius('maxR')
-    .ringPropagationSpeed('propagationSpeed')
-    .ringRepeatPeriod('repeatPeriod');
-
-  // Hide loading overlay
-  const loading = document.getElementById('globe-loading');
-  if (loading) { setTimeout(() => { loading.style.opacity = 0; setTimeout(() => loading.remove(), 500); }, 800); }
-
-  // Resize handler
-  const resize = () => {
-    globe.width(container.offsetWidth);
-    globe.height(container.offsetHeight);
-  };
+  // Resize
+  const resize = () => { globe.width(container.offsetWidth); globe.height(container.offsetHeight); };
   window.addEventListener('resize', resize);
+
+  // Hide loading
+  const loading = document.getElementById('globe-loading');
+  if (loading) setTimeout(() => { loading.style.transition = 'opacity .5s'; loading.style.opacity = 0; setTimeout(() => loading.remove(), 600); }, 1000);
+
+  // Render event list
+  renderGlobeEventList(filtered);
+
+  // Total pin count
+  const countEl = document.getElementById('event-count');
+  if (countEl) countEl.textContent = `${filtered.length} events · ${globeAllEvents.length} total`;
 }
 
-function buildGlobePoints(db) {
-  const points = [...STATIC_EVENTS];
-  const news = db.news || [];
-  const seen = new Set(points.map(p => p.name));
-
-  news.slice(0, 40).forEach(item => {
-    const title = (item.title + ' ' + (item.description || '')).toLowerCase();
-    NEWS_GEOCODE.forEach(rule => {
-      if (rule.keywords.some(k => title.includes(k))) {
-        const key = rule.name;
-        if (!seen.has(key)) {
-          seen.add(key);
-          points.push({
-            lat: rule.lat + (Math.random() - 0.5) * 0.5,
-            lng: rule.lng + (Math.random() - 0.5) * 0.5,
-            name: rule.name,
-            event: item.title.slice(0, 80),
-            type: rule.type,
-            size: 0.7,
-            note: `[${item.source}] ${(item.description || '').slice(0, 120)}`,
-            isLive: true,
-          });
-        }
-      }
-    });
-  });
-
-  return points;
+/* ─── TOOLTIP BUILDER ───────────────────────────── */
+function buildGlobeTooltip(d) {
+  const color = getEventColor(d);
+  const typeLabel = (d.type || 'event').toUpperCase();
+  const mag = d.magnitude ? ` · M${d.magnitude.toFixed(1)}` : '';
+  const depth = d.depth ? ` · Depth: ${d.depth}km` : '';
+  return `
+    <div style="background:rgba(2,2,1,.92);border:1px solid ${color};padding:10px 13px;max-width:240px;font-family:'JetBrains Mono',monospace;border-radius:3px">
+      <div style="font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:${color};margin-bottom:4px">${typeLabel}${mag}${depth}</div>
+      <div style="font-size:11px;color:#DBDEE1;font-weight:600;margin-bottom:4px;line-height:1.3">${d.name || ''}</div>
+      <div style="font-size:10px;color:#80848E;line-height:1.5">${(d.event || d.title || '').slice(0,80)}</div>
+      ${d.isLive ? '<div style="font-size:9px;color:#28b088;margin-top:4px">● LIVE</div>' : ''}
+      ${d.source ? `<div style="font-size:8px;color:#4E5058;margin-top:3px">${d.source}</div>` : ''}
+    </div>`;
 }
 
-function updateGlobePins(db) {
-  if (!globeInstance) return;
-  const points = buildGlobePoints(db);
-  globeInstance.pointsData(points);
-  renderGlobeEventList(db);
-}
-
+/* ─── DETAIL PANEL ──────────────────────────────── */
 function showGlobeDetail(d) {
-  const detail = document.getElementById('globe-detail');
+  const panel = document.getElementById('globe-detail');
   const content = document.getElementById('globe-detail-content');
-  if (!detail || !content) return;
+  if (!panel || !content) return;
+  const color = getEventColor(d);
+  const mag = d.magnitude ? `<div style="font-family:var(--fm);font-size:8px;color:${color};margin-top:.4rem">MAGNITUDE ${d.magnitude.toFixed(1)} · DEPTH ${d.depth || '?'}km${d.tsunami ? ' · ⚠️ TSUNAMI WARNING' : ''}</div>` : '';
   content.innerHTML = `
-    <div style="font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:${getEventColor(d.type)};margin-bottom:.5rem">${d.type.toUpperCase()} EVENT · ${d.name}</div>
-    <div style="font-size:.92rem;color:#e4dcc8;font-weight:600;margin-bottom:.6rem;line-height:1.4">${d.event}</div>
-    <div style="font-size:.82rem;color:#a09880;line-height:1.7">${d.note || ''}</div>
-    ${d.isLive ? '<div style="font-family:\'JetBrains Mono\',monospace;font-size:7.5px;color:#28b088;margin-top:.6rem">● LIVE — from current news feed</div>' : '<div style="font-family:\'JetBrains Mono\',monospace;font-size:7.5px;color:#d4b26a;margin-top:.6rem">◆ Continuous monitoring</div>'}
+    <div style="font-family:var(--fm);font-size:7.5px;letter-spacing:.18em;text-transform:uppercase;color:${color};margin-bottom:.5rem">${(d.type||'').toUpperCase()} EVENT</div>
+    <div style="font-size:1rem;font-weight:600;color:var(--pch);margin-bottom:.4rem;line-height:1.3">${d.name || d.title || ''}</div>
+    <div style="font-size:.85rem;color:var(--gld);margin-bottom:.6rem">${d.event || d.title || ''}</div>
+    ${mag}
+    <div style="font-size:.83rem;color:var(--smk);line-height:1.75;margin:.6rem 0">${d.desc || ''}</div>
+    ${d.detail ? `<div style="font-size:.78rem;color:var(--ash);line-height:1.65;padding:.5rem;background:var(--abyss);border-radius:2px;margin-top:.4rem">${d.detail}</div>` : ''}
+    <div style="font-family:var(--fm);font-size:7.5px;color:var(--ash);margin-top:.6rem;display:flex;gap:.5rem;flex-wrap:wrap">
+      <span>Lat: ${d.lat?.toFixed(3)}, Lng: ${d.lng?.toFixed(3)}</span>
+      ${d.isLive ? '<span style="color:var(--jbrt)">● LIVE NEWS</span>' : ''}
+      ${d.alert ? `<span style="color:${d.alert==='Red'?'var(--ebrt)':d.alert==='Orange'?'var(--gld)':'var(--jbrt)'}">GDACS ${d.alert} Alert</span>` : ''}
+    </div>
+    ${d.source ? `<div style="font-family:var(--fm);font-size:7.5px;color:var(--gdim);margin-top:.3rem">Source: ${d.source}</div>` : ''}
+    ${d.url ? `<a href="${d.url}" target="_blank" style="display:inline-block;margin-top:.7rem;font-family:var(--fm);font-size:8px;color:var(--gld);text-decoration:none;border:1px solid var(--gdim);padding:3px 10px;border-radius:2px">View Source ↗</a>` : ''}
   `;
-  detail.style.display = 'block';
+  panel.style.display = 'block';
+
+  // Fly to event
+  if (globeInstance) globeInstance.pointOfView({ lat: d.lat, lng: d.lng, altitude: 1.5 }, 1000);
 }
 
-function renderGlobeEventList(db) {
+/* ─── EVENT LIST ─────────────────────────────────── */
+function renderGlobeEventList(events) {
   const el = document.getElementById('globe-event-list');
   if (!el) return;
-  const points = buildGlobePoints(db).slice(0, 9);
-  el.innerHTML = points.map(p => `
-    <div style="background:var(--surf);padding:1rem;border-left:2px solid ${getEventColor(p.type)};cursor:pointer" onclick="if(globeInstance){globeInstance.pointOfView({lat:${p.lat},lng:${p.lng},altitude:1.8},1000);}">
-      <div style="font-family:var(--fm);font-size:7.5px;letter-spacing:.12em;text-transform:uppercase;color:${getEventColor(p.type)};margin-bottom:.3rem">${p.type.toUpperCase()} · ${p.name}</div>
-      <div style="font-size:.85rem;color:var(--pch);line-height:1.4">${p.event.slice(0,70)}${p.event.length>70?'...':''}</div>
-    </div>
-  `).join('');
+  const countEl = document.getElementById('event-count');
+  if (countEl) countEl.textContent = `${events.length} events shown · ${globeAllEvents.length} total`;
+
+  // Sort: severity first (red > orange > war > everything else)
+  const sorted = [...events].sort((a, b) => {
+    const sevScore = { red: 3, orange: 2, war: 1 };
+    const as = sevScore[a.severity] || sevScore[a.type] || 0;
+    const bs = sevScore[b.severity] || sevScore[b.type] || 0;
+    return bs - as;
+  }).slice(0, 24);
+
+  el.innerHTML = sorted.map(e => {
+    const color = getEventColor(e);
+    const mag = e.magnitude ? ` M${e.magnitude.toFixed(1)}` : '';
+    const typeIcon = { earthquake:'🪨', wildfire:'🔥', storm:'🌀', cyclone:'🌀', volcano:'🌋', flood:'🌊', tsunami:'🌊', war:'⚔️', economic:'📊', tech:'🤖', climate:'🌡️', diplomacy:'🔵', disaster:'⚠️' }[e.type] || '◆';
+    return `
+      <div style="background:var(--surf);padding:.85rem 1rem;border-left:2px solid ${color};cursor:pointer;transition:background .15s"
+        onclick="if(globeInstance){globeInstance.pointOfView({lat:${e.lat},lng:${e.lng},altitude:1.5},900);showGlobeDetail(${JSON.stringify(e).replace(/"/g,'&quot;')})}"
+        onmouseover="this.style.background='var(--raised)'" onmouseout="this.style.background='var(--surf)'">
+        <div style="font-family:var(--fm);font-size:7px;letter-spacing:.12em;text-transform:uppercase;color:${color};margin-bottom:.25rem">${typeIcon} ${e.type?.toUpperCase()}${mag}</div>
+        <div style="font-size:.82rem;color:var(--pch);line-height:1.35;font-weight:500">${(e.name || '').slice(0,30)}</div>
+        <div style="font-size:.76rem;color:var(--smk);line-height:1.4;margin-top:.2rem">${(e.event || e.title || '').slice(0,65)}${(e.event||e.title||'').length>65?'...':''}</div>
+        ${e.isLive ? '<div style="font-family:var(--fm);font-size:7px;color:var(--jbrt);margin-top:.25rem">● LIVE</div>' : ''}
+      </div>`;
+  }).join('');
 }
 
+/* ─── STATS UPDATE ───────────────────────────────── */
+function updateGlobeStats(stats) {
+  if (!stats) return;
+  const s = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+  s('gstat-eq', stats.earthquakes || 0);
+  s('gstat-nat', stats.naturalEvents || 0);
+  s('gstat-dis', stats.disasters || 0);
+  s('gstat-crit', stats.active || 0);
+  s('gstat-total', stats.total || 0);
+}
+
+/* ─── REFRESH ────────────────────────────────────── */
+async function refreshGlobeData(db) {
+  try {
+    const resp = await fetch('/api/globe');
+    if (resp.ok) {
+      globeLiveData = await resp.json();
+      updateGlobeStats(globeLiveData.stats);
+    }
+  } catch(e) {}
+  globeAllEvents = buildAllEvents(db, globeLiveData);
+  applyGlobeFilter();
+}
 
 /* ============================================================
    MARKETS MODULE

@@ -909,3 +909,32 @@ section[id] {
   opacity: 1 !important;
   transform: none !important;
 }
+
+/* ============ GLOBE FILTER BUTTONS ============ */
+.gf-btn {
+  background: var(--surf);
+  border: 1px solid var(--bdr);
+  color: var(--smk);
+  font-family: var(--fm);
+  font-size: 8px;
+  letter-spacing: .08em;
+  padding: 4px 10px;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: all .15s;
+  white-space: nowrap;
+}
+.gf-btn:hover { border-color: var(--gld); color: var(--gld); background: var(--gf); }
+.gf-btn.active { background: var(--gf); border-color: var(--gld); color: var(--gld); }
+@media(max-width:768px) {
+  #globe-filters { gap: .35rem; }
+  .gf-btn { font-size: 7.5px; padding: 4px 8px; }
+  #globeViz { height: 400px !important; }
+}
+@media(max-width:480px) { #globeViz { height: 320px !important; } }
+
+/* Earthquake magnitude ring */
+@keyframes eqRing { 0%{transform:scale(1);opacity:.8} 100%{transform:scale(3);opacity:0} }
+
+/* Globe spin (loading) */
+@keyframes spin { to { transform: rotate(360deg); } }

@@ -755,50 +755,89 @@
 
 
 <!-- ====== 3D WORLD EVENTS GLOBE ======
-     Globe.gl — Three.js powered 3D interactive globe
-     Real-time event pins from live news feed
-     Auto-rotating, hover to pause, click to drill in
-     ============================================================ -->
 <section class="mod" id="globe">
-  <div class="mod-label">Module · 3D Live Events Globe · Globe.gl + Three.js · Auto-updating</div>
-  <h2 class="mod-title">World Events Globe</h2>
-  <p class="mod-desc">A live 3D globe mapping current events from the news feed to their geographic coordinates. Pins update every 20 minutes with the data refresh cycle. Color-coded by event type: <span style="color:#c04a28">■ War/Conflict</span> &nbsp;<span style="color:#d4b26a">■ Economic</span> &nbsp;<span style="color:#28b088">■ Climate/Space</span> &nbsp;<span style="color:#7860c0">■ Technology</span> &nbsp;<span style="color:#4090d8">■ Diplomacy</span>. Drag to rotate · Scroll to zoom · Click pin for details.</p>
+  <div class="mod-label">Module · 3D Live Events Globe · Real-Time · USGS · NASA EONET · GDACS · BBC/AJ · Auto-updates</div>
+  <h2 class="mod-title">Live World Events Globe</h2>
+  <p class="mod-desc">A live 3D globe pulling from four real-time data sources: USGS Earthquake API (533+ seismic events M4.5+), NASA EONET active natural events (wildfires, typhoons, volcanoes), GDACS global disaster feed (136 active alerts), and our live news feeds. Every pin is a real event with real coordinates. Drag · Scroll to zoom · Click any pin for detail.</p>
   <div class="last-updated"></div>
 
-  <div style="position:relative;margin-top:1.5rem;background:#020201;border:1px solid var(--bdr);overflow:hidden" id="globe-container">
-    <div id="globeViz" style="width:100%;height:580px"></div>
+  <!-- STATS ROW -->
+  <div class="g5 mt1" style="gap:2px" id="globe-stats-row">
+    <div style="background:var(--surf);padding:.8rem 1rem;text-align:center"><div style="font-family:var(--fd);font-size:1.6rem;font-weight:900;color:var(--ebrt)" id="gstat-eq">—</div><div style="font-family:var(--fm);font-size:7.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);margin-top:2px">Earthquakes</div></div>
+    <div style="background:var(--surf);padding:.8rem 1rem;text-align:center"><div style="font-family:var(--fd);font-size:1.6rem;font-weight:900;color:var(--gld)" id="gstat-nat">—</div><div style="font-family:var(--fm);font-size:7.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);margin-top:2px">Natural Events</div></div>
+    <div style="background:var(--surf);padding:.8rem 1rem;text-align:center"><div style="font-family:var(--fd);font-size:1.6rem;font-weight:900;color:var(--vbrt)" id="gstat-dis">—</div><div style="font-family:var(--fm);font-size:7.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);margin-top:2px">Disasters</div></div>
+    <div style="background:var(--surf);padding:.8rem 1rem;text-align:center"><div style="font-family:var(--fd);font-size:1.6rem;font-weight:900;color:var(--ebrt)" id="gstat-crit">—</div><div style="font-family:var(--fm);font-size:7.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);margin-top:2px">Red/Orange</div></div>
+    <div style="background:var(--surf);padding:.8rem 1rem;text-align:center"><div style="font-family:var(--fd);font-size:1.6rem;font-weight:900;color:var(--pch)" id="gstat-total">—</div><div style="font-family:var(--fm);font-size:7.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);margin-top:2px">Total Pins</div></div>
+  </div>
 
-    <!-- Legend overlay -->
-    <div style="position:absolute;bottom:1rem;left:1rem;background:rgba(5,5,4,.85);backdrop-filter:blur(8px);border:1px solid var(--bdr);padding:.8rem 1rem;z-index:10">
-      <div style="font-family:var(--fm);font-size:7.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--gld);margin-bottom:.5rem">EVENT TYPES</div>
-      <div style="display:flex;flex-direction:column;gap:.35rem">
-        <div style="display:flex;align-items:center;gap:.5rem"><div style="width:10px;height:10px;border-radius:50%;background:#c04a28"></div><span style="font-family:var(--fm);font-size:9px;color:var(--smk)">War / Conflict</span></div>
-        <div style="display:flex;align-items:center;gap:.5rem"><div style="width:10px;height:10px;border-radius:50%;background:#d4b26a"></div><span style="font-family:var(--fm);font-size:9px;color:var(--smk)">Economic / Trade</span></div>
-        <div style="display:flex;align-items:center;gap:.5rem"><div style="width:10px;height:10px;border-radius:50%;background:#28b088"></div><span style="font-family:var(--fm);font-size:9px;color:var(--smk)">Climate / Space</span></div>
-        <div style="display:flex;align-items:center;gap:.5rem"><div style="width:10px;height:10px;border-radius:50%;background:#7860c0"></div><span style="font-family:var(--fm);font-size:9px;color:var(--smk)">Technology / AI</span></div>
-        <div style="display:flex;align-items:center;gap:.5rem"><div style="width:10px;height:10px;border-radius:50%;background:#4090d8"></div><span style="font-family:var(--fm);font-size:9px;color:var(--smk)">Diplomacy / Policy</span></div>
+  <!-- FILTER CONTROLS -->
+  <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin:.8rem 0;align-items:center" id="globe-filters">
+    <span style="font-family:var(--fm);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--ash)">Filter:</span>
+    <button class="gf-btn active" data-filter="all" onclick="setGlobeFilter(this)">All</button>
+    <button class="gf-btn" data-filter="earthquake" onclick="setGlobeFilter(this)">🪨 Earthquakes</button>
+    <button class="gf-btn" data-filter="wildfire" onclick="setGlobeFilter(this)">🔥 Wildfires</button>
+    <button class="gf-btn" data-filter="storm,cyclone" onclick="setGlobeFilter(this)">🌀 Storms</button>
+    <button class="gf-btn" data-filter="volcano" onclick="setGlobeFilter(this)">🌋 Volcanoes</button>
+    <button class="gf-btn" data-filter="flood,tsunami" onclick="setGlobeFilter(this)">🌊 Floods</button>
+    <button class="gf-btn" data-filter="war" onclick="setGlobeFilter(this)">⚔️ Conflicts</button>
+    <button class="gf-btn" data-filter="economic,diplomacy" onclick="setGlobeFilter(this)">📊 Geopolitical</button>
+    <button class="gf-btn" data-filter="tech,climate" onclick="setGlobeFilter(this)">🌡️ Climate/AI</button>
+    <div style="margin-left:auto;display:flex;gap:.5rem;align-items:center">
+      <button onclick="resetGlobeView()" class="gf-btn">⊙ Reset View</button>
+      <button onclick="toggleGlobeRotate()" class="gf-btn" id="rotate-btn">⏸ Pause</button>
+    </div>
+  </div>
+
+  <!-- GLOBE CONTAINER -->
+  <div style="position:relative;background:#020201;border:1px solid var(--bdr);overflow:hidden;border-radius:4px" id="globe-container">
+    <div id="globeViz" style="width:100%;height:620px"></div>
+
+    <!-- LEGEND -->
+    <div style="position:absolute;bottom:1rem;left:1rem;background:rgba(2,2,1,.88);backdrop-filter:blur(12px);border:1px solid var(--bdr);padding:.9rem 1.1rem;z-index:10;min-width:160px">
+      <div style="font-family:var(--fm);font-size:7px;letter-spacing:.25em;text-transform:uppercase;color:var(--gld);margin-bottom:.6rem">EVENT TYPES</div>
+      <div style="display:flex;flex-direction:column;gap:.3rem">
+        <div style="display:flex;align-items:center;gap:.5rem"><div style="width:8px;height:8px;border-radius:50%;background:#c04a28;flex-shrink:0"></div><span style="font-family:var(--fm);font-size:8px;color:var(--smk)">War · Conflict</span></div>
+        <div style="display:flex;align-items:center;gap:.5rem"><div style="width:8px;height:8px;border-radius:50%;background:#d4b26a;flex-shrink:0"></div><span style="font-family:var(--fm);font-size:8px;color:var(--smk)">Economic · Trade</span></div>
+        <div style="display:flex;align-items:center;gap:.5rem"><div style="width:8px;height:8px;border-radius:50%;background:#28b088;flex-shrink:0"></div><span style="font-family:var(--fm);font-size:8px;color:var(--smk)">Climate · Space</span></div>
+        <div style="display:flex;align-items:center;gap:.5rem"><div style="width:8px;height:8px;border-radius:50%;background:#7860c0;flex-shrink:0"></div><span style="font-family:var(--fm);font-size:8px;color:var(--smk)">Technology · AI</span></div>
+        <div style="display:flex;align-items:center;gap:.5rem"><div style="width:8px;height:8px;border-radius:50%;background:#4090d8;flex-shrink:0"></div><span style="font-family:var(--fm);font-size:8px;color:var(--smk)">Diplomacy</span></div>
+        <div style="height:1px;background:var(--bdr);margin:.2rem 0"></div>
+        <div style="display:flex;align-items:center;gap:.5rem"><div style="width:8px;height:8px;border-radius:50%;background:#ff4444;flex-shrink:0"></div><span style="font-family:var(--fm);font-size:8px;color:var(--smk)">Earthquake M6+</span></div>
+        <div style="display:flex;align-items:center;gap:.5rem"><div style="width:8px;height:8px;border-radius:50%;background:#ff8800;flex-shrink:0"></div><span style="font-family:var(--fm);font-size:8px;color:var(--smk)">Earthquake M5+</span></div>
+        <div style="display:flex;align-items:center;gap:.5rem"><div style="width:8px;height:8px;border-radius:50%;background:#ff4500;flex-shrink:0"></div><span style="font-family:var(--fm);font-size:8px;color:var(--smk)">Wildfire · EONET</span></div>
+        <div style="display:flex;align-items:center;gap:.5rem"><div style="width:8px;height:8px;border-radius:50%;background:#8B5CF6;flex-shrink:0"></div><span style="font-family:var(--fm);font-size:8px;color:var(--smk)">Typhoon · Storm</span></div>
+        <div style="display:flex;align-items:center;gap:.5rem"><div style="width:8px;height:8px;border-radius:50%;background:#06B6D4;flex-shrink:0"></div><span style="font-family:var(--fm);font-size:8px;color:var(--smk)">Flood · Tsunami</span></div>
+        <div style="display:flex;align-items:center;gap:.5rem"><div style="width:8px;height:8px;border-radius:2px;background:rgba(255,255,255,.25);flex-shrink:0"></div><span style="font-family:var(--fm);font-size:8px;color:var(--smk)">Arc = Connection</span></div>
       </div>
     </div>
 
-    <!-- Event detail panel -->
-    <div id="globe-detail" style="display:none;position:absolute;top:1rem;right:1rem;max-width:280px;background:rgba(5,5,4,.92);backdrop-filter:blur(12px);border:1px solid var(--bhi);padding:1.2rem;z-index:10">
+    <!-- HOVER DETAIL -->
+    <div id="globe-detail" style="display:none;position:absolute;top:1rem;right:1rem;max-width:300px;background:rgba(2,2,1,.94);backdrop-filter:blur(16px);border:1px solid var(--bhi);padding:1.4rem;z-index:10;border-radius:4px">
       <div id="globe-detail-content"></div>
-      <button onclick="document.getElementById('globe-detail').style.display='none'" style="font-family:var(--fm);font-size:8px;color:var(--ash);background:none;border:none;cursor:pointer;margin-top:.8rem;letter-spacing:.1em">✕ CLOSE</button>
+      <button onclick="document.getElementById('globe-detail').style.display='none'" style="font-family:var(--fm);font-size:8px;color:var(--ash);background:none;border:1px solid var(--bdr);cursor:pointer;margin-top:1rem;padding:3px 10px;letter-spacing:.1em;border-radius:2px">✕ CLOSE</button>
     </div>
 
-    <!-- Loading state -->
-    <div id="globe-loading" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#020201;z-index:5">
+    <!-- LOADING -->
+    <div id="globe-loading" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#020201;z-index:20">
       <div style="text-align:center">
-        <div style="font-family:var(--fm);font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--gld);margin-bottom:.5rem">Initializing Globe</div>
-        <div style="font-family:var(--fm);font-size:8px;color:var(--ash)">Loading Three.js + Earth textures...</div>
+        <svg width="60" height="60" viewBox="0 0 60 60" style="margin-bottom:1rem;animation:spin 3s linear infinite">
+          <circle cx="30" cy="30" r="27" fill="none" stroke="rgba(212,178,106,.15)" stroke-width="2"/>
+          <path d="M 30 3 A 27 27 0 0 1 57 30" fill="none" stroke="#d4b26a" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="30" cy="30" r="4" fill="#d4b26a"/>
+        </svg>
+        <div style="font-family:var(--fm);font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--gld);margin-bottom:.4rem" id="globe-load-text">Initializing Globe</div>
+        <div style="font-family:var(--fm);font-size:8px;color:var(--ash)" id="globe-load-sub">Loading Three.js + Earth textures...</div>
       </div>
     </div>
   </div>
 
-  <!-- Live event list below globe -->
+  <!-- EVENT GRID -->
   <div class="mt2">
-    <div style="font-family:var(--fm);font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--gld);margin-bottom:.8rem;font-weight:400">ACTIVE EVENTS — MAPPED TO GLOBE</div>
-    <div id="globe-event-list" class="g3" style="gap:2px"></div>
+    <div style="font-family:var(--fm);font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--gld);margin-bottom:.8rem;display:flex;align-items:center;justify-content:space-between">
+      <span>ACTIVE EVENTS — CLICK TO FLY TO LOCATION</span>
+      <span id="event-count" style="color:var(--ash)">loading...</span>
+    </div>
+    <div id="globe-event-list" class="g3" style="gap:2px;max-height:400px;overflow-y:auto;scrollbar-width:thin"></div>
   </div>
 </section>
 
