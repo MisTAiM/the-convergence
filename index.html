@@ -26,6 +26,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,700&family=JetBrains+Mono:wght@300;400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,900;1,9..144,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/style.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/globe.gl@2.32.0/dist/globe.gl.min.js"></script>
 </head>
 <body>
 
@@ -55,7 +56,7 @@
     <a href="#survival">Survival</a>
     <a href="#restore">Restore</a>
     <a href="#cycle">Cycles</a>
-    <a href="#finance">Finance</a>
+    <a href="#globe">Globe</a><a href="#markets">Markets</a><a href="#finance">Finance</a>
     <a href="#data">Data</a>
     <a href="#charts">Charts</a>
     <a href="#patterns">Patterns</a>
@@ -748,6 +749,212 @@
       <div class="cycle-legend-item"><div class="cycle-dot" style="background:var(--jbrt)"></div><div class="cycle-text"><span class="cycle-name">Empire Lifespan (~250yr historical average)</span>US republic turns 250 in 2026. Historical average empire lifespan: ~250 years. At the exact transition point identified independently by historians.</div></div>
       <div class="cycle-legend-item"><div class="cycle-dot" style="background:var(--vbrt)"></div><div class="cycle-text"><span class="cycle-name">Technological Singularity Curve (Exponential)</span>AI capability doubling every 2-3 years. Curve goes vertical between 2026–2032 by every major forecast. 50% AGI probability by 2028 (DeepMind).</div></div>
       <div class="cycle-legend-item"><div class="cycle-dot" style="background:var(--ibrt)"></div><div class="cycle-text"><span class="cycle-name">Climate Cascade (~150yr industrial accumulation)</span>150 years of industrial CO2 reaching systemic threshold. First tipping point crossed 2025. Cascade risk window 2025–2040.</div></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ====== 3D WORLD EVENTS GLOBE ======
+     Globe.gl — Three.js powered 3D interactive globe
+     Real-time event pins from live news feed
+     Auto-rotating, hover to pause, click to drill in
+     ============================================================ -->
+<section class="mod" id="globe">
+  <div class="mod-label">Module · 3D Live Events Globe · Globe.gl + Three.js · Auto-updating</div>
+  <h2 class="mod-title">World Events Globe</h2>
+  <p class="mod-desc">A live 3D globe mapping current events from the news feed to their geographic coordinates. Pins update every 20 minutes with the data refresh cycle. Color-coded by event type: <span style="color:#c04a28">■ War/Conflict</span> &nbsp;<span style="color:#d4b26a">■ Economic</span> &nbsp;<span style="color:#28b088">■ Climate/Space</span> &nbsp;<span style="color:#7860c0">■ Technology</span> &nbsp;<span style="color:#4090d8">■ Diplomacy</span>. Drag to rotate · Scroll to zoom · Click pin for details.</p>
+  <div class="last-updated"></div>
+
+  <div style="position:relative;margin-top:1.5rem;background:#020201;border:1px solid var(--bdr);overflow:hidden" id="globe-container">
+    <div id="globeViz" style="width:100%;height:580px"></div>
+
+    <!-- Legend overlay -->
+    <div style="position:absolute;bottom:1rem;left:1rem;background:rgba(5,5,4,.85);backdrop-filter:blur(8px);border:1px solid var(--bdr);padding:.8rem 1rem;z-index:10">
+      <div style="font-family:var(--fm);font-size:7.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--gld);margin-bottom:.5rem">EVENT TYPES</div>
+      <div style="display:flex;flex-direction:column;gap:.35rem">
+        <div style="display:flex;align-items:center;gap:.5rem"><div style="width:10px;height:10px;border-radius:50%;background:#c04a28"></div><span style="font-family:var(--fm);font-size:9px;color:var(--smk)">War / Conflict</span></div>
+        <div style="display:flex;align-items:center;gap:.5rem"><div style="width:10px;height:10px;border-radius:50%;background:#d4b26a"></div><span style="font-family:var(--fm);font-size:9px;color:var(--smk)">Economic / Trade</span></div>
+        <div style="display:flex;align-items:center;gap:.5rem"><div style="width:10px;height:10px;border-radius:50%;background:#28b088"></div><span style="font-family:var(--fm);font-size:9px;color:var(--smk)">Climate / Space</span></div>
+        <div style="display:flex;align-items:center;gap:.5rem"><div style="width:10px;height:10px;border-radius:50%;background:#7860c0"></div><span style="font-family:var(--fm);font-size:9px;color:var(--smk)">Technology / AI</span></div>
+        <div style="display:flex;align-items:center;gap:.5rem"><div style="width:10px;height:10px;border-radius:50%;background:#4090d8"></div><span style="font-family:var(--fm);font-size:9px;color:var(--smk)">Diplomacy / Policy</span></div>
+      </div>
+    </div>
+
+    <!-- Event detail panel -->
+    <div id="globe-detail" style="display:none;position:absolute;top:1rem;right:1rem;max-width:280px;background:rgba(5,5,4,.92);backdrop-filter:blur(12px);border:1px solid var(--bhi);padding:1.2rem;z-index:10">
+      <div id="globe-detail-content"></div>
+      <button onclick="document.getElementById('globe-detail').style.display='none'" style="font-family:var(--fm);font-size:8px;color:var(--ash);background:none;border:none;cursor:pointer;margin-top:.8rem;letter-spacing:.1em">✕ CLOSE</button>
+    </div>
+
+    <!-- Loading state -->
+    <div id="globe-loading" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#020201;z-index:5">
+      <div style="text-align:center">
+        <div style="font-family:var(--fm);font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--gld);margin-bottom:.5rem">Initializing Globe</div>
+        <div style="font-family:var(--fm);font-size:8px;color:var(--ash)">Loading Three.js + Earth textures...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Live event list below globe -->
+  <div class="mt2">
+    <div style="font-family:var(--fm);font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--gld);margin-bottom:.8rem;font-weight:400">ACTIVE EVENTS — MAPPED TO GLOBE</div>
+    <div id="globe-event-list" class="g3" style="gap:2px"></div>
+  </div>
+</section>
+
+<!-- ====== MARKETS + SURVIVAL FINANCE ======
+     Live market data from Yahoo Finance + CoinGecko + Fear&Greed
+     Convergence-informed investment/survival strategies
+     ============================================================ -->
+<section class="mod" id="markets">
+  <div class="mod-label">Module · Live Markets · Yahoo Finance · CoinGecko · Fear &amp; Greed · Updates Every 20min</div>
+  <h2 class="mod-title">Markets &amp; Survival Finance</h2>
+  <p class="mod-desc">The Convergence data — dollar decline, Hormuz closure, Iran war, CSI at 74 — has direct market implications. These are not random price movements. They are the financial expression of the structural stresses this platform tracks. The Fear &amp; Greed Index at <strong id="fng-inline" style="color:var(--ebrt)">16 (Extreme Fear)</strong> is the market pricing in the convergence in real time.</p>
+  <div class="last-updated"></div>
+
+  <!-- Fear & Greed + Quick Market Overview -->
+  <div class="g2 mt2" style="gap:1.5rem;align-items:start">
+    <div>
+      <!-- Fear & Greed Gauge -->
+      <div style="background:var(--surf);border:1px solid var(--bdr);padding:1.5rem;margin-bottom:1rem">
+        <div style="font-family:var(--fm);font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--gld);margin-bottom:1rem">Fear &amp; Greed Index — CNN / Alternative.me</div>
+        <div style="display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap">
+          <div style="text-align:center;flex-shrink:0">
+            <svg width="160" height="90" viewBox="0 0 160 90">
+              <defs><linearGradient id="fngG" x1="0%" x2="100%"><stop offset="0%" stop-color="#1a7a5e"/><stop offset="40%" stop-color="#c8913a"/><stop offset="100%" stop-color="#c04a28"/></linearGradient></defs>
+              <path d="M 8 86 A 72 72 0 0 1 152 86" fill="none" stroke="rgba(212,178,106,.1)" stroke-width="12" stroke-linecap="round"/>
+              <path d="M 8 86 A 72 72 0 0 1 152 86" fill="none" stroke="url(#fngG)" stroke-width="12" stroke-linecap="round" stroke-dasharray="226" id="fng-arc"/>
+              <line x1="80" y1="86" x2="80" y2="18" stroke="var(--pch)" stroke-width="2" stroke-linecap="round" transform="rotate(-128,80,86)" id="fng-needle"/>
+              <circle cx="80" cy="86" r="4" fill="var(--pch)"/>
+              <text x="8" y="98" font-family="JetBrains Mono" font-size="8" fill="#6a6458">FEAR</text>
+              <text x="152" y="98" font-family="JetBrains Mono" font-size="8" fill="#6a6458" text-anchor="end">GREED</text>
+            </svg>
+            <div style="font-family:var(--fd);font-size:2.5rem;font-weight:900;color:var(--ebrt);line-height:1" id="fng-score">16</div>
+            <div style="font-family:var(--fm);font-size:8px;color:var(--ash);letter-spacing:.12em;text-transform:uppercase" id="fng-label">EXTREME FEAR</div>
+          </div>
+          <div style="flex:1">
+            <p style="font-size:.9rem;color:var(--smk);line-height:1.8;margin-bottom:.7rem">The Fear &amp; Greed Index composites 7 market indicators: market momentum, stock price strength, put/call ratio, market volatility (VIX), junk bond demand, safe haven demand, and market breadth. A reading of 0-24 = Extreme Fear historically represents a buying signal — but only if the fear is temporary dislocation, not structural collapse. The Convergence data is designed to help you distinguish which this is.</p>
+            <div style="display:flex;gap:.5rem;flex-wrap:wrap" id="fng-history"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIX reading -->
+      <div style="background:var(--surf);border:1px solid var(--bdr);padding:1.2rem;display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div style="font-family:var(--fm);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--ash)">VIX (Volatility Index)</div>
+          <div style="font-size:.82rem;color:var(--smk);margin-top:.2rem">Market's 30-day implied volatility expectation. &gt;30 = elevated fear. &gt;40 = crisis mode.</div>
+        </div>
+        <div style="text-align:right;flex-shrink:0;margin-left:1rem">
+          <div style="font-family:var(--fd);font-size:2rem;font-weight:700;color:var(--ebrt)" id="vix-price">—</div>
+          <div style="font-family:var(--fm);font-size:8px" id="vix-change">—</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Market Sparklines -->
+    <div style="display:flex;flex-direction:column;gap:2px">
+      <div style="font-family:var(--fm);font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--gld);padding:.5rem 0;font-weight:400">LIVE MARKET PRICES — 30-DAY SPARKLINES</div>
+      <div id="market-cards"></div>
+    </div>
+  </div>
+
+  <!-- Crypto Section -->
+  <div class="mt2">
+    <div style="font-family:var(--fm);font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--vbrt);margin-bottom:.8rem;font-weight:400">CRYPTO — LIVE CoinGecko + 30-day Chart</div>
+    <div class="g2" style="gap:1.5rem">
+      <div style="background:var(--surf);border:1px solid var(--bdr);padding:1.5rem">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1rem">
+          <div><div style="font-family:var(--fm);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--ash);margin-bottom:.3rem">BITCOIN (BTC)</div><div style="font-family:var(--fd);font-size:2rem;font-weight:700;color:var(--pch)" id="btc-price">—</div><div style="font-family:var(--fm);font-size:9px" id="btc-change">—</div></div>
+          <div style="text-align:right"><div style="font-family:var(--fm);font-size:8px;color:var(--ash)">Market Cap</div><div style="font-family:var(--fm);font-size:9px;color:var(--smk)" id="btc-mcap">—</div></div>
+        </div>
+        <div style="height:80px;position:relative"><canvas id="chart-btc-spark" role="img" aria-label="BTC price chart"></canvas></div>
+        <div style="font-size:.82rem;color:var(--smk);line-height:1.7;margin-top:.8rem">Bitcoin as reserve currency hedge: BTC is increasingly treated as digital gold — a store of value outside any single nation's control. As the dollar reserve share declines (57.8% and falling), institutional allocation to BTC as a non-sovereign asset grows. Gold is at $4,787 (inflation adjusted near all-time highs). BTC is following the same structural bid.</div>
+      </div>
+      <div style="background:var(--surf);border:1px solid var(--bdr);padding:1.5rem">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1rem">
+          <div><div style="font-family:var(--fm);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--ash);margin-bottom:.3rem">ETHEREUM (ETH)</div><div style="font-family:var(--fd);font-size:2rem;font-weight:700;color:var(--pch)" id="eth-price">—</div><div style="font-family:var(--fm);font-size:9px" id="eth-change">—</div></div>
+          <div style="text-align:right"><div style="font-family:var(--fm);font-size:8px;color:var(--ash)">Market Cap</div><div style="font-family:var(--fm);font-size:9px;color:var(--smk)" id="eth-mcap">—</div></div>
+        </div>
+        <div style="height:80px;position:relative"><canvas id="chart-eth-spark" role="img" aria-label="ETH price chart"></canvas></div>
+        <div style="font-size:.82rem;color:var(--smk);line-height:1.7;margin-top:.8rem">Ethereum as programmable value infrastructure: ETH powers DeFi (decentralized finance) — financial services that operate outside traditional banking. As BRICS Pay and non-dollar settlement systems expand, ETH-based infrastructure becomes an increasingly viable parallel to dollar-denominated systems. High risk. High relevance to Convergence thesis.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Convergence-Based Strategy Analysis -->
+  <div class="mt2" style="background:var(--abyss);border:1px solid var(--bdr);padding:2rem">
+    <div style="font-family:var(--fm);font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--gld);margin-bottom:1.2rem">CONVERGENCE-INFORMED MARKET ANALYSIS — What the Data Suggests</div>
+    <div style="font-family:var(--fm);font-size:8px;color:var(--emb);margin-bottom:1.2rem;padding:.6rem 1rem;background:rgba(192,74,40,.06);border:1px solid rgba(192,74,40,.2)">DISCLAIMER: This is analytical synthesis of publicly available data, not financial advice. No investment decision should be made solely on this analysis. Consult a licensed financial advisor. All investments carry risk of total loss.</div>
+
+    <div class="g3" style="gap:1.5rem">
+      <div style="background:var(--surf);padding:1.5rem;border-top:2px solid var(--gld)">
+        <div style="font-family:var(--fm);font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--gld);margin-bottom:.7rem">Signal: Dollar Reserve Decline</div>
+        <h4 style="font-size:1rem;font-weight:600;margin-bottom:.6rem">Hard Asset Positioning</h4>
+        <p style="font-size:.9rem;color:var(--smk);line-height:1.8;margin-bottom:.6rem">When a reserve currency loses share (dollar: 71% → 57.8%), assets priced in that currency historically outperform. Gold: +285% since 2000, outpacing dollar debasement. Silver: industrial + monetary. Historical pattern during British pound reserve transition: gold +400% in real terms 1920-1960.</p>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+          <span style="font-family:var(--fm);font-size:7.5px;padding:3px 8px;background:rgba(212,178,106,.08);border:1px solid rgba(212,178,106,.25);color:var(--gld)">GLD ETF</span>
+          <span style="font-family:var(--fm);font-size:7.5px;padding:3px 8px;background:rgba(212,178,106,.08);border:1px solid rgba(212,178,106,.25);color:var(--gld)">SLV ETF</span>
+          <span style="font-family:var(--fm);font-size:7.5px;padding:3px 8px;background:rgba(212,178,106,.08);border:1px solid rgba(212,178,106,.25);color:var(--gld)">Physical gold</span>
+          <span style="font-family:var(--fm);font-size:7.5px;padding:3px 8px;background:rgba(212,178,106,.08);border:1px solid rgba(212,178,106,.25);color:var(--gld)">BTC as digital gold</span>
+        </div>
+      </div>
+
+      <div style="background:var(--surf);padding:1.5rem;border-top:2px solid var(--ebrt)">
+        <div style="font-family:var(--fm);font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--ebrt);margin-bottom:.7rem">Signal: Hormuz + Energy Disruption</div>
+        <h4 style="font-size:1rem;font-weight:600;margin-bottom:.6rem">Energy Transition Arbitrage</h4>
+        <p style="font-size:.9rem;color:var(--smk);line-height:1.8;margin-bottom:.6rem">Oil at $96/barrel (Hormuz premium). Every major oil disruption in history accelerated the alternative energy transition — 1973 embargo drove US solar investment, 1979 crisis drove European nuclear. Current disruption is driving record renewable deployment. The 2026 oil spike is the last gasp of petrodollar dependence and the clearest buying signal for energy transition infrastructure.</p>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+          <span style="font-family:var(--fm);font-size:7.5px;padding:3px 8px;background:rgba(192,74,40,.08);border:1px solid rgba(192,74,40,.25);color:var(--ebrt)">ICLN (clean energy)</span>
+          <span style="font-family:var(--fm);font-size:7.5px;padding:3px 8px;background:rgba(192,74,40,.08);border:1px solid rgba(192,74,40,.25);color:var(--ebrt)">ENPH (solar)</span>
+          <span style="font-family:var(--fm);font-size:7.5px;padding:3px 8px;background:rgba(192,74,40,.08);border:1px solid rgba(192,74,40,.25);color:var(--ebrt)">Local solar install</span>
+        </div>
+      </div>
+
+      <div style="background:var(--surf);padding:1.5rem;border-top:2px solid var(--vbrt)">
+        <div style="font-family:var(--fm);font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--vbrt);margin-bottom:.7rem">Signal: AI Acceleration (CSI Tech: 70)</div>
+        <h4 style="font-size:1rem;font-weight:600;margin-bottom:.6rem">AI Infrastructure + Semiconductor</h4>
+        <p style="font-size:.9rem;color:var(--smk);line-height:1.8;margin-bottom:.6rem">The AI capability curve is the steepest in the Accelerationist Index. Infrastructure enablers (GPU manufacturers, data center operators, power utilities serving AI clusters) historically outperform the AI companies themselves in early adoption phases — just as railroad builders outperformed the train manufacturers. NVIDIA's 400% run was the template. The next phase is power + cooling infrastructure.</p>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+          <span style="font-family:var(--fm);font-size:7.5px;padding:3px 8px;background:rgba(120,96,192,.1);border:1px solid rgba(120,96,192,.3);color:var(--vbrt)">SOXX (semiconductors)</span>
+          <span style="font-family:var(--fm);font-size:7.5px;padding:3px 8px;background:rgba(120,96,192,.1);border:1px solid rgba(120,96,192,.3);color:var(--vbrt)">VST (power utilities)</span>
+          <span style="font-family:var(--fm);font-size:7.5px;padding:3px 8px;background:rgba(120,96,192,.1);border:1px solid rgba(120,96,192,.3);color:var(--vbrt)">EQIX (data centers)</span>
+        </div>
+      </div>
+
+      <div style="background:var(--surf);padding:1.5rem;border-top:2px solid var(--jbrt)">
+        <div style="font-family:var(--fm);font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--jbrt);margin-bottom:.7rem">Signal: Supply Chain Localization</div>
+        <h4 style="font-size:1rem;font-weight:600;margin-bottom:.6rem">Reshoring + Domestic Production</h4>
+        <p style="font-size:.9rem;color:var(--smk);line-height:1.8;margin-bottom:.6rem">Hormuz, COVID, and US-China tension are driving the largest reshoring of manufacturing in 50 years. The CHIPS Act, IRA, and infrastructure bill collectively represent $2T+ in domestic production incentives. Companies that service domestic manufacturing — industrial automation, construction materials, regional logistics — benefit from a structural multi-decade trend that persists regardless of which party governs.</p>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+          <span style="font-family:var(--fm);font-size:7.5px;padding:3px 8px;background:rgba(40,176,136,.08);border:1px solid rgba(40,176,136,.25);color:var(--jbrt)">MLM (materials)</span>
+          <span style="font-family:var(--fm);font-size:7.5px;padding:3px 8px;background:rgba(40,176,136,.08);border:1px solid rgba(40,176,136,.25);color:var(--jbrt)">GNRC (backup power)</span>
+          <span style="font-family:var(--fm);font-size:7.5px;padding:3px 8px;background:rgba(40,176,136,.08);border:1px solid rgba(40,176,136,.25);color:var(--jbrt)">Local RE (food land)</span>
+        </div>
+      </div>
+
+      <div style="background:var(--surf);padding:1.5rem;border-top:2px solid var(--ibrt)">
+        <div style="font-family:var(--fm);font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--ibrt);margin-bottom:.7rem">Signal: Extreme Fear Reading (F&amp;G: 16)</div>
+        <h4 style="font-size:1rem;font-weight:600;margin-bottom:.6rem">Contrarian Opportunity Window</h4>
+        <p style="font-size:.9rem;color:var(--smk);line-height:1.8;margin-bottom:.6rem">Fear &amp; Greed at 16 (Extreme Fear) has historically been a reliable contrarian buying signal — but only with 12-18 month time horizon. Buffett's principle: "Be fearful when others are greedy, and greedy when others are fearful." The key distinction: temporary fear (COVID crash → recovery in 12mo) vs. structural fear (2008 → took 4 years). Use the Convergence CSI to assess which this is. CSI at 74 suggests elevated but not terminal structural stress.</p>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+          <span style="font-family:var(--fm);font-size:7.5px;padding:3px 8px;background:rgba(64,144,216,.08);border:1px solid rgba(64,144,216,.25);color:var(--ibrt)">QQQ (tech index)</span>
+          <span style="font-family:var(--fm);font-size:7.5px;padding:3px 8px;background:rgba(64,144,216,.08);border:1px solid rgba(64,144,216,.25);color:var(--ibrt)">SPY (broad market)</span>
+          <span style="font-family:var(--fm);font-size:7.5px;padding:3px 8px;background:rgba(64,144,216,.08);border:1px solid rgba(64,144,216,.25);color:var(--ibrt)">Dollar-cost average</span>
+        </div>
+      </div>
+
+      <div style="background:var(--surf);padding:1.5rem;border-top:2px solid var(--gld)">
+        <div style="font-family:var(--fm);font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--gld);margin-bottom:.7rem">Non-Market: Tobit Survival Finance</div>
+        <h4 style="font-size:1rem;font-weight:600;margin-bottom:.6rem">Skills, Land &amp; Local Economy</h4>
+        <p style="font-size:.9rem;color:var(--smk);line-height:1.8;margin-bottom:.6rem">The highest ROI investment during civilizational transitions is not in financial markets — it is in practical skills and local productive capacity. A vegetable garden produces 5-20x its cost in food value per year. A solar installation pays back in 6-10 years, then generates free energy. A skill like electrical work or plumbing generates income that cannot be automated and increases in value as supply chain disruptions continue.</p>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+          <span style="font-family:var(--fm);font-size:7.5px;padding:3px 8px;background:var(--gf);border:1px solid rgba(212,178,106,.25);color:var(--gld)">Food production</span>
+          <span style="font-family:var(--fm);font-size:7.5px;padding:3px 8px;background:var(--gf);border:1px solid rgba(212,178,106,.25);color:var(--gld)">Solar + battery</span>
+          <span style="font-family:var(--fm);font-size:7.5px;padding:3px 8px;background:var(--gf);border:1px solid rgba(212,178,106,.25);color:var(--gld)">Trade skills</span>
+          <span style="font-family:var(--fm);font-size:7.5px;padding:3px 8px;background:var(--gf);border:1px solid rgba(212,178,106,.25);color:var(--gld)">Local RE (no leverage)</span>
+        </div>
+      </div>
     </div>
   </div>
 </section>

@@ -188,3 +188,39 @@ window.calcSurvival = function() {
   const db = DataEngine.getDB();
   try { renderDeadReckoning(db); } catch(e) {}
 };
+
+/* ============ GLOBE + MARKETS INIT ============ */
+
+// Markets — fetch once on load, then every 20min with the main cycle
+async function initMarkets() {
+  try { await renderMarkets(); } catch(e) { console.error('Markets init:', e); }
+}
+
+// Globe — init after page loads, then update pins with data
+function initGlobeWhenReady(db) {
+  if (typeof Globe === 'undefined') {
+    setTimeout(() => initGlobeWhenReady(db), 500);
+    return;
+  }
+  initGlobe(db);
+  renderGlobeEventList(db);
+}
+
+// Hook into main data cycle
+DataEngine.on('updated', db => {
+  // Globe pins update with every news refresh
+  if (globeInitialized) updateGlobePins(db);
+  else initGlobeWhenReady(db);
+  // Markets refresh
+  renderMarkets().catch(e => console.error('Markets update:', e));
+});
+
+DataEngine.on('cached', db => {
+  initGlobeWhenReady(db);
+});
+
+// Initial markets load (independent of WB/news cycle)
+setTimeout(initMarkets, 1500);
+
+// Repeat markets every 5 minutes for price freshness
+setInterval(() => { renderMarkets().catch(() => {}); }, 5 * 60 * 1000);

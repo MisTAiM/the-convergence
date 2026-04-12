@@ -739,3 +739,398 @@ function renderDeadReckoning(db) {
 
 // Hook into renderAll
 const _origRenderAll = window.renderAll;
+
+/* ============================================================
+   WORLD EVENTS GLOBE — Globe.gl 3D
+   ============================================================ */
+let globeInstance = null;
+let globeInitialized = false;
+
+// Static known event locations — always shown
+const STATIC_EVENTS = [
+  { lat: 35.69, lng: 51.39, name: 'Tehran', event: 'Iran War Epicenter — Day 43', type: 'war', size: 1.2, note: 'US/Israel strikes Feb 28. Khamenei killed. Ceasefire talks ongoing in Islamabad.' },
+  { lat: 33.68, lng: 73.05, name: 'Islamabad', event: 'Iran-US Peace Talks', type: 'diplomacy', size: 1.0, note: 'Day 43 ceasefire negotiations. Pakistan PM: "make or break" moment.' },
+  { lat: 50.45, lng: 30.52, name: 'Kyiv', event: 'Ukraine War — Easter Truce', type: 'war', size: 0.9, note: 'Russia-Ukraine Orthodox Easter ceasefire active April 2026.' },
+  { lat: 31.52, lng: 34.46, name: 'Gaza Strip', event: 'Active Conflict Zone', type: 'war', size: 0.9, note: 'Ongoing humanitarian crisis. 2.3M population under siege.' },
+  { lat: 15.50, lng: 32.56, name: 'Khartoum', event: 'Sudan Civil War', type: 'war', size: 0.9, note: 'Worst humanitarian crisis globally. RSF vs SAF. 25M+ displaced.' },
+  { lat: 26.57, lng: 56.25, name: 'Strait of Hormuz', event: 'Global Oil Chokepoint — Closed', type: 'economic', size: 1.3, note: '20% of global oil passes through Hormuz. Iranian toll system. EU fuel shortage warning.' },
+  { lat: 37.77, lng: -122.43, name: 'San Francisco', event: 'AGI Development Hub', type: 'tech', size: 0.9, note: 'OpenAI, Anthropic, Google DeepMind. AI capability curve at steepest in history.' },
+  { lat: 51.50, lng: -0.13, name: 'London', event: 'Disinformation Crisis', type: 'tech', size: 0.8, note: 'Mayor warns of disinformation blizzard targeting city. AI-generated synthetic content.' },
+  { lat: 37.75, lng: 29.05, name: 'Cape Canaveral', event: 'Artemis II Return', type: 'climate', size: 0.8, note: 'First crewed Moon mission in 53 years returned April 11, 2026.' },
+  { lat: 23.69, lng: -12.89, name: 'Atlantic Ocean', event: 'AMOC Weakening', type: 'climate', size: 1.1, note: 'Atlantic Meridional Overturning Circulation at weakest in 1,000 years. Tipping point risk: 2.0°C.' },
+  { lat: -1.00, lng: -51.00, name: 'Amazon Basin', event: 'Dieback Risk Zone', type: 'climate', size: 1.1, note: 'Amazon dieback tipping point: 2.0°C. Eastern Amazon already shifting to savanna.' },
+  { lat: 72.00, lng: -42.00, name: 'Greenland Ice Sheet', event: 'Destabilization Zone', type: 'climate', size: 1.0, note: 'Tipping point: 1.5°C. Crossed in 2024 peak year. Irreversible ice loss now occurring.' },
+  { lat: 39.90, lng: 116.41, name: 'Beijing', event: 'BRICS Pay Coordination', type: 'economic', size: 0.9, note: 'Yuan becoming reserve currency alternative. BRICS Pay operational in 44 countries.' },
+  { lat: 55.75, lng: 37.62, name: 'Moscow', event: 'Ruble-Yuan Settlement', type: 'economic', size: 0.8, note: 'Russia conducting 90%+ of trade in non-dollar currencies since 2022.' },
+  { lat: 40.71, lng: -74.01, name: 'New York', event: 'US Debt Clock — $36T', type: 'economic', size: 0.9, note: 'Federal debt at 118% GDP. Fastest growing debt in peacetime US history.' },
+  { lat: 32.08, lng: 34.78, name: 'Tel Aviv', event: 'Lebanon Negotiations', type: 'diplomacy', size: 0.7, note: 'Lebanon-Israel officials meeting Tuesday in Washington.' },
+  { lat: -33.87, lng: 151.21, name: 'Great Barrier Reef', event: 'First Tipping Point Crossed', type: 'climate', size: 1.0, note: 'Coral reef systems declared past tipping point. Global Tipping Points Report 2025.' },
+  { lat: 28.61, lng: 77.21, name: 'New Delhi', event: 'India: Alternative Reserve', type: 'economic', size: 0.8, note: 'India accelerating rupee internationalization. Digital rupee CBDC launched.' },
+];
+
+// Map news keywords to geo-locations
+const NEWS_GEOCODE = [
+  { keywords: ['iran','tehran','khamenei','hormuz'], lat: 35.69, lng: 51.39, name: 'Iran', type: 'war' },
+  { keywords: ['islamabad','pakistan'], lat: 33.68, lng: 73.05, name: 'Islamabad', type: 'diplomacy' },
+  { keywords: ['ukraine','kyiv','kiev','russia'], lat: 50.45, lng: 30.52, name: 'Ukraine', type: 'war' },
+  { keywords: ['gaza','hamas','west bank'], lat: 31.52, lng: 34.46, name: 'Gaza', type: 'war' },
+  { keywords: ['sudan','khartoum','rsf'], lat: 15.50, lng: 32.56, name: 'Sudan', type: 'war' },
+  { keywords: ['london','uk','britain','bbc'], lat: 51.50, lng: -0.13, name: 'London', type: 'tech' },
+  { keywords: ['openai','ai','artificial intelligence','chatgpt','anthropic'], lat: 37.77, lng: -122.43, name: 'Silicon Valley', type: 'tech' },
+  { keywords: ['fed','federal reserve','wall street','nasdaq','s&p'], lat: 40.71, lng: -74.01, name: 'New York', type: 'economic' },
+  { keywords: ['china','beijing','yuan','brics'], lat: 39.90, lng: 116.41, name: 'Beijing', type: 'economic' },
+  { keywords: ['nasa','space','moon','artemis','rocket'], lat: 28.52, lng: -80.68, name: 'Cape Canaveral', type: 'climate' },
+  { keywords: ['climate','temperature','warming','flood','wildfire'], lat: -1.00, lng: 20.00, name: 'Climate Zone', type: 'climate' },
+  { keywords: ['amazon','brazil'], lat: -3.47, lng: -62.22, name: 'Amazon', type: 'climate' },
+  { keywords: ['inflation','oil','fuel','energy','prices'], lat: 26.57, lng: 56.25, name: 'Hormuz Region', type: 'economic' },
+];
+
+function getEventColor(type) {
+  return { war: '#c04a28', economic: '#d4b26a', climate: '#28b088', tech: '#7860c0', diplomacy: '#4090d8' }[type] || '#a09880';
+}
+
+function initGlobe(db) {
+  if (globeInitialized) { updateGlobePins(db); return; }
+  const container = document.getElementById('globeViz');
+  if (!container || typeof Globe === 'undefined') {
+    setTimeout(() => initGlobe(db), 1000);
+    return;
+  }
+
+  globeInitialized = true;
+
+  // Build initial points
+  const points = buildGlobePoints(db);
+
+  const globe = Globe()
+    .globeImageUrl('https://unpkg.com/three-globe@2.32.0/example/img/earth-blue-marble.jpg')
+    .bumpImageUrl('https://unpkg.com/three-globe@2.32.0/example/img/earth-topology.png')
+    .backgroundImageUrl('https://unpkg.com/three-globe@2.32.0/example/img/night-sky.png')
+    .atmosphereColor('#d4b26a')
+    .atmosphereAltitude(0.18)
+    .pointsData(points)
+    .pointColor(d => getEventColor(d.type))
+    .pointRadius(d => d.size * 0.4)
+    .pointAltitude(d => 0.04 + (d.size - 0.7) * 0.06)
+    .pointLabel(d => `
+      <div style="background:rgba(5,5,4,.92);border:1px solid ${getEventColor(d.type)};padding:.7rem 1rem;max-width:220px;font-family:'JetBrains Mono',monospace">
+        <div style="font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:${getEventColor(d.type)};margin-bottom:.3rem">${d.name}</div>
+        <div style="font-size:11px;color:#e4dcc8;margin-bottom:.4rem">${d.event}</div>
+        <div style="font-size:10px;color:#a09880;line-height:1.5">${d.note || ''}</div>
+      </div>
+    `)
+    .onPointClick(d => showGlobeDetail(d))
+    .onPointHover(d => { container.style.cursor = d ? 'pointer' : 'grab'; })
+    (container);
+
+  globeInstance = globe;
+
+  // Auto-rotate
+  globe.controls().autoRotate = true;
+  globe.controls().autoRotateSpeed = 0.35;
+  globe.controls().enableZoom = true;
+  globe.controls().zoomSpeed = 0.8;
+  globe.controls().minDistance = 150;
+  globe.controls().maxDistance = 600;
+
+  // Pause on interaction
+  container.addEventListener('mousedown', () => { globe.controls().autoRotate = false; });
+  container.addEventListener('touchstart', () => { globe.controls().autoRotate = false; });
+  container.addEventListener('mouseup', () => { setTimeout(() => { globe.controls().autoRotate = true; }, 3000); });
+  container.addEventListener('touchend', () => { setTimeout(() => { globe.controls().autoRotate = true; }, 3000); });
+
+  // Start pointing at Middle East (most active zone)
+  globe.pointOfView({ lat: 30, lng: 45, altitude: 2.5 }, 1500);
+
+  // Add arcs for key connections
+  const arcs = [
+    { startLat: 35.69, startLng: 51.39, endLat: 33.68, endLng: 73.05, color: '#4090d8', label: 'Iran → Islamabad talks' },
+    { startLat: 40.71, startLng: -74.01, endLat: 35.69, endLng: 51.39, color: '#c04a28', label: 'US → Iran war' },
+    { startLat: 26.57, startLng: 56.25, endLat: 51.50, endLng: -0.13, color: '#d4b26a', label: 'Hormuz → EU fuel crisis' },
+    { startLat: 39.90, startLng: 116.41, endLat: 40.71, endLng: -74.01, color: '#7860c0', label: 'China → USD reserve' },
+  ];
+
+  globe.arcsData(arcs)
+    .arcColor('color')
+    .arcDashLength(0.4)
+    .arcDashGap(0.15)
+    .arcDashAnimateTime(2000)
+    .arcStroke(0.6)
+    .arcAltitude(0.25)
+    .arcLabel('label');
+
+  // Add rings at critical zones
+  const rings = [
+    { lat: 26.57, lng: 56.25, maxR: 4, color: '#d4b26a', propagationSpeed: 3, repeatPeriod: 1200 },
+    { lat: 35.69, lng: 51.39, maxR: 3, color: '#c04a28', propagationSpeed: 2.5, repeatPeriod: 1000 },
+    { lat: -33.87, lng: 151.21, maxR: 2.5, color: '#28b088', propagationSpeed: 2, repeatPeriod: 1500 },
+  ];
+
+  globe.ringsData(rings)
+    .ringColor(d => t => { const c = d.color; return c + Math.round((1-t)*180).toString(16).padStart(2,'0'); })
+    .ringMaxRadius('maxR')
+    .ringPropagationSpeed('propagationSpeed')
+    .ringRepeatPeriod('repeatPeriod');
+
+  // Hide loading overlay
+  const loading = document.getElementById('globe-loading');
+  if (loading) { setTimeout(() => { loading.style.opacity = 0; setTimeout(() => loading.remove(), 500); }, 800); }
+
+  // Resize handler
+  const resize = () => {
+    globe.width(container.offsetWidth);
+    globe.height(container.offsetHeight);
+  };
+  window.addEventListener('resize', resize);
+}
+
+function buildGlobePoints(db) {
+  const points = [...STATIC_EVENTS];
+  const news = db.news || [];
+  const seen = new Set(points.map(p => p.name));
+
+  news.slice(0, 40).forEach(item => {
+    const title = (item.title + ' ' + (item.description || '')).toLowerCase();
+    NEWS_GEOCODE.forEach(rule => {
+      if (rule.keywords.some(k => title.includes(k))) {
+        const key = rule.name;
+        if (!seen.has(key)) {
+          seen.add(key);
+          points.push({
+            lat: rule.lat + (Math.random() - 0.5) * 0.5,
+            lng: rule.lng + (Math.random() - 0.5) * 0.5,
+            name: rule.name,
+            event: item.title.slice(0, 80),
+            type: rule.type,
+            size: 0.7,
+            note: `[${item.source}] ${(item.description || '').slice(0, 120)}`,
+            isLive: true,
+          });
+        }
+      }
+    });
+  });
+
+  return points;
+}
+
+function updateGlobePins(db) {
+  if (!globeInstance) return;
+  const points = buildGlobePoints(db);
+  globeInstance.pointsData(points);
+  renderGlobeEventList(db);
+}
+
+function showGlobeDetail(d) {
+  const detail = document.getElementById('globe-detail');
+  const content = document.getElementById('globe-detail-content');
+  if (!detail || !content) return;
+  content.innerHTML = `
+    <div style="font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:${getEventColor(d.type)};margin-bottom:.5rem">${d.type.toUpperCase()} EVENT · ${d.name}</div>
+    <div style="font-size:.92rem;color:#e4dcc8;font-weight:600;margin-bottom:.6rem;line-height:1.4">${d.event}</div>
+    <div style="font-size:.82rem;color:#a09880;line-height:1.7">${d.note || ''}</div>
+    ${d.isLive ? '<div style="font-family:\'JetBrains Mono\',monospace;font-size:7.5px;color:#28b088;margin-top:.6rem">● LIVE — from current news feed</div>' : '<div style="font-family:\'JetBrains Mono\',monospace;font-size:7.5px;color:#d4b26a;margin-top:.6rem">◆ Continuous monitoring</div>'}
+  `;
+  detail.style.display = 'block';
+}
+
+function renderGlobeEventList(db) {
+  const el = document.getElementById('globe-event-list');
+  if (!el) return;
+  const points = buildGlobePoints(db).slice(0, 9);
+  el.innerHTML = points.map(p => `
+    <div style="background:var(--surf);padding:1rem;border-left:2px solid ${getEventColor(p.type)};cursor:pointer" onclick="if(globeInstance){globeInstance.pointOfView({lat:${p.lat},lng:${p.lng},altitude:1.8},1000);}">
+      <div style="font-family:var(--fm);font-size:7.5px;letter-spacing:.12em;text-transform:uppercase;color:${getEventColor(p.type)};margin-bottom:.3rem">${p.type.toUpperCase()} · ${p.name}</div>
+      <div style="font-size:.85rem;color:var(--pch);line-height:1.4">${p.event.slice(0,70)}${p.event.length>70?'...':''}</div>
+    </div>
+  `).join('');
+}
+
+
+/* ============================================================
+   MARKETS MODULE
+   ============================================================ */
+let chartsMarketInited = false;
+let sparkCharts = {};
+
+async function renderMarkets() {
+  let data;
+  try {
+    const resp = await fetch('/api/markets');
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    data = await resp.json();
+  } catch(e) {
+    console.error('Markets fetch failed:', e);
+    return;
+  }
+
+  const { indices, charts, fearGreed, crypto } = data;
+
+  // Fear & Greed
+  if (fearGreed?.latest) {
+    const fg = fearGreed.latest;
+    const score = parseInt(fg.value);
+    const el = document.getElementById('fng-score');
+    const lblEl = document.getElementById('fng-label');
+    const inlineEl = document.getElementById('fng-inline');
+    const arcEl = document.getElementById('fng-arc');
+    const needleEl = document.getElementById('fng-needle');
+    if (el) el.textContent = score;
+    if (lblEl) lblEl.textContent = fg.value_classification?.toUpperCase();
+    if (inlineEl) { inlineEl.textContent = `${score} (${fg.value_classification})`; inlineEl.style.color = score < 25 ? 'var(--ebrt)' : score < 50 ? 'var(--gld)' : 'var(--jbrt)'; }
+    if (el) el.style.color = score < 25 ? 'var(--ebrt)' : score < 50 ? 'var(--gld)' : 'var(--jbrt)';
+    // Animate gauge — 226 = full arc. score 0-100 maps to offset 226→0
+    if (arcEl) arcEl.setAttribute('stroke-dashoffset', (226 - score * 2.26).toFixed(1));
+    if (needleEl) needleEl.setAttribute('transform', `rotate(${-128 + score * 2.56},80,86)`);
+
+    // History badges
+    const histEl = document.getElementById('fng-history');
+    if (histEl && fearGreed.history) {
+      histEl.innerHTML = fearGreed.history.map((h,i) => {
+        const s = parseInt(h.value);
+        const c = s < 25 ? '#c04a28' : s < 50 ? '#d4b26a' : '#28b088';
+        const d = i === 0 ? 'Today' : i === 1 ? 'Yesterday' : `${i}d ago`;
+        return `<div style="text-align:center;flex:1"><div style="font-family:var(--fm);font-size:9px;color:${c};font-weight:600">${s}</div><div style="font-family:var(--fm);font-size:7px;color:var(--ash)">${d}</div></div>`;
+      }).join('');
+    }
+  }
+
+  // VIX
+  if (indices?.vix) {
+    const vix = indices.vix;
+    const vixEl = document.getElementById('vix-price');
+    const vixChg = document.getElementById('vix-change');
+    if (vixEl) { vixEl.textContent = vix.price; vixEl.style.color = vix.price > 30 ? 'var(--ebrt)' : vix.price > 20 ? 'var(--gld)' : 'var(--jbrt)'; }
+    if (vixChg) { vixChg.textContent = (vix.change >= 0 ? '+' : '') + vix.change + '%'; vixChg.style.color = vix.change > 0 ? 'var(--ebrt)' : 'var(--jbrt)'; }
+  }
+
+  // Market cards with sparklines
+  const MARKET_DEFS = [
+    { key: 'spy', label: 'S&P 500 (SPY)', icon: '📈', desc: 'Broad US market. Bellwether for global risk appetite.', colorPos: 'var(--jbrt)', colorNeg: 'var(--ebrt)' },
+    { key: 'qqq', label: 'Nasdaq 100 (QQQ)', icon: '💻', desc: 'Tech-heavy. Sensitive to AI disruption + rate changes.', colorPos: 'var(--vbrt)', colorNeg: 'var(--ebrt)' },
+    { key: 'gold', label: 'Gold Futures (GC=F)', icon: '🥇', desc: 'Reserve currency hedge. $4,787 = near all-time real high.', colorPos: 'var(--gld)', colorNeg: 'var(--ebrt)' },
+    { key: 'oil', label: 'Crude Oil WTI (CL=F)', icon: '🛢️', desc: 'Hormuz premium embedded. Key inflation driver.', colorPos: 'var(--ebrt)', colorNeg: 'var(--jbrt)' },
+    { key: 'soxx', label: 'Semiconductors (SOXX)', icon: '🔬', desc: 'AI infrastructure. GPU + chip supply chain bellwether.', colorPos: 'var(--vbrt)', colorNeg: 'var(--ebrt)' },
+    { key: 'btc', label: 'Bitcoin (BTC-USD)', icon: '₿', desc: 'Digital gold. Non-sovereign store of value.', colorPos: 'var(--gld)', colorNeg: 'var(--ebrt)' },
+  ];
+
+  const cardsEl = document.getElementById('market-cards');
+  if (cardsEl) {
+    cardsEl.innerHTML = MARKET_DEFS.map(def => {
+      const m = indices[def.key];
+      if (!m) return '';
+      const chgColor = m.change >= 0 ? def.colorPos : def.colorNeg;
+      const chgIcon = m.change >= 0 ? '▲' : '▼';
+      return `<div style="background:var(--surf);border:1px solid var(--bdr);padding:1rem;margin-bottom:2px;display:grid;grid-template-columns:1fr 1fr auto;gap:1rem;align-items:center">
+        <div><div style="font-family:var(--fm);font-size:7.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);margin-bottom:.2rem">${def.icon} ${def.label}</div><div style="font-size:.8rem;color:var(--smk)">${def.desc}</div></div>
+        <div><canvas id="spark-${def.key}" width="120" height="40" style="display:block"></canvas></div>
+        <div style="text-align:right;flex-shrink:0">
+          <div style="font-family:var(--fd);font-size:1.4rem;font-weight:700;color:var(--pch)">${m.currency === 'USD' ? '$' : ''}${m.price?.toLocaleString('en-US', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>
+          <div style="font-family:var(--fm);font-size:9px;color:${chgColor}">${chgIcon} ${Math.abs(m.change)}%</div>
+        </div>
+      </div>`;
+    }).join('');
+
+    // Draw sparklines
+    setTimeout(() => {
+      MARKET_DEFS.forEach(def => {
+        const m = indices[def.key];
+        if (!m?.closes?.length) return;
+        const canvas = document.getElementById('spark-' + def.key);
+        if (!canvas) return;
+        drawSparkline(canvas, m.closes, m.change >= 0 ? '#28b088' : '#c04a28');
+      });
+    }, 100);
+  }
+
+  // Crypto
+  const btcData = indices?.btc;
+  const ethData = indices?.eth;
+  const cgBtc = crypto?.bitcoin;
+  const cgEth = crypto?.ethereum;
+
+  if (btcData || cgBtc) {
+    const price = btcData?.price || cgBtc?.usd;
+    const change = btcData?.change ?? cgBtc?.usd_24h_change;
+    const mcap = cgBtc?.usd_market_cap;
+    const btcPriceEl = document.getElementById('btc-price');
+    const btcChgEl = document.getElementById('btc-change');
+    const btcMcapEl = document.getElementById('btc-mcap');
+    if (btcPriceEl) btcPriceEl.textContent = '$' + (price||0).toLocaleString();
+    if (btcChgEl) { btcChgEl.textContent = (change>=0?'+':'') + (change||0).toFixed(2) + '% 24h'; btcChgEl.style.color = change>=0?'var(--jbrt)':'var(--ebrt)'; }
+    if (btcMcapEl && mcap) btcMcapEl.textContent = '$' + (mcap/1e12).toFixed(2) + 'T';
+    if (charts?.btc?.length) {
+      const canvas = document.getElementById('chart-btc-spark');
+      if (canvas) drawLargeSparkline(canvas, charts.btc);
+    }
+  }
+
+  if (ethData || cgEth) {
+    const price = ethData?.price || cgEth?.usd;
+    const change = ethData?.change ?? cgEth?.usd_24h_change;
+    const mcap = cgEth?.usd_market_cap;
+    const ethPriceEl = document.getElementById('eth-price');
+    const ethChgEl = document.getElementById('eth-change');
+    const ethMcapEl = document.getElementById('eth-mcap');
+    if (ethPriceEl) ethPriceEl.textContent = '$' + (price||0).toLocaleString();
+    if (ethChgEl) { ethChgEl.textContent = (change>=0?'+':'') + (change||0).toFixed(2) + '% 24h'; ethChgEl.style.color = change>=0?'var(--jbrt)':'var(--ebrt)'; }
+    if (ethMcapEl && mcap) ethMcapEl.textContent = '$' + (mcap/1e9).toFixed(0) + 'B';
+    if (charts?.eth?.length) {
+      const canvas = document.getElementById('chart-eth-spark');
+      if (canvas) drawLargeSparkline(canvas, charts.eth);
+    }
+  }
+}
+
+function drawSparkline(canvas, data, color) {
+  if (!data?.length || !canvas) return;
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width, h = canvas.height;
+  const min = Math.min(...data), max = Math.max(...data);
+  const range = max - min || 1;
+  ctx.clearRect(0, 0, w, h);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1.5;
+  ctx.shadowBlur = 4;
+  ctx.shadowColor = color;
+  ctx.beginPath();
+  data.forEach((v, i) => {
+    const x = (i / (data.length - 1)) * w;
+    const y = h - ((v - min) / range) * (h * 0.8) - h * 0.1;
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+}
+
+function drawLargeSparkline(canvas, data) {
+  if (!data?.length || !canvas) return;
+  const ctx = canvas.getContext('2d');
+  const w = canvas.offsetWidth || 300, h = canvas.height || 80;
+  canvas.width = w;
+  const min = Math.min(...data), max = Math.max(...data);
+  const range = max - min || 1;
+  const isUp = data[data.length-1] >= data[0];
+  const color = isUp ? '#28b088' : '#c04a28';
+  ctx.clearRect(0, 0, w, h);
+  // Fill
+  const grad = ctx.createLinearGradient(0, 0, 0, h);
+  grad.addColorStop(0, color + '40');
+  grad.addColorStop(1, color + '04');
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  data.forEach((v, i) => {
+    const x = (i / (data.length - 1)) * w;
+    const y = h - ((v - min) / range) * (h * 0.75) - h * 0.1;
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  });
+  ctx.lineTo(w, h); ctx.lineTo(0, h); ctx.closePath(); ctx.fill();
+  // Line
+  ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.shadowBlur = 6; ctx.shadowColor = color;
+  ctx.beginPath();
+  data.forEach((v, i) => {
+    const x = (i / (data.length - 1)) * w;
+    const y = h - ((v - min) / range) * (h * 0.75) - h * 0.1;
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+}
