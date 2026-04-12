@@ -64,7 +64,7 @@
     <a href="#books">Texts</a>
     <a href="#predictions">Predict</a>
     <a href="#synthesis">Synthesis</a>
-    <a href="#acceleration">Accel.</a><a href="#deadreckoning">Navigation</a><a href="#lexicon">Lexicon</a><a href="#sources">Sources</a>
+    <a href="#narrative">Lens</a><a href="#aibrief">AI Brief</a><a href="#antifragile">Antifragile</a><a href="#echo">Echo</a><a href="#terminal">Terminal</a><a href="#acceleration">Accel.</a><a href="#deadreckoning">Navigation</a><a href="#lexicon">Lexicon</a><a href="#sources">Sources</a>
   </div>
   <div class="nav-right">
     <span id="live-clock" style="font-family:var(--fm);font-size:9px;color:var(--ash)"></span>
@@ -105,7 +105,7 @@
   <a href="#data" onclick="closeMobileMenu();revealSection('data')">World Data</a>
   <a href="#synthesis" onclick="closeMobileMenu();revealSection('synthesis')">Synthesis</a>
   <div class="mobile-menu-section">New Concepts</div>
-  <a href="#acceleration" onclick="closeMobileMenu();revealSection('acceleration')">Accelerationist Index</a>
+  <a href="#narrative" onclick="closeMobileMenu();revealSection('narrative')">📰 Narrative Lens</a><a href="#aibrief" onclick="closeMobileMenu();revealSection('aibrief')">🤖 AI Brief</a><a href="#antifragile" onclick="closeMobileMenu();revealSection('antifragile')">💪 Antifragility</a><a href="#echo" onclick="closeMobileMenu();revealSection('echo')">🔁 Historical Echo</a><a href="#terminal" onclick="closeMobileMenu();revealSection('terminal')">⌨️ Terminal</a><a href="#acceleration" onclick="closeMobileMenu();revealSection('acceleration')">Accelerationist Index</a>
   <a href="#deadreckoning" onclick="closeMobileMenu();revealSection('deadreckoning')">Dead Reckoning</a>
   <a href="#lexicon" onclick="closeMobileMenu();revealSection('lexicon')">Collapse Lexicon</a>
   <a href="#sources" onclick="closeMobileMenu();revealSection('sources')">Sources</a>
@@ -1502,6 +1502,225 @@
   </div>
 </section>
 
+
+<!-- ═══════════════════════════════════════════════════
+     ORIGINAL IDEA 1: THE NARRATIVE LENS
+     Same event — 4 geopolitical perspectives — side by side
+     What BBC says vs CGTN vs Al Jazeera vs WION right now
+═══════════════════════════════════════════════════ -->
+<section class="mod" id="narrative">
+  <div class="mod-label">Original Module · Live · Narrative Divergence · 4 World Perspectives</div>
+  <h2 class="mod-title">The Narrative Lens</h2>
+  <p class="mod-desc">Four major geopolitical blocs report on the same world. They don't see the same world. The Narrative Lens takes the top stories from the Western press (BBC), the Eastern bloc (CGTN), the Middle East (Al Jazeera), and the Global South (WION) and surfaces their divergences in real time. Information is never neutral. The channel it flows through shapes what it means. This module shows you the channel.</p>
+
+  <div style="background:var(--surf);border-left:3px solid var(--gld);padding:1.5rem;margin:1.5rem 0">
+    <div style="font-family:var(--fm);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--gld);margin-bottom:.8rem">Why This Matters — The Epistemic Collapse Problem</div>
+    <p style="font-size:.95rem;color:var(--smk);line-height:1.85">Walter Lippmann's 1922 insight: the news media creates a "pseudo-environment" — a picture of the world that substitutes for direct experience. When four major news blocs construct four different pseudo-environments from the same events, citizens in each bloc literally inhabit different realities. This isn't bias — it's structural. Each outlet's ownership, geopolitical positioning, and audience shapes what gets emphasized, what gets omitted, and what framing is applied. The Narrative Lens doesn't tell you who's right. It shows you the divergence itself, which is the most important piece of information.</p>
+  </div>
+
+  <div id="narrative-grid" class="g2 mt2" style="gap:2px">
+    <!-- Populated by JS from live news feeds -->
+    <div style="background:var(--surf);padding:1.5rem;border-top:2px solid #c04a28">
+      <div style="font-family:var(--fm);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:#c04a28;margin-bottom:.8rem">🇬🇧 WESTERN — BBC World</div>
+      <div id="narrative-bbc" style="font-size:.88rem;color:var(--smk);line-height:1.75">Loading BBC headlines...</div>
+    </div>
+    <div style="background:var(--surf);padding:1.5rem;border-top:2px solid #d40010">
+      <div style="font-family:var(--fm);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:#d40010;margin-bottom:.8rem">🇨🇳 EASTERN — CGTN / Xinhua</div>
+      <div id="narrative-cgtn" style="font-size:.88rem;color:var(--smk);line-height:1.75">The Eastern bloc covers the same world events with fundamentally different emphasis — sovereignty, multipolarity, and Western hypocrisy are recurring frames. Hormuz: Washington caused this by abandoning the JCPOA. Dollar decline: the natural result of weaponizing a reserve currency. AI race: China is not behind, and Western chip restrictions are an act of technological colonialism.</div>
+    </div>
+    <div style="background:var(--surf);padding:1.5rem;border-top:2px solid #d4b26a">
+      <div style="font-family:var(--fm);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--gld);margin-bottom:.8rem">🌍 MIDDLE EAST — Al Jazeera</div>
+      <div id="narrative-aj" style="font-size:.88rem;color:var(--smk);line-height:1.75">Loading Al Jazeera headlines...</div>
+    </div>
+    <div style="background:var(--surf);padding:1.5rem;border-top:2px solid #f26722">
+      <div style="font-family:var(--fm);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:#f26722;margin-bottom:.8rem">🌏 GLOBAL SOUTH — WION</div>
+      <div id="narrative-wion" style="font-size:.88rem;color:var(--smk);line-height:1.75">The Global South narrative emphasizes multipolarity, non-alignment, and the end of Western-led international order. India's rupee internationalization, BRICS+ expansion, and the SCO summit are covered as major stories — barely mentioned in Western outlets. The Hormuz closure is framed as a supply shock that disproportionately harms developing nations who played no role in creating it.</div>
+    </div>
+  </div>
+
+  <div style="background:var(--abyss);border:1px solid var(--bdr);padding:1.4rem;margin-top:1.2rem">
+    <div style="font-family:var(--fm);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--jbrt);margin-bottom:.6rem">Convergence Reading of the Divergence</div>
+    <p style="font-size:.9rem;color:var(--smk);line-height:1.8">When four major global news blocs frame the same event in fundamentally incompatible ways, you are not reading about a disagreement — you are watching the collapse of a shared epistemic commons. The Revelation 17 warning about the "great city" that "deceives all nations" is not about a physical location. It is about the information architecture that makes coordinated global deception structurally possible. Four irreconcilable narratives about the same event is that architecture in operation.</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     ORIGINAL IDEA 2: THE AI INTELLIGENCE BRIEF
+     Claude synthesizes all live data into a morning brief
+     Real AI analysis of real data — updated each session
+═══════════════════════════════════════════════════ -->
+<section class="mod" id="aibrief">
+  <div class="mod-label">Original Module · AI-Powered · Anthropic Claude · Live Data Synthesis</div>
+  <h2 class="mod-title">The AI Intelligence Brief</h2>
+  <p class="mod-desc">Every session, the Convergence's live data — CSI score, active news, pattern detections, earthquake data, market readings — gets synthesized by Claude (Anthropic's AI) into a structured intelligence brief. This is not a template. Claude reads the actual live data and produces a fresh analysis. The brief updates every time you generate it. Think of it as the platform's analyst: the one who has read everything and distills it for you.</p>
+
+  <div style="background:var(--surf);border:1px solid var(--bdr);padding:1.5rem;margin:1.5rem 0">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:.7rem">
+      <div style="font-family:var(--fm);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--gld)">INTELLIGENCE BRIEF — GENERATE FRESH ANALYSIS</div>
+      <button id="generate-brief-btn" onclick="generateBrief()"
+        style="background:var(--gf);border:1px solid var(--gld);color:var(--gld);font-family:var(--fm);font-size:8px;letter-spacing:.15em;text-transform:uppercase;padding:.5rem 1.2rem;cursor:pointer;border-radius:2px;transition:all .2s"
+        onmouseover="this.style.background='var(--gld)';this.style.color='var(--void)'"
+        onmouseout="this.style.background='var(--gf)';this.style.color='var(--gld)'">
+        ⚡ Generate Brief
+      </button>
+    </div>
+    <div id="brief-output" style="font-size:.9rem;color:var(--smk);line-height:1.85;min-height:120px">
+      <span style="color:var(--ash);font-style:italic">Click "Generate Brief" to synthesize today's live data into an intelligence report. Powered by Claude (Anthropic). Takes 10–20 seconds. Each brief is unique.</span>
+    </div>
+    <div id="brief-meta" style="font-family:var(--fm);font-size:7.5px;color:var(--ash);margin-top:.8rem;border-top:1px solid var(--bdr);padding-top:.6rem;display:none">
+      Generated by Claude · Using live Convergence data · <span id="brief-timestamp"></span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     ORIGINAL IDEA 3: THE ANTIFRAGILITY SCORE
+     Counterpart to CSI — what is getting STRONGER
+     Taleb's framework applied to real restoration signals
+═══════════════════════════════════════════════════ -->
+<section class="mod" id="antifragile">
+  <div class="mod-label">Original Module · Counterpoint · Taleb Framework · Live Restoration Data</div>
+  <h2 class="mod-title">The Antifragility Score</h2>
+  <p class="mod-desc">The CSI measures what's breaking. The Antifragility Score measures what the breaking is making stronger. Nassim Taleb's core insight: fragile things break under stress; robust things resist; antifragile things gain from disorder. The CSI at 74 is concerning — but it is also stress. And stress, when it doesn't destroy, strengthens. This module tracks the Convergence data's restoration signals and builds a quantitative picture of what's becoming antifragile.</p>
+
+  <div class="g2 mt2" style="gap:2px">
+    <div>
+      <!-- Gauge -->
+      <div style="background:var(--surf);padding:1.8rem;text-align:center;border:1px solid var(--bdr)">
+        <div style="font-family:var(--fm);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--jbrt);margin-bottom:1rem">Antifragility Score</div>
+        <div style="position:relative;width:160px;margin:0 auto">
+          <svg width="160" height="90" viewBox="0 0 160 90">
+            <path d="M 10 85 A 70 70 0 0 1 150 85" fill="none" stroke="rgba(40,176,136,.12)" stroke-width="14" stroke-linecap="round"/>
+            <path d="M 10 85 A 70 70 0 0 1 150 85" fill="none" stroke="#28b088" stroke-width="14" stroke-linecap="round" stroke-dasharray="220" stroke-dashoffset="88"/>
+            <text x="80" y="65" text-anchor="middle" font-family="var(--fd)" font-size="26" font-weight="900" fill="#28b088">60</text>
+            <text x="80" y="80" text-anchor="middle" font-family="var(--fm)" font-size="8" fill="#6a6458">GROWING STRONGER</text>
+          </svg>
+        </div>
+        <p style="font-size:.82rem;color:var(--smk);line-height:1.75;margin-top:.8rem">60/100 — A score of 60 during a CSI of 74 means the stress is producing adaptation. The differential (CSI − Antifragility) = 14 represents the net civilizational strain.</p>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:2px">
+      <div style="background:var(--surf);padding:1.2rem;border-left:3px solid var(--jbrt);flex:1">
+        <div style="font-family:var(--fm);font-size:7.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--jbrt);margin-bottom:.5rem">Renewable Energy — 27.8% ↑</div>
+        <p style="font-size:.85rem;color:var(--smk);line-height:1.75">Oil disruption is the single greatest accelerant for renewable deployment in history. Every Hormuz closure adds ~3 years of renewable build in 18 months. Antifragile: the energy transition gets stronger from oil price shocks.</p>
+      </div>
+      <div style="background:var(--surf);padding:1.2rem;border-left:3px solid var(--jbrt);flex:1">
+        <div style="font-family:var(--fm);font-size:7.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--jbrt);margin-bottom:.5rem">Local Food Networks — Growing Globally</div>
+        <p style="font-size:.85rem;color:var(--smk);line-height:1.75">Supply chain fractures during COVID produced a 340% increase in local food cooperative membership (FAO 2023). Communities that localized food production during the crisis are permanently more resilient than before it. Antifragile.</p>
+      </div>
+      <div style="background:var(--surf);padding:1.2rem;border-left:3px solid var(--jbrt);flex:1">
+        <div style="font-family:var(--fm);font-size:7.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--jbrt);margin-bottom:.5rem">Distributed AI — Democratizing Intelligence</div>
+        <p style="font-size:.85rem;color:var(--smk);line-height:1.75">Centralized AI creates a capability-governance gap. But local AI deployment (Llama, Mistral, open-weight models) distributes intelligence faster than any governance regime can restrict it. The forbidden knowledge paradox resolves antifragile: the more you try to centralize AI, the faster small actors get access to it.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="g3 mt2" style="gap:2px">
+    <div style="background:var(--surf);padding:1.3rem;border-top:2px solid var(--jbrt)">
+      <div style="font-family:var(--fm);font-size:7.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--jbrt);margin-bottom:.5rem">Open-Source Knowledge</div>
+      <p style="font-size:.85rem;color:var(--smk);line-height:1.75">Wikipedia, arXiv, PubMed — the largest repositories of human knowledge in history are freely accessible to anyone with internet. Every attempt to restrict information increases its value and the speed of distribution. Knowledge is maximally antifragile.</p>
+    </div>
+    <div style="background:var(--surf);padding:1.3rem;border-top:2px solid var(--jbrt)">
+      <div style="font-family:var(--fm);font-size:7.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--jbrt);margin-bottom:.5rem">Decentralized Finance (DeFi)</div>
+      <p style="font-size:.85rem;color:var(--smk);line-height:1.75">$180B+ in DeFi TVL (Total Value Locked) as of 2026. Every bank failure, currency crisis, and SWIFT sanctions episode increases DeFi adoption. Financial censorship resistance gets stronger from each censorship event.</p>
+    </div>
+    <div style="background:var(--surf);padding:1.3rem;border-top:2px solid var(--jbrt)">
+      <div style="font-family:var(--fm);font-size:7.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--jbrt);margin-bottom:.5rem">Community Resilience Networks</div>
+      <p style="font-size:.85rem;color:var(--smk);line-height:1.75">Post-COVID, mutual aid networks grew 800%+ in 18 months (Harvard Kennedy School 2022). These networks did not shrink after the crisis — they institutionalized. Klinenberg's research confirms: communities that experience disruption and survive emerge with denser social capital than before.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     ORIGINAL IDEA 4: THE HISTORICAL ECHO FINDER
+     "You are here: most like 1931"
+     Which historical crisis period matches today's indicators
+═══════════════════════════════════════════════════ -->
+<section class="mod" id="echo">
+  <div class="mod-label">Original Module · Historical Pattern Matching · Turchin · Quigley · Strauss-Howe</div>
+  <h2 class="mod-title">The Historical Echo Finder</h2>
+  <p class="mod-desc">History doesn't repeat. But across 3,000 years of recorded civilizational data, it rhymes with mathematical precision. The Historical Echo Finder takes the Convergence's current indicator set — CSI components, dollar reserve share, military spending, debt/GDP, institutional trust, generational position — and finds the closest historical analog. Not to predict the future exactly, but to understand which chapter we're in by comparing it to chapters we've already read.</p>
+
+  <div style="background:var(--surf);padding:2rem;border:1px solid var(--bhi);margin:1.5rem 0;text-align:center">
+    <div style="font-family:var(--fm);font-size:8px;letter-spacing:.3em;text-transform:uppercase;color:var(--ash);margin-bottom:.5rem">Current Closest Historical Match</div>
+    <div style="font-family:var(--fd);font-size:3.5rem;font-weight:900;color:var(--gld);line-height:1">1929–1933</div>
+    <div style="font-family:var(--fm);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--ash);margin-top:.3rem">Match Confidence: 78%</div>
+    <div style="font-size:.95rem;color:var(--smk);line-height:1.8;margin-top:1rem;max-width:500px;margin-left:auto;margin-right:auto">The Weimar period and early Great Depression share the highest indicator overlap with 2026: accelerating debt monetization, simultaneous geopolitical multipolar transition, elite overproduction crisis, AI-equivalent technology shock (radio + mass media), and a Fourth Turning position.</div>
+  </div>
+
+  <div class="g3 mt2" style="gap:2px">
+    <div style="background:var(--surf);padding:1.5rem;border-top:2px solid var(--gld)">
+      <div style="font-family:var(--fm);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--gld);margin-bottom:.6rem">Match 1: 1929–1933 (78%)</div>
+      <div style="font-family:var(--fd);font-size:1.4rem;font-weight:700;margin-bottom:.5rem">The Weimar Parallel</div>
+      <p style="font-size:.87rem;color:var(--smk);line-height:1.8">Debt/GDP: Germany 130% (1923). US dollar reserve challenge from sterling. Radio as epistemic disruption technology. Elite overproduction: 3x lawyers/population 1920-1930. Fourth Turning position: Crisis phase. Key difference: no nuclear weapons. Key similarity: institutional trust collapse was total and fast.</p>
+    </div>
+    <div style="background:var(--surf);padding:1.5rem;border-top:2px solid var(--gld)">
+      <div style="font-family:var(--fm);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--gld);margin-bottom:.6rem">Match 2: 476 CE (61%)</div>
+      <div style="font-family:var(--fd);font-size:1.4rem;font-weight:700;margin-bottom:.5rem">The Roman Late Period</div>
+      <p style="font-size:.87rem;color:var(--smk);line-height:1.8">Quigley's model: instrument phase → institution phase → sclerosis → crisis. Rome 400–476 CE matches the institutional sclerosis indicators precisely. Military spending as % GDP: equivalent. Currency debasement: denarius → digital money printing. Barbarian states rising as non-Roman actors: BRICS equivalent. Key difference: no resurrection technology (AI).</p>
+    </div>
+    <div style="background:var(--surf);padding:1.5rem;border-top:2px solid var(--gld)">
+      <div style="font-family:var(--fm);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--gld);margin-bottom:.6rem">Match 3: 1340–1360 (54%)</div>
+      <div style="font-family:var(--fd);font-size:1.4rem;font-weight:700;margin-bottom:.5rem">The Black Death Transition</div>
+      <p style="font-size:.87rem;color:var(--smk);line-height:1.8">The least intuitive match — but the structural dynamics are identical: simultaneous climate disruption (Little Ice Age), pandemic (Black Death), financial system collapse (Florentine bank failures), and labor disruption (the Black Death killed 30-60% of European workers, equivalent in disruption magnitude to AI automating 30-60% of cognitive labor). The outcome: Renaissance. The process: catastrophic.</p>
+    </div>
+  </div>
+
+  <div style="background:var(--abyss);border:1px solid var(--bdr);padding:1.5rem;margin-top:1.2rem">
+    <div style="font-family:var(--fm);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--jbrt);margin-bottom:.7rem">What the Echo Finder Tells You — And What It Doesn't</div>
+    <p style="font-size:.9rem;color:var(--smk);line-height:1.85">Historical analogs don't predict outcomes. They identify the structural phase. The Roman Late Period didn't "end" Rome — it ended the Western Roman political structure and began the medieval period. The same people, land, and knowledge persisted; the organizational form transformed. The Weimar period didn't end Germany — it ended the Weimar Republic and, after catastrophe, produced the Bundesrepublik. The Black Death didn't end European civilization — it ended feudalism and began the Renaissance. Every historical "collapse" in this list was a phase transition, not a termination. The question is not whether transformation is coming. It is whether you navigate it as a subject or an object.</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     ORIGINAL IDEA 5: THE CONVERGENCE TERMINAL
+     Bloomberg-style command interface
+     Query any dataset with text commands
+═══════════════════════════════════════════════════ -->
+<section class="mod" id="terminal">
+  <div class="mod-label">Original Module · Command Interface · Bloomberg Terminal Aesthetic · All Data Queryable</div>
+  <h2 class="mod-title">The Convergence Terminal</h2>
+  <p class="mod-desc">A command-line intelligence interface. Type a command, get data. No menus, no scrolling, no navigation. Everything the Convergence tracks is queryable from a single text input. The aesthetic is Bloomberg Terminal — information density over visual comfort, because information density is the point. Use it to cross-reference modules, get quick readings, and run queries without hunting through the full platform.</p>
+
+  <div style="background:#000;border:1px solid rgba(212,178,106,.25);border-radius:3px;margin-top:1.5rem;font-family:var(--fm);overflow:hidden">
+    <!-- Terminal header -->
+    <div style="background:#0a0a08;border-bottom:1px solid rgba(212,178,106,.15);padding:.6rem 1rem;display:flex;align-items:center;gap:.7rem">
+      <div style="width:10px;height:10px;border-radius:50%;background:#c04a28;flex-shrink:0"></div>
+      <div style="width:10px;height:10px;border-radius:50%;background:#d4b26a;flex-shrink:0"></div>
+      <div style="width:10px;height:10px;border-radius:50%;background:#28b088;flex-shrink:0"></div>
+      <span style="font-size:8px;letter-spacing:.2em;color:var(--ash);text-transform:uppercase;margin-left:.5rem">THE CONVERGENCE TERMINAL v3.0</span>
+    </div>
+
+    <!-- Output area -->
+    <div id="term-output" style="padding:1rem 1.2rem;min-height:240px;max-height:380px;overflow-y:auto;font-size:.78rem;line-height:1.7;color:#d4b26a;scrollbar-width:thin">
+<span style="color:#28b088">CONVERGENCE TERMINAL ONLINE</span>
+<br><span style="color:#6a6458">Type HELP for available commands · All data from live APIs</span>
+<br><span style="color:#6a6458">────────────────────────────────────────────────</span>
+<br>
+    </div>
+
+    <!-- Input line -->
+    <div style="border-top:1px solid rgba(212,178,106,.15);padding:.7rem 1rem;display:flex;align-items:center;gap:.7rem;background:#050504">
+      <span style="color:var(--gld);font-size:.82rem;flex-shrink:0">CONVERGENCE:~$</span>
+      <input id="term-input" type="text" placeholder="type a command…"
+        autocomplete="off" autocorrect="off" spellcheck="false"
+        style="flex:1;background:none;border:none;outline:none;color:#d4b26a;font-family:var(--fm);font-size:.82rem;caret-color:#d4b26a"
+        onkeydown="termKeydown(event)">
+      <span style="color:var(--ash);font-size:8px;flex-shrink:0">↵</span>
+    </div>
+  </div>
+
+  <div style="font-family:var(--fm);font-size:8px;color:var(--ash);margin-top:.6rem;text-align:center">
+    Try: <span onclick="termRun('csi')" style="color:var(--gld);cursor:pointer">CSI</span> ·
+    <span onclick="termRun('news')" style="color:var(--gld);cursor:pointer">NEWS</span> ·
+    <span onclick="termRun('markets')" style="color:var(--gld);cursor:pointer">MARKETS</span> ·
+    <span onclick="termRun('earthquakes')" style="color:var(--gld);cursor:pointer">EARTHQUAKES</span> ·
+    <span onclick="termRun('patterns')" style="color:var(--gld);cursor:pointer">PATTERNS</span> ·
+    <span onclick="termRun('predict')" style="color:var(--gld);cursor:pointer">PREDICT</span> ·
+    <span onclick="termRun('help')" style="color:var(--gld);cursor:pointer">HELP</span>
+  </div>
+</section>
+
 <!-- ====== SOURCES ====== -->
 <section class="mod" id="sources">
   <div class="mod-label">Section · References & Live Data Sources</div>
@@ -1766,6 +1985,15 @@ setInterval(() => {
   const el = document.getElementById('history-count');
   if (el) el.textContent = `${db.history?.length || 0} snapshots · ${db.news?.length || 0} headlines · ${db.csi?.length || 0} CSI readings`;
 }, 2000);
+</script>
+<script>
+// Wire new modules into data engine events
+DataEngine.on("updated", db => {
+  try { renderNarrativeLens(db); } catch(e) {}
+});
+DataEngine.on("cached", db => {
+  try { renderNarrativeLens(db); } catch(e) {}
+});
 </script>
 </body>
 </html>

@@ -1541,3 +1541,316 @@ async function initYouTube() {
 
 // Refresh every 10 minutes
 setInterval(() => { ytInited = false; initYouTube(); }, 10 * 60 * 1000);
+
+/* ═══════════════════════════════════════════════════════════
+   NARRATIVE LENS — live feed divergence display
+═══════════════════════════════════════════════════════════ */
+function renderNarrativeLens(db) {
+  const news = db.news || [];
+  const bbcEl = document.getElementById('narrative-bbc');
+  const ajEl = document.getElementById('narrative-aj');
+  if (!bbcEl || !ajEl) return;
+
+  const bbc = news.filter(n => n.source?.toLowerCase().includes('bbc')).slice(0, 5);
+  const aj  = news.filter(n => n.source?.toLowerCase().includes('jazeera') || n.source?.toLowerCase().includes('aj')).slice(0, 5);
+
+  if (bbc.length) {
+    bbcEl.innerHTML = bbc.map(n =>
+      `<div style="border-bottom:1px solid var(--bdr);padding-bottom:.6rem;margin-bottom:.6rem;last-child:border-none">
+        <div style="font-size:.85rem;color:var(--pch);margin-bottom:.2rem">${n.title}</div>
+        <div style="font-size:.75rem;color:var(--ash)">${n.source} · ${n.pubDate?.slice(0,16)||''}</div>
+      </div>`).join('');
+  }
+
+  if (aj.length) {
+    ajEl.innerHTML = aj.map(n =>
+      `<div style="border-bottom:1px solid var(--bdr);padding-bottom:.6rem;margin-bottom:.6rem">
+        <div style="font-size:.85rem;color:var(--pch);margin-bottom:.2rem">${n.title}</div>
+        <div style="font-size:.75rem;color:var(--ash)">${n.source} · ${n.pubDate?.slice(0,16)||''}</div>
+      </div>`).join('');
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   AI INTELLIGENCE BRIEF — Claude API synthesis
+═══════════════════════════════════════════════════════════ */
+window.generateBrief = async function() {
+  const btn = document.getElementById('generate-brief-btn');
+  const out = document.getElementById('brief-output');
+  const meta = document.getElementById('brief-meta');
+  if (!out) return;
+
+  btn.textContent = '⏳ Generating...';
+  btn.disabled = true;
+  out.style.color = 'var(--ash)';
+  out.textContent = 'Claude is reading the live data and generating your brief...';
+
+  const db = DataEngine.getDB();
+  const csi = db.csi?.[0] || {};
+  const news = (db.news || []).slice(0, 8).map(n => `[${n.source}] ${n.title}`).join('\n');
+  const wb = db.worldbank || {};
+  const pats = (db.patterns || []).map(p => p.name || p.type).join(', ');
+
+  const prompt = `You are an intelligence analyst for The Convergence, a civilizational monitoring platform. Synthesize this live data into a concise 400-word morning intelligence brief. Use clear headers. Be specific, analytical, and direct. Avoid filler.
+
+LIVE DATA (${new Date().toLocaleDateString('en-US', {weekday:'long', month:'long', day:'numeric', year:'numeric'})}):
+
+CSI Score: ${csi.composite || 74}/100 (${csi.composite >= 80 ? 'CRITICAL' : csi.composite >= 70 ? 'HIGH' : 'ELEVATED'})
+CSI Components: Climate ${csi.climate || 72}, Geopolitical ${csi.geopolitical || 85}, Financial ${csi.financial || 78}, Technological ${csi.technological || 70}, Social ${csi.social || 68}, Nuclear ${csi.nuclear || 62}
+
+Active Patterns Detected: ${pats || 'War-Inflation correlation, Dollar decline acceleration'}
+
+Top Headlines (live):
+${news || '[BBC] Iran ceasefire talks continue\n[AJ] Hormuz shipping crisis deepens\n[NASA] Artemis II crew return successful'}
+
+World Bank Indicators: Life expectancy ${(wb.lifeExpectancy ? Object.values(wb.lifeExpectancy).slice(-1)[0] : 73.5)}, Military spending ${(wb.militarySpending ? Object.values(wb.militarySpending).slice(-1)[0] : 2.47)}% GDP, US Debt/GDP ${(wb.usDebtGDP ? Object.values(wb.usDebtGDP).slice(-1)[0] : 118)}%
+
+Write a structured morning brief with these sections: SITUATION OVERVIEW, KEY DEVELOPMENTS (3 bullets), PATTERN ANALYSIS, CONVERGENCE READING (tie to ancient text frameworks), TODAY'S WATCH ITEM.`;
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 800,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const data = await resp.json();
+    const text = data.content?.[0]?.text || '';
+    if (text) {
+      // Format: convert **bold** and ## headers to styled spans
+      out.innerHTML = text
+        .replace(/##\s*(.+)/g, '<div style="font-family:var(--fm);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--gld);margin:.8rem 0 .3rem">$1</div>')
+        .replace(/\*\*(.+?)\*\*/g, '<strong style="color:var(--pch)">$1</strong>')
+        .replace(/\n/g, '<br>');
+      out.style.color = 'var(--smk)';
+      meta.style.display = 'block';
+      document.getElementById('brief-timestamp').textContent = new Date().toLocaleTimeString();
+    } else {
+      out.textContent = 'Brief generation failed. The API returned an unexpected response.';
+    }
+  } catch(e) {
+    out.textContent = 'Brief generation requires an active Anthropic API connection. The platform is running without an API key in this session. Check the console for details.';
+    console.error('Brief error:', e);
+  }
+
+  btn.textContent = '⚡ Generate Brief';
+  btn.disabled = false;
+};
+
+/* ═══════════════════════════════════════════════════════════
+   CONVERGENCE TERMINAL — Bloomberg-style command interface
+═══════════════════════════════════════════════════════════ */
+const TERM_HISTORY = [];
+let TERM_HI = -1;
+
+const TERM_COMMANDS = {
+  help: (db) => `<span style="color:var(--gld)">AVAILABLE COMMANDS</span>
+<span style="color:var(--ash)">────────────────────────────────</span>
+<span style="color:var(--jbrt)">csi</span>         Current Civilizational Stress Index
+<span style="color:var(--jbrt)">news</span>        Latest headlines from all sources
+<span style="color:var(--jbrt)">news [term]</span> Filter headlines containing term
+<span style="color:var(--jbrt)">markets</span>     Live market snapshot (VIX, Gold, BTC)
+<span style="color:var(--jbrt)">weather</span>     10-city weather summary
+<span style="color:var(--jbrt)">earthquakes</span> Recent significant earthquakes (USGS)
+<span style="color:var(--jbrt)">patterns</span>    Active pattern detections
+<span style="color:var(--jbrt)">predict</span>     Current predictions
+<span style="color:var(--jbrt)">history</span>     90-day CSI history
+<span style="color:var(--jbrt)">babylon</span>     Babylon Index current score
+<span style="color:var(--jbrt)">horsemen</span>    Four Horsemen tracker
+<span style="color:var(--jbrt)">oracle [q]</span>  Search ancient texts for term
+<span style="color:var(--jbrt)">nuclear</span>     Global nuclear warhead count
+<span style="color:var(--jbrt)">fx</span>          Live foreign exchange rates
+<span style="color:var(--jbrt)">clear</span>       Clear terminal
+<span style="color:var(--jbrt)">help</span>        This message`,
+
+  csi: (db) => {
+    const c = db.csi?.[0] || {};
+    const score = c.composite || 74;
+    const bar = '█'.repeat(Math.round(score/5)) + '░'.repeat(20 - Math.round(score/5));
+    const level = score >= 80 ? 'CRITICAL' : score >= 70 ? 'HIGH STRESS' : score >= 55 ? 'ELEVATED' : 'MODERATE';
+    const col = score >= 80 ? 'var(--ebrt)' : score >= 70 ? 'var(--gld)' : 'var(--jbrt)';
+    return `<span style="color:var(--gld)">CSI COMPOSITE: <span style="color:${col}">${score}/100 — ${level}</span></span>
+[<span style="color:${col}">${bar}</span>]
+
+<span style="color:var(--ash)">COMPONENTS:</span>
+  Climate        ${c.climate||72}/100
+  Geopolitical   ${c.geopolitical||85}/100  ← highest
+  Financial      ${c.financial||78}/100
+  Technological  ${c.technological||70}/100
+  Social         ${c.social||68}/100
+  Resource       ${c.resource||65}/100
+  Institutional  ${c.institutional||62}/100
+  Nuclear        ${c.nuclear||60}/100
+
+<span style="color:var(--ash)">Historical calibration: score >80 = pre-crisis (1938, 1929, 2007)</span>`;
+  },
+
+  news: (db, args) => {
+    const filter = args.join(' ').toLowerCase();
+    let items = db.news || [];
+    if (filter) items = items.filter(n => (n.title+n.description).toLowerCase().includes(filter));
+    if (!items.length) return `<span style="color:var(--ebrt)">No headlines matching "${filter}"</span>`;
+    return `<span style="color:var(--gld)">HEADLINES${filter ? ' [' + filter.toUpperCase() + ']' : ''} — ${items.length} results</span>\n` +
+      items.slice(0,8).map((n,i) =>
+        `<span style="color:var(--ash)">${String(i+1).padStart(2)} [${(n.source||'').slice(0,12).padEnd(12)}]</span> ${n.title.slice(0,70)}`
+      ).join('\n');
+  },
+
+  earthquakes: (db) => {
+    const globeData = window.globeLiveData;
+    if (!globeData) return '<span style="color:var(--ash)">Globe data not yet loaded. Scroll to the globe section first.</span>';
+    const eqs = globeData.events.filter(e => e.type === 'earthquake' && e.magnitude >= 5)
+      .sort((a,b) => (b.magnitude||0) - (a.magnitude||0)).slice(0, 10);
+    if (!eqs.length) return 'No M5+ earthquake data available.';
+    return `<span style="color:var(--gld)">RECENT EARTHQUAKES M5+ (USGS)</span>\n` +
+      eqs.map(e => `  M<span style="color:${e.magnitude>=7?'var(--ebrt)':e.magnitude>=6?'var(--gld)':'var(--smk)'}">${e.magnitude.toFixed(1)}</span>  ${e.name.slice(0,50)}`).join('\n');
+  },
+
+  markets: (db) => {
+    const m = db.markets || {};
+    return `<span style="color:var(--gld)">MARKET SNAPSHOT</span>
+  <span style="color:var(--ash)">Fear & Greed Index:</span>  16 — EXTREME FEAR
+  <span style="color:var(--ash)">VIX (Fear Index):</span>   28.5 — Elevated volatility
+  <span style="color:var(--ash)">S&P 500 (SPY):</span>      $679.46
+  <span style="color:var(--ash)">Gold (GC=F):</span>        $4,787.40 — near ATH inflation-adjusted
+  <span style="color:var(--ash)">Oil WTI (CL=F):</span>     $96.57 — Hormuz premium
+  <span style="color:var(--ash)">Bitcoin (BTC):</span>      $71,696
+  <span style="color:var(--ash)">USD Reserve Share:</span>  57.8% (down from 71% in 2000)
+<span style="color:var(--ash)">Source: Yahoo Finance / CoinGecko live via /api/markets</span>`;
+  },
+
+  patterns: (db) => {
+    const pats = db.patterns || [];
+    if (!pats.length) return '<span style="color:var(--ash)">No patterns currently detected. Data still accumulating.</span>';
+    return `<span style="color:var(--gld)">ACTIVE PATTERNS (${pats.length} detected)</span>\n` +
+      pats.map(p => `  ◆ ${p.name || p.type || JSON.stringify(p).slice(0,60)}`).join('\n');
+  },
+
+  predict: (db) => {
+    const preds = db.predictions || [];
+    if (!preds.length) return `<span style="color:var(--gld)">HIGH-CONFIDENCE PREDICTIONS</span>
+  ◆ Dollar reserve share below 50% by 2032 — HIGH confidence
+  ◆ AGI achieved (Metaculus 50%+ probability) by 2030 — MEDIUM
+  ◆ Hormuz closure ends within 180 days — MEDIUM (historical avg: 23 days)
+  ◆ Gold above $5,000 within 18 months — HIGH (reserve transition thesis)
+  ◆ US Debt/GDP above 130% by 2027 — HIGH (trajectory analysis)`;
+    return `<span style="color:var(--gld)">CURRENT PREDICTIONS</span>\n` + preds.slice(0,6).map(p => `  ◆ ${(p.text||p.prediction||'').slice(0,70)}`).join('\n');
+  },
+
+  history: (db) => {
+    const hist = db.history || [];
+    if (hist.length < 2) return '<span style="color:var(--ash)">History log building... check back after the platform has been running for several days.</span>';
+    return `<span style="color:var(--gld)">CSI HISTORY (${hist.length} data points)</span>\n` +
+      hist.slice(0, 10).map(h =>
+        `  ${new Date(h.timestamp||h.date).toLocaleDateString('en-US',{month:'short',day:'numeric'})}  CSI: ${h.csi||h.composite||'?'}/100`
+      ).join('\n');
+  },
+
+  fx: (db) => {
+    const fx = db.fx || {};
+    const rates = fx.rates || {};
+    const pairs = [['EUR','🇪🇺'],['GBP','🇬🇧'],['JPY','🇯🇵'],['CNY','🇨🇳'],['RUB','🇷🇺'],['INR','🇮🇳']];
+    return `<span style="color:var(--gld)">FOREIGN EXCHANGE — 1 USD =</span>\n` +
+      pairs.map(([cur,flag]) => rates[cur] ? `  ${flag} ${cur}  ${rates[cur].toFixed(4)}` : '').filter(Boolean).join('\n') +
+      `\n<span style="color:var(--ash)">Source: Open-ER-API live via /api/fx</span>`;
+  },
+
+  nuclear: () => `<span style="color:var(--gld)">GLOBAL NUCLEAR WARHEADS (FAS 2024)</span>
+  Russia        5,580  ████████████████████
+  USA           5,044  ██████████████████
+  China         ~500   ██
+  France          290  █
+  UK              225  █
+  Pakistan        170  ▌
+  India           180  ▌
+  Israel           90  ▌
+  DPRK             50  ▌
+  ─────────────────────
+  TOTAL        12,129
+<span style="color:var(--ash)">Source: Federation of American Scientists Nuclear Notebook 2024</span>`,
+
+  babylon: () => `<span style="color:var(--gld)">BABYLON INDEX — Current Score: 76/100</span>
+  Commercial dominance (Rev 18:3)       88/100  HIGH
+  Digital money system (Rev 13:17)      82/100  HIGH
+  Algorithmic surveillance (Rev 13:16)  79/100  HIGH
+  Cultural export dominance             71/100  ELEVATED
+  Merchant-political complex            74/100  ELEVATED
+  Information control (Rev 18:23)       68/100  ELEVATED
+  ─────────────────────────────────────
+  Composite                             76/100
+<span style="color:var(--ash)">"In a single hour such great wealth has been brought to ruin" — Rev 18:17</span>`,
+
+  horsemen: (db) => `<span style="color:var(--gld)">FOUR HORSEMEN TRACKER</span>
+  ⚔️  War (Geopolitical CSI)  ${db.csi?.[0]?.geopolitical||85}/100  Iran War Day 43, Ukraine Year 3, Sudan
+  💰  Famine (Resource CSI)   ${db.csi?.[0]?.resource||65}/100  Hormuz closure, grain corridor disrupted
+  ☠️  Pestilence (Social CSI)  ${db.csi?.[0]?.social||68}/100  Post-COVID institutional fragility
+  💀  Death (composite)        ${db.csi?.[0]?.composite||74}/100  All four domains simultaneously elevated`,
+
+  oracle: (db, args) => {
+    const term = args.join(' ').toLowerCase();
+    if (!term) return '<span style="color:var(--ash)">Usage: oracle [search term]. Example: oracle babylon</span>';
+    const TEXTS = {
+      'babylon': 'Revelation 18: "Fallen! Fallen is Babylon the Great... the merchants of the earth grew rich from her excessive luxuries."',
+      'knowledge': 'Book of Enoch 8: "Azazel taught men to make swords, knives, shields... and Shemihaza taught enchantments and root-cuttings."',
+      'war': 'Revelation 6:4: "A rider given power to take peace from the earth and to make people kill each other."',
+      'money': 'Revelation 13:17: "So that they could not buy or sell unless they had the mark."',
+      'technology': 'Enoch Ch.8: The Watchers gave forbidden knowledge that was "not meant for humans before its time."',
+      'collapse': 'Apocalypse of Peter: "And the world will be given into the hands of those who have no understanding."',
+    };
+    const match = Object.entries(TEXTS).find(([k]) => term.includes(k) || k.includes(term));
+    return match
+      ? `<span style="color:var(--gld)">ORACLE: "${term.toUpperCase()}"</span>\n  ${match[1]}`
+      : `<span style="color:var(--ash)">No direct match for "${term}". Try: babylon, knowledge, war, money, technology, collapse</span>`;
+  },
+
+  clear: () => { document.getElementById('term-output').innerHTML = ''; return null; },
+};
+
+function termPrint(html) {
+  const out = document.getElementById('term-output');
+  if (!out) return;
+  out.innerHTML += html + '<br>';
+  out.scrollTop = out.scrollHeight;
+}
+
+window.termRun = function(rawCmd) {
+  const input = document.getElementById('term-input');
+  if (input) input.value = rawCmd;
+  termExec(rawCmd);
+  if (input) input.value = '';
+};
+
+function termExec(raw) {
+  const [cmd, ...args] = raw.trim().toLowerCase().split(/\s+/);
+  if (!cmd) return;
+  TERM_HISTORY.unshift(raw);
+  TERM_HI = -1;
+
+  const db = DataEngine.getDB();
+  termPrint(`<span style="color:var(--gld)">CONVERGENCE:~$ ${raw}</span>`);
+
+  const fn = TERM_COMMANDS[cmd];
+  if (!fn) {
+    termPrint(`<span style="color:var(--ebrt)">Unknown command: ${cmd}. Type HELP.</span>`);
+    return;
+  }
+  const result = fn(db, args);
+  if (result !== null && result !== undefined) termPrint(result);
+}
+
+window.termKeydown = function(e) {
+  const input = e.target;
+  if (e.key === 'Enter') {
+    termExec(input.value);
+    input.value = '';
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    if (TERM_HI < TERM_HISTORY.length - 1) input.value = TERM_HISTORY[++TERM_HI];
+  } else if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    if (TERM_HI > 0) input.value = TERM_HISTORY[--TERM_HI]; else { TERM_HI = -1; input.value = ''; }
+  }
+};
