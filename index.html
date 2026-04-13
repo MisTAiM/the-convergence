@@ -163,11 +163,22 @@
     </div>
 
     <div class="nav-group">
+      <button class="nav-group-btn">Intelligence <span class="nav-arrow">▾</span></button>
+      <div class="nav-dropdown">
+        <a href="#truthengine" onclick="event.preventDefault();revealSection('truthengine')">🔍 Truth Engine</a>
+        <a href="#intel" onclick="event.preventDefault();revealSection('intel')">🔴 Intelligence Feed — FBI/Gov</a>
+        <a href="#signalnoise" onclick="event.preventDefault();revealSection('signalnoise')">📡 Signal / Noise Ratio</a>
+        <a href="#narrative" onclick="event.preventDefault();revealSection('narrative')">📰 Narrative Lens</a>
+        <a href="#powermap" onclick="event.preventDefault();revealSection('powermap')">🗺️ Power Map</a>
+      </div>
+    </div>
+    <div class="nav-group">
       <button class="nav-group-btn">Resources <span class="nav-arrow">▾</span></button>
       <div class="nav-dropdown">
-        <a href="#signalnoise" onclick="event.preventDefault();revealSection('signalnoise')">📡 Signal / Noise Ratio</a>
-        <a href="#resources" onclick="event.preventDefault();revealSection('resources')">🌍 Resource Depletion</a>
-        <a href="#powermap" onclick="event.preventDefault();revealSection('powermap')">🗺️ Power Map</a>
+        <a href="#spaceweather" onclick="event.preventDefault();revealSection('spaceweather')">☀️ Space Weather</a>
+        <a href="#conflictzones" onclick="event.preventDefault();revealSection('conflictzones')">🌍 Conflict Zone Conditions</a>
+        <a href="#sectors" onclick="event.preventDefault();revealSection('sectors')">📈 Sector Rotation</a>
+        <a href="#resources" onclick="event.preventDefault();revealSection('resources')">⚙️ Resource Depletion</a>
         <a href="#radio" onclick="event.preventDefault();revealSection('radio')">🎙️ Convergence Radio</a>
         <a href="#resilience" onclick="event.preventDefault();revealSection('resilience')">🛡️ Resilience Portfolio</a>
       </div>
@@ -2564,6 +2575,187 @@
       </div>
     </div>
 
+  </div>
+</section>
+
+
+
+<!-- ====== SPACE WEATHER MONITOR ====== -->
+<section class="mod" id="spaceweather">
+  <div class="mod-label">Live · NOAA SWPC · Kp-Index · Solar Wind · Geomagnetic Storms</div>
+  <h2 class="mod-title">Space Weather Monitor</h2>
+  <p class="mod-desc">A geomagnetic storm above Kp 7 can collapse power grids, disable satellites, and knock out GPS globally. The 1989 Quebec storm blacked out an entire province in 90 seconds. The 2003 Halloween storms destroyed 28 satellites. NOAA tracks this in real-time — the Convergence now does too.</p>
+  <div class="g2 mt2" style="gap:2px">
+    <div>
+      <div style="background:var(--surf);padding:1.8rem;border-top:3px solid var(--jbrt);margin-bottom:2px">
+        <div style="font-family:var(--fm);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--ash);margin-bottom:.6rem">Kp-Index — Now</div>
+        <div style="display:flex;align-items:baseline;gap:1rem;margin-bottom:.6rem">
+          <div style="font-family:var(--fd);font-size:4rem;font-weight:900;line-height:1" id="sw-kp">—</div>
+          <div style="font-family:var(--fd);font-size:1rem;color:var(--ash)">/9</div>
+        </div>
+        <div id="sw-level" style="font-family:var(--fm);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--jbrt)">Loading...</div>
+        <div style="height:3px;background:rgba(40,176,136,.1);border-radius:2px;margin-top:.8rem">
+          <div id="sw-bar" style="height:100%;border-radius:2px;background:var(--jbrt);width:0%;transition:width 1s ease"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:7px;color:var(--faint);margin-top:3px">
+          <span>QUIET</span><span>UNSETTLED</span><span>STORM</span><span>SEVERE</span>
+        </div>
+      </div>
+      <div style="background:var(--surf);padding:1.5rem;margin-bottom:2px">
+        <div style="font-family:var(--fm);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--ash);margin-bottom:.8rem">Solar Wind</div>
+        <div class="g2" style="gap:1rem">
+          <div><div style="font-family:var(--fd);font-size:1.6rem;font-weight:700;color:var(--ibrt)" id="sw-speed">—</div><div style="font-family:var(--fm);font-size:7.5px;color:var(--ash)">km/s SPEED</div></div>
+          <div><div style="font-family:var(--fd);font-size:1.6rem;font-weight:700;color:var(--vbrt)" id="sw-density">—</div><div style="font-family:var(--fm);font-size:7.5px;color:var(--ash)">p/cm³ DENSITY</div></div>
+        </div>
+        <p style="font-size:.78rem;color:var(--smk);margin-top:.8rem;line-height:1.6">Solar wind above 700 km/s = extreme storm risk. Current normal: 400–500 km/s. The 1989 Quebec Blackout: 800+ km/s event.</p>
+      </div>
+      <div style="background:var(--surf);padding:1.5rem">
+        <div style="font-family:var(--fm);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--ebrt);margin-bottom:.5rem">What Kp Means for Civilization</div>
+        <div style="display:flex;flex-direction:column;gap:2px;font-size:.8rem">
+          <div style="padding:.4rem .8rem;background:var(--abyss);display:flex;justify-content:space-between"><span style="color:var(--jbrt)">Kp 0–2</span><span style="color:var(--smk)">Quiet. No effect on infrastructure.</span></div>
+          <div style="padding:.4rem .8rem;background:var(--abyss);display:flex;justify-content:space-between"><span style="color:var(--gld)">Kp 3–4</span><span style="color:var(--smk)">Unsettled. HF radio degraded. Aurora possible.</span></div>
+          <div style="padding:.4rem .8rem;background:var(--abyss);display:flex;justify-content:space-between"><span style="color:#ff9900">Kp 5–6</span><span style="color:var(--smk)">G1–G2 Storm. Pipeline currents. GPS errors.</span></div>
+          <div style="padding:.4rem .8rem;background:var(--abyss);display:flex;justify-content:space-between"><span style="color:var(--ebrt)">Kp 7–8</span><span style="color:var(--smk)">G3–G4 Storm. Power grid stress. Satellite drag.</span></div>
+          <div style="padding:.4rem .8rem;background:rgba(192,74,40,.15);display:flex;justify-content:space-between"><span style="color:#ff4444">Kp 9</span><span style="color:var(--smk)">G5 Extreme. Grid collapse risk. 1989 scenario.</span></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div style="background:var(--surf);padding:1.5rem;margin-bottom:2px">
+        <div style="font-family:var(--fm);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--ash);margin-bottom:.8rem">Active NOAA Space Weather Alerts</div>
+        <div id="sw-alerts" style="font-size:.82rem;color:var(--smk);line-height:1.75">Loading...</div>
+      </div>
+      <div style="background:var(--surf);padding:1.5rem">
+        <div style="font-family:var(--fm);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--ash);margin-bottom:.8rem">Kp Forecast — Next 48 Hours</div>
+        <div id="sw-forecast" style="display:flex;gap:3px;align-items:flex-end;height:60px"></div>
+        <div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:7px;color:var(--faint);margin-top:4px"><span>NOW</span><span>+24h</span><span>+48h</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== CONFLICT ZONE CONDITIONS ====== -->
+<section class="mod" id="conflictzones">
+  <div class="mod-label">Live · Open Meteo · 12 Active Conflict + Tension Zones · Updates Every 30min</div>
+  <h2 class="mod-title">Conflict Zone Conditions</h2>
+  <p class="mod-desc">Live weather at every active war zone, tension flashpoint, and crisis region. Military operations, ceasefire negotiations, refugee movements, and food supply routes are all weather-dependent. This is the physical context behind every headline.</p>
+  <div class="g4 mt2" style="gap:2px" id="cz-grid">
+    <div style="background:var(--surf);padding:1.2rem;color:var(--ash);font-family:var(--fm);font-size:8px">Loading conflict zone data...</div>
+  </div>
+</section>
+
+<!-- ====== SECTOR ROTATION TRACKER ====== -->
+<section class="mod" id="sectors">
+  <div class="mod-label">Live · Yahoo Finance · Sector ETFs · Money Flow Intelligence · Updates Every 5min</div>
+  <h2 class="mod-title">Sector Rotation Tracker</h2>
+  <p class="mod-desc">Institutional money moves BEFORE events become headlines. Energy and gold rising while technology falls = war/crisis premium being priced in. This is the market's collective intelligence translated into a civilizational signal.</p>
+  <div style="background:var(--surf);border-left:3px solid var(--gld);padding:1.2rem 1.5rem;margin-bottom:1rem" id="sr-signal">
+    <div style="font-family:var(--fm);font-size:8px;color:var(--ash);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.3rem">Rotation Signal</div>
+    <div style="font-size:1rem;color:var(--gld)" id="sr-signal-text">Analyzing market flows...</div>
+  </div>
+  <div class="g4 mt1" style="gap:2px" id="sr-grid">
+    <div style="background:var(--surf);padding:1.2rem;color:var(--ash);font-family:var(--fm);font-size:8px">Loading sector data...</div>
+  </div>
+</section>
+
+<!-- ====== THE INTELLIGENCE FEED ====== -->
+<section class="mod" id="intel">
+  <div class="mod-label">Live · FBI · Federal Register · Hacker News · Real Charges · Real Power Moves</div>
+  <h2 class="mod-title">The Intelligence Feed</h2>
+  <p class="mod-desc">Three streams of raw institutional intelligence: who is actually being charged and sentenced (FBI press releases, updated continuously), what executive power moves are being made right now (Federal Register — every executive order and proclamation), and what the tech/power infrastructure community is building and debating (Hacker News top stories filtered for AI, government, military, and markets).</p>
+
+  <div class="g3 mt2" style="gap:2px">
+
+    <!-- CHARGES & SENTENCING -->
+    <div>
+      <div style="background:var(--surf);border-top:3px solid var(--ebrt);padding:1.2rem 1.5rem">
+        <div style="font-family:var(--fm);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--ebrt);margin-bottom:.3rem">🔴 Charges &amp; Sentencing — FBI</div>
+        <div style="font-family:var(--fm);font-size:7.5px;color:var(--ash)">Live feed · Updated continuously</div>
+      </div>
+      <div id="intel-charges" style="display:flex;flex-direction:column;gap:2px;max-height:600px;overflow-y:auto">
+        <div style="background:var(--surf);padding:1rem;font-family:var(--fm);font-size:8px;color:var(--ash)">Loading FBI data...</div>
+      </div>
+    </div>
+
+    <!-- EXECUTIVE POWER MOVES -->
+    <div>
+      <div style="background:var(--surf);border-top:3px solid var(--gld);padding:1.2rem 1.5rem">
+        <div style="font-family:var(--fm);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--gld);margin-bottom:.3rem">⚡ Executive Power Moves</div>
+        <div style="font-family:var(--fm);font-size:7.5px;color:var(--ash)">Federal Register · All executive orders &amp; proclamations</div>
+      </div>
+      <div id="intel-power" style="display:flex;flex-direction:column;gap:2px;max-height:600px;overflow-y:auto">
+        <div style="background:var(--surf);padding:1rem;font-family:var(--fm);font-size:8px;color:var(--ash)">Loading Federal Register...</div>
+      </div>
+    </div>
+
+    <!-- TECH INTELLIGENCE -->
+    <div>
+      <div style="background:var(--surf);border-top:3px solid var(--ibrt);padding:1.2rem 1.5rem">
+        <div style="font-family:var(--fm);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--ibrt);margin-bottom:.3rem">🤖 Tech &amp; Power Intelligence</div>
+        <div style="font-family:var(--fm);font-size:7.5px;color:var(--ash)">Hacker News · AI, gov, military, markets</div>
+      </div>
+      <div id="intel-tech" style="display:flex;flex-direction:column;gap:2px;max-height:600px;overflow-y:auto">
+        <div style="background:var(--surf);padding:1rem;font-family:var(--fm);font-size:8px;color:var(--ash)">Loading HN tech feed...</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ====== TRUTH ENGINE — NARRATIVE DIVERGENCE ====== -->
+<section class="mod" id="truthengine">
+  <div class="mod-label">Live · 8 Global Sources · Cross-Reference Engine · Propaganda Detection · Narrative Divergence</div>
+  <h2 class="mod-title">The Truth Engine</h2>
+  <p class="mod-desc">8 global news sources simultaneously: BBC (UK State), Al Jazeera (Qatar/Gulf), Reuters (Wire), The Guardian (UK Liberal), AP (Wire), NPR (US Public), RT (Russian State), Xinhua (Chinese State). The engine identifies: what every source is covering, what only ONE source is covering (exclusive or suppressed), and where the same story has radically different framing. Narrative divergence = the gap between the pseudo-environment and the actual environment. High divergence = information war in progress.</p>
+
+  <!-- STATUS ROW -->
+  <div style="display:flex;gap:4px;flex-wrap:wrap;margin:1rem 0" id="te-sources"></div>
+
+  <div class="g2 mt1" style="gap:2px;align-items:start">
+
+    <!-- WHAT EVERYONE IS COVERING -->
+    <div>
+      <div style="background:var(--surf);border-top:3px solid var(--gld);padding:1.2rem 1.5rem;margin-bottom:2px">
+        <div style="font-family:var(--fm);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--gld)">📡 Multi-Source Coverage — Likely Real Signal</div>
+        <div style="font-family:var(--fm);font-size:7.5px;color:var(--ash);margin-top:.2rem">Stories confirmed by 2+ independent sources = higher truth probability</div>
+      </div>
+      <div id="te-mainstream" style="display:flex;flex-direction:column;gap:2px">
+        <div style="background:var(--surf);padding:1rem;color:var(--ash);font-family:var(--fm);font-size:8px">Analyzing narratives...</div>
+      </div>
+    </div>
+
+    <!-- WHAT ONLY ONE SOURCE IS COVERING -->
+    <div>
+      <div style="background:var(--surf);border-top:3px solid var(--ebrt);padding:1.2rem 1.5rem;margin-bottom:2px">
+        <div style="font-family:var(--fm);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--ebrt)">⚠️ Single-Source Stories — Requires Verification</div>
+        <div style="font-family:var(--fm);font-size:7.5px;color:var(--ash);margin-top:.2rem">Covered by ONLY ONE outlet. Could be exclusive, could be fabricated, could be suppressed by others.</div>
+      </div>
+      <div id="te-exclusive" style="display:flex;flex-direction:column;gap:2px">
+        <div style="background:var(--surf);padding:1rem;color:var(--ash);font-family:var(--fm);font-size:8px">Analyzing sources...</div>
+      </div>
+
+      <div style="background:var(--surf);border-top:3px solid var(--vbrt);padding:1.2rem 1.5rem;margin-top:2px;margin-bottom:2px">
+        <div style="font-family:var(--fm);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--vbrt)">🌡️ Narrative Saturation</div>
+        <div style="font-family:var(--fm);font-size:7.5px;color:var(--ash);margin-top:.2rem">Stories appearing in 4+ sources simultaneously. High saturation = coordinated narrative or massive real event.</div>
+      </div>
+      <div id="te-saturated" style="display:flex;flex-direction:column;gap:2px">
+        <div style="background:var(--surf);padding:1rem;color:var(--ash);font-family:var(--fm);font-size:8px">Analyzing saturation...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SOURCE COMPARISON MATRIX -->
+  <div style="margin-top:1.5rem;background:var(--surf);padding:1.5rem;border:1px solid var(--bdr)">
+    <div style="font-family:var(--fm);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--ash);margin-bottom:1rem">Source Perspective Map — Understanding Bias Before Reading</div>
+    <div class="g2" style="gap:2rem">
+      <div>
+        <p style="font-size:.88rem;color:var(--smk);line-height:1.85;margin-bottom:.8rem">The 8 sources represent 5 different geopolitical perspectives. A story covered identically by BBC, Reuters, and AP is more likely accurate. A story covered only by RT or only by Xinhua deserves extreme skepticism. A story covered only by BBC or Guardian but not by AP or Reuters also warrants caution.</p>
+        <p style="font-size:.88rem;color:var(--smk);line-height:1.85">The Walter Lippmann insight: all these sources are constructing pseudo-environments. The divergences between their pseudo-environments is where the truth lives.</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px" id="te-coverage-counts">
+        <div style="font-family:var(--fm);font-size:8px;color:var(--ash)">Loading source coverage stats...</div>
+      </div>
+    </div>
   </div>
 </section>
 

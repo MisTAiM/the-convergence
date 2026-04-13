@@ -222,7 +222,11 @@ function renderHeroStats(db) {
   }
 }
 
-window.addEventListener('DOMContentLoaded', initApp);
+window.addEventListener('DOMContentLoaded', () => {
+  initApp();
+  // Async modules fire after main app starts
+  setTimeout(() => initAsyncModules(), 1500);
+});
 
 // Extend renderAll for new modules
 const _baseRenderAll = renderAll;
@@ -232,6 +236,28 @@ window.renderAll = function(db) {
   try { renderSignalNoise(db); } catch(e) { console.error('signalnoise', e); }
   try { renderNarrativeLens(db); } catch(e) { console.error('narrative', e); }
 };
+
+// One-shot async modules — called once on load, not on every data refresh
+async function initAsyncModules() {
+  try { await renderSpaceWeather(); } catch(e) { console.error('spaceweather', e); }
+  try { await renderConflictZones(); } catch(e) { console.error('conflictzones', e); }
+  try { await renderSectors(); } catch(e) { console.error('sectors', e); }
+  try { await renderIntelligenceFeed(); } catch(e) { console.error('intel', e); }
+  try { await renderTruthEngine(); } catch(e) { console.error('truthengine', e); }
+}
+
+// Refresh async modules every 15 minutes alongside data engine
+setInterval(() => {
+  renderSpaceWeather().catch(()=>{});
+  renderSectors().catch(()=>{});
+  renderIntelligenceFeed().catch(()=>{});
+  renderTruthEngine().catch(()=>{});
+}, 15 * 60 * 1000);
+
+// Refresh conflict zones every 30 minutes
+setInterval(() => {
+  renderConflictZones().catch(()=>{});
+}, 30 * 60 * 1000);
 
 // Save survival score to sessionStorage when calculated
 const _baseSurv = window.calcSurvival;

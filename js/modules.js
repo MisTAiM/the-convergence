@@ -1928,3 +1928,235 @@ function renderSignalNoise(db) {
 window.openAudioLink = function(url) {
   window.open(url, '_blank', 'noopener,noreferrer');
 };
+
+/* ═══════════════════════════════════════════════════════════
+   SPACE WEATHER MONITOR
+═══════════════════════════════════════════════════════════ */
+async function renderSpaceWeather() {
+  try {
+    const r = await fetch('/api/spaceweather');
+    if (!r.ok) return;
+    const d = await r.json();
+    
+    const kp = d.kpCurrent?.kp || 0;
+    const kpEl = document.getElementById('sw-kp');
+    const levelEl = document.getElementById('sw-level');
+    const barEl = document.getElementById('sw-bar');
+    if (kpEl) { kpEl.textContent = kp.toFixed(1); kpEl.style.color = d.stormColor; }
+    if (levelEl) { levelEl.textContent = d.stormLevel; levelEl.style.color = d.stormColor; }
+    if (barEl) { barEl.style.width = (kp/9*100)+'%'; barEl.style.background = d.stormColor; }
+    
+    const speedEl = document.getElementById('sw-speed');
+    const densEl = document.getElementById('sw-density');
+    if (speedEl && d.solarWind) { speedEl.textContent = Math.round(d.solarWind.speed); speedEl.style.color = d.solarWind.speed > 600 ? 'var(--ebrt)' : 'var(--ibrt)'; }
+    if (densEl && d.solarWind) densEl.textContent = d.solarWind.density?.toFixed(1) || '—';
+
+    const alertsEl = document.getElementById('sw-alerts');
+    if (alertsEl && d.alerts?.length) {
+      alertsEl.innerHTML = d.alerts.slice(0,5).map(a => `
+        <div style="padding:.5rem 0;border-bottom:1px solid var(--bdr)">
+          <div style="font-family:var(--fm);font-size:7.5px;color:var(--ebrt);letter-spacing:.1em">${a.code} · ${a.issued?.slice(0,16)||''}</div>
+          <div style="font-size:.8rem;color:var(--smk);margin-top:.2rem">${a.message?.slice(0,120)||''}...</div>
+        </div>`).join('');
+    } else if (alertsEl) alertsEl.innerHTML = '<div style="color:var(--jbrt);font-size:.85rem">No active alerts — geomagnetic conditions quiet</div>';
+
+    const fcastEl = document.getElementById('sw-forecast');
+    if (fcastEl && d.forecast?.length) {
+      const maxKp = Math.max(...d.forecast.map(f=>f.kp), 1);
+      fcastEl.innerHTML = d.forecast.slice(0,16).map(f => {
+        const h = Math.max(4, (f.kp/9)*56);
+        const col = f.kp>=7?'#ff4444':f.kp>=5?'var(--ebrt)':f.kp>=3?'var(--gld)':'var(--jbrt)';
+        return `<div title="Kp ${f.kp} at ${f.time?.slice(11,16)||''}" style="flex:1;background:${col};height:${h}px;opacity:.7;border-radius:2px 2px 0 0;min-width:6px"></div>`;
+      }).join('');
+    }
+  } catch(e) { console.error('spaceweather', e); }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CONFLICT ZONE CONDITIONS
+═══════════════════════════════════════════════════════════ */
+async function renderConflictZones() {
+  try {
+    const r = await fetch('/api/conflictzones');
+    if (!r.ok) return;
+    const d = await r.json();
+    const grid = document.getElementById('cz-grid');
+    if (!grid) return;
+    grid.innerHTML = (d.zones||[]).map(z => `
+      <div style="background:var(--surf);padding:1.2rem;border-top:2px solid ${z.color};position:relative">
+        <div style="font-family:var(--fm);font-size:7px;letter-spacing:.15em;text-transform:uppercase;color:${z.color};margin-bottom:.3rem">${z.status}</div>
+        <div style="font-family:var(--fd);font-size:1rem;font-weight:600;color:var(--pch);margin-bottom:.6rem">${z.name}</div>
+        <div style="display:flex;gap:.8rem;align-items:baseline;margin-bottom:.3rem">
+          ${z.temp !== null ? `<div style="font-family:var(--fd);font-size:1.8rem;font-weight:700;color:var(--pch)">${z.temp}°C</div>` : '<div style="color:var(--ash);font-size:.8rem">No data</div>'}
+          ${z.apparent !== null && z.apparent !== z.temp ? `<div style="font-size:.75rem;color:var(--ash)">feels ${z.apparent}°C</div>` : ''}
+        </div>
+        <div style="font-family:var(--fm);font-size:7.5px;color:var(--ash)">${z.condition || ''}</div>
+        ${z.wind ? `<div style="font-family:var(--fm);font-size:7px;color:var(--faint);margin-top:.2rem">Wind: ${z.wind} km/h${z.precip > 0 ? ' · Rain: '+z.precip+'mm' : ''}</div>` : ''}
+      </div>`).join('');
+  } catch(e) { console.error('conflictzones', e); }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SECTOR ROTATION TRACKER
+═══════════════════════════════════════════════════════════ */
+async function renderSectors() {
+  try {
+    const r = await fetch('/api/sectors');
+    if (!r.ok) return;
+    const d = await r.json();
+    
+    const signalEl = document.getElementById('sr-signal-text');
+    if (signalEl) signalEl.textContent = d.rotationSignal || '—';
+    
+    const grid = document.getElementById('sr-grid');
+    if (!grid) return;
+    grid.innerHTML = (d.sectors||[]).map(s => {
+      const pct = s.changePct;
+      const col = pct === null ? 'var(--ash)' : pct > 0 ? 'var(--jbrt)' : 'var(--ebrt)';
+      const bar = pct === null ? 0 : Math.min(100, Math.abs(pct) * 10);
+      return `<div style="background:var(--surf);padding:1.2rem;border-top:2px solid ${s.color}">
+        <div style="font-size:1.1rem;margin-bottom:.2rem">${s.icon}</div>
+        <div style="font-family:var(--fm);font-size:7.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ash);margin-bottom:.3rem">${s.name}</div>
+        <div style="font-family:var(--fd);font-size:1.4rem;font-weight:700;color:var(--pch)">${s.price !== null ? '$'+s.price : '—'}</div>
+        <div style="font-family:var(--fm);font-size:8px;color:${col};margin-top:.2rem">${pct !== null ? (pct>0?'+':'')+pct.toFixed(2)+'%' : 'N/A'}</div>
+        <div style="height:2px;background:rgba(255,255,255,.05);margin-top:.5rem;border-radius:1px">
+          <div style="height:100%;width:${bar}%;background:${col};border-radius:1px;transition:width 1s"></div>
+        </div>
+      </div>`;
+    }).join('');
+  } catch(e) { console.error('sectors', e); }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   INTELLIGENCE FEED (FBI + Federal Register + HN)
+═══════════════════════════════════════════════════════════ */
+async function renderIntelligenceFeed() {
+  try {
+    const r = await fetch('/api/intelligence');
+    if (!r.ok) return;
+    const d = await r.json();
+
+    // FBI Charges
+    const chargesEl = document.getElementById('intel-charges');
+    if (chargesEl && d.charges?.length) {
+      chargesEl.innerHTML = d.charges.slice(0,15).map(c => `
+        <div style="background:var(--surf);padding:.8rem 1rem;border-left:3px solid ${c.highProfile?'var(--ebrt)':'var(--bdr)'}">
+          <div style="font-size:.82rem;color:var(--pch);font-weight:${c.highProfile?'600':'400'};margin-bottom:.3rem;line-height:1.4">${c.title}</div>
+          <div style="font-size:.75rem;color:var(--smk);line-height:1.5;margin-bottom:.4rem">${c.desc?.slice(0,120)||''}...</div>
+          <div style="display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.3rem">
+            ${c.keywords?.map(k=>`<span style="font-family:var(--fm);font-size:6.5px;padding:1px 6px;background:rgba(192,74,40,.15);border:1px solid rgba(192,74,40,.25);color:var(--ebrt)">${k}</span>`).join('')||''}
+            ${c.highProfile ? '<span style="font-family:var(--fm);font-size:6.5px;padding:1px 6px;background:rgba(192,74,40,.3);color:#fff">HIGH PROFILE</span>' : ''}
+          </div>
+          <div style="font-family:var(--fm);font-size:7px;color:var(--faint);margin-top:.3rem">${c.date?.slice(0,20)||''} · FBI</div>
+        </div>`).join('');
+    }
+
+    // Power Moves
+    const powerEl = document.getElementById('intel-power');
+    if (powerEl && d.powerMoves?.length) {
+      powerEl.innerHTML = d.powerMoves.slice(0,12).map(p => `
+        <div style="background:var(--surf);padding:.8rem 1rem;border-left:3px solid ${p.significance>1?'var(--gld)':'var(--bdr)'}">
+          <div style="font-family:var(--fm);font-size:7px;letter-spacing:.1em;text-transform:uppercase;color:${p.significance>1?'var(--gld)':'var(--ash)'};margin-bottom:.3rem">${p.subtype||'EXECUTIVE DOC'}</div>
+          <div style="font-size:.82rem;color:var(--pch);line-height:1.4;margin-bottom:.3rem">${p.title?.slice(0,90)||''}</div>
+          ${p.agencies?.length ? `<div style="font-family:var(--fm);font-size:7px;color:var(--ash)">${p.agencies.join(' · ')}</div>` : ''}
+          <div style="font-family:var(--fm);font-size:7px;color:var(--faint);margin-top:.3rem">${p.date||''} · Federal Register</div>
+        </div>`).join('');
+    }
+
+    // Tech Intel
+    const techEl = document.getElementById('intel-tech');
+    if (techEl && d.techIntel?.length) {
+      techEl.innerHTML = d.techIntel.slice(0,10).map(t => `
+        <div style="background:var(--surf);padding:.8rem 1rem;border-left:3px solid var(--ibrt)">
+          <div style="font-size:.82rem;color:var(--pch);line-height:1.4;margin-bottom:.3rem">${t.title?.slice(0,90)||''}</div>
+          <div style="display:flex;gap:1rem">
+            <div style="font-family:var(--fd);font-size:.9rem;color:var(--ibrt)">▲ ${t.score}</div>
+            <div style="font-family:var(--fm);font-size:7.5px;color:var(--ash)">${t.comments} comments</div>
+          </div>
+          <div style="font-family:var(--fm);font-size:7px;color:var(--faint);margin-top:.3rem">${t.url?.slice(0,50)||''}...</div>
+        </div>`).join('');
+    }
+  } catch(e) { console.error('intel feed', e); }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   TRUTH ENGINE — NARRATIVE DIVERGENCE
+═══════════════════════════════════════════════════════════ */
+async function renderTruthEngine() {
+  try {
+    const r = await fetch('/api/narrative');
+    if (!r.ok) return;
+    const d = await r.json();
+
+    // Source status badges
+    const srcEl = document.getElementById('te-sources');
+    if (srcEl) {
+      srcEl.innerHTML = (d.sources||[]).map(s =>
+        `<div style="font-family:var(--fm);font-size:7px;padding:3px 8px;border:1px solid ${s.ok?'rgba(40,176,136,.3)':'rgba(192,74,40,.3)'};color:${s.ok?'var(--jbrt)':'var(--ash)'}">
+          ${s.ok?'●':'○'} ${s.name} (${s.count||0})
+        </div>`
+      ).join('');
+    }
+
+    // Multi-source stories (signal)
+    const mainEl = document.getElementById('te-mainstream');
+    const analysis = d.analysis || {};
+    if (mainEl && analysis.groups?.length) {
+      mainEl.innerHTML = analysis.groups.map(g => `
+        <div style="background:var(--surf);padding:.9rem 1.1rem;border-left:3px solid ${g.coverageCount>=4?'var(--ebrt)':g.coverageCount>=3?'var(--gld)':'var(--jbrt)'}">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:.5rem;margin-bottom:.4rem">
+            <div style="font-size:.84rem;color:var(--pch);line-height:1.4;flex:1">${g.topic?.slice(0,90)||''}</div>
+            <div style="font-family:var(--fm);font-size:7px;background:${g.coverageCount>=4?'rgba(192,74,40,.2)':'rgba(212,178,106,.15)'};padding:2px 6px;color:${g.coverageCount>=4?'var(--ebrt)':'var(--gld)'};flex-shrink:0">${g.coverageCount} SOURCES</div>
+          </div>
+          <div style="display:flex;gap:3px;flex-wrap:wrap">
+            ${g.sources?.map(s=>{const src=d.sources?.find(x=>x.id===s);return`<span style="font-family:var(--fm);font-size:6.5px;padding:1px 5px;background:rgba(255,255,255,.04);color:var(--ash)">${src?.name||s}</span>`;}).join('')||''}
+          </div>
+        </div>`).join('');
+    }
+
+    // Single-source (exclusive/suppressed)
+    const excEl = document.getElementById('te-exclusive');
+    if (excEl && analysis.exclusive?.length) {
+      excEl.innerHTML = analysis.exclusive.map(e => {
+        const src = d.sources?.find(x=>x.id===e.source);
+        const isStateMedia = ['rt','xinhua'].includes(e.source);
+        return `<div style="background:var(--surf);padding:.8rem 1.1rem;border-left:3px solid ${isStateMedia?'var(--ebrt)':'var(--gld)'}">
+          <div style="font-family:var(--fm);font-size:7px;color:${isStateMedia?'var(--ebrt)':'var(--gld)'};margin-bottom:.3rem">${src?.name||e.source} ${isStateMedia?'· STATE MEDIA — HIGH SKEPTICISM':'· VERIFY INDEPENDENTLY'}</div>
+          <div style="font-size:.82rem;color:var(--smk);line-height:1.4">${e.topic?.slice(0,90)||''}</div>
+        </div>`;
+      }).join('');
+    }
+
+    // High-saturation
+    const satEl = document.getElementById('te-saturated');
+    if (satEl) {
+      const sat = analysis.groups?.filter(g=>g.saturated)||[];
+      if (sat.length) {
+        satEl.innerHTML = sat.slice(0,5).map(g=>`
+          <div style="background:rgba(120,96,192,.08);border:1px solid rgba(120,96,192,.2);padding:.8rem 1.1rem">
+            <div style="font-family:var(--fm);font-size:7px;color:var(--vbrt);margin-bottom:.3rem">SATURATION: ${g.coverageCount}/8 sources · ${g.saturated?'COORDINATED NARRATIVE OR MAJOR REAL EVENT':''}</div>
+            <div style="font-size:.83rem;color:var(--pch);line-height:1.4">${g.topic?.slice(0,85)||''}</div>
+          </div>`).join('');
+      } else {
+        satEl.innerHTML = '<div style="background:var(--surf);padding:.8rem 1.1rem;color:var(--ash);font-size:.82rem">No highly-saturated narratives detected — low coordination period</div>';
+      }
+    }
+
+    // Source counts
+    const countEl = document.getElementById('te-coverage-counts');
+    if (countEl && analysis.sourceCount) {
+      countEl.innerHTML = Object.entries(analysis.sourceCount)
+        .sort((a,b)=>b[1]-a[1])
+        .map(([id,count])=>{
+          const src=d.sources?.find(s=>s.id===id);
+          return `<div style="display:flex;justify-content:space-between;align-items:center;padding:.3rem 0;border-bottom:1px solid var(--bdr)">
+            <div>
+              <div style="font-family:var(--fm);font-size:8px;color:var(--pch)">${src?.name||id}</div>
+              <div style="font-family:var(--fm);font-size:7px;color:var(--ash)">${src?.perspective||''} · ${src?.bias||''}</div>
+            </div>
+            <div style="font-family:var(--fd);font-size:1rem;font-weight:600;color:var(--gld)">${count}</div>
+          </div>`;
+        }).join('');
+    }
+  } catch(e) { console.error('truth engine', e); }
+}
