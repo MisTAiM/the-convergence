@@ -249,9 +249,13 @@ async function initAsyncModules() {
 // DataEngine-dependent async modules (need db data first)
 DataEngine.on('updated', async db => {
   try { await renderBlackSwanMonitor(db); } catch(e) { console.error('blackswan', e); }
+  try { renderInflationMap(db); } catch(e) { console.error('inflation', e); }
+  try { renderSupplyChain(db); } catch(e) { console.error('supplychain', e); }
 });
 DataEngine.on('cached', async db => {
   try { await renderBlackSwanMonitor(db); } catch(e) { console.error('blackswan', e); }
+  try { renderInflationMap(db); } catch(e) { console.error('inflation', e); }
+  try { renderSupplyChain(db); } catch(e) { console.error('supplychain', e); }
 });
 
 // Refresh async modules every 15 minutes alongside data engine

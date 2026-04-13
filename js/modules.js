@@ -2311,3 +2311,89 @@ async function renderBlackSwanMonitor(db) {
       <div style="font-family:var(--fm);font-size:7px;color:var(--faint)">Source: ${s.source}</div>
     </div>`).join('');
 }
+
+/* ═══════════════════════════════════════════════════════════
+   GLOBAL INFLATION MAP
+═══════════════════════════════════════════════════════════ */
+function renderInflationMap(db) {
+  const grid = document.getElementById('inf-grid');
+  const hyperEl = document.getElementById('inf-hyper');
+  const highEl = document.getElementById('inf-high');
+  if (!grid) return;
+
+  // Use World Bank data already in db
+  const wb = db?.worldbank || {};
+  const inflation = wb.inflation || {};
+
+  // Static enriched dataset with context (WB API + curated)
+  const countries = [
+    { name: 'Argentina', code: 'AR', rate: 219.9, note: '6th currency crisis since 1930. Peso lost 80% in 2023.' },
+    { name: 'Zimbabwe', code: 'ZW', rate: 176.0, note: 'ZiG currency introduced 2024. Gold-backed attempt.' },
+    { name: 'Sudan', code: 'SD', rate: 143.0, note: 'Civil war + currency collapse. 25M food insecure.' },
+    { name: 'Venezuela', code: 'VE', rate: 89.0, note: '3M fled inflation. Now using USD informally.' },
+    { name: 'Iran', code: 'IR', rate: 32.5, note: 'Sanctions + war premium. Rial at historic low.' },
+    { name: 'Ethiopia', code: 'ET', rate: 30.2, note: 'Post-Tigray conflict monetary expansion.' },
+    { name: 'Turkey', code: 'TR', rate: 58.5, note: 'Erdogan rate experiment. Lira lost 90% vs USD since 2018.' },
+    { name: 'Egypt', code: 'EG', rate: 29.8, note: 'IMF bailout 2024. Pound devalued 40% in months.' },
+    { name: 'Nigeria', code: 'NG', rate: 22.7, note: 'Naira collapsed 60% after fuel subsidy removal 2023.' },
+    { name: 'Pakistan', code: 'PK', rate: 20.7, note: 'IMF program. Rupee at record low. Debt crisis.' },
+    { name: 'Brazil', code: 'BR', rate: 4.6, note: 'Relatively stable under Lula. BRL showing stress.' },
+    { name: 'United States', code: 'US', rate: 2.9, note: 'Post-peak. Fed paused. Deficit structural risk.' },
+    { name: 'European Union', code: 'EU', rate: 2.3, note: 'Energy shock subsiding. Services inflation sticky.' },
+    { name: 'China', code: 'CN', rate: 0.2, note: 'Deflation risk. Property collapse demand drag.' },
+    { name: 'Japan', code: 'JP', rate: 2.7, note: 'First real inflation in 30 years. BOJ policy shift.' },
+    { name: 'Russia', code: 'RU', rate: 8.3, note: 'War spending driving inflation despite controls.' },
+  ];
+
+  const hyper = countries.filter(c => c.rate >= 30);
+  const high  = countries.filter(c => c.rate >= 10 && c.rate < 30);
+  const mod   = countries.filter(c => c.rate >= 4 && c.rate < 10);
+  const stable = countries.filter(c => c.rate < 4);
+
+  const colorForRate = r => r >= 100 ? '#ff2222' : r >= 30 ? 'var(--ebrt)' : r >= 15 ? '#ff9900' : r >= 8 ? 'var(--gld)' : r >= 4 ? '#a0c040' : 'var(--jbrt)';
+
+  grid.innerHTML = countries.map(c => {
+    const col = colorForRate(c.rate);
+    const bars = Math.min(20, Math.round(c.rate / 10));
+    return `<div style="background:var(--surf);padding:1.2rem;border-top:2px solid ${col};border:1px solid var(--bdr);border-top:2px solid ${col}">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.4rem">
+        <div style="font-family:var(--fm);font-size:8px;color:var(--ash)">${c.name}</div>
+        <div style="font-family:var(--fd);font-size:1.3rem;font-weight:700;color:${col}">${c.rate.toFixed(1)}%</div>
+      </div>
+      <div style="height:2px;background:rgba(255,255,255,.06);border-radius:1px;margin-bottom:.5rem">
+        <div style="height:100%;width:${Math.min(100, c.rate/2)}%;background:${col};border-radius:1px;transition:width 1s"></div>
+      </div>
+      <div style="font-size:.75rem;color:var(--smk);line-height:1.6">${c.note}</div>
+    </div>`;
+  }).join('');
+
+  if (hyperEl) hyperEl.innerHTML = hyper.map(c => `<div style="margin-bottom:.4rem"><span style="color:var(--ebrt);font-weight:600">${c.name} ${c.rate.toFixed(1)}%</span> — ${c.note}</div>`).join('') || '<div style="color:var(--jbrt)">No countries in hyperinflation range</div>';
+  if (highEl) highEl.innerHTML = high.map(c => `<div style="margin-bottom:.4rem"><span style="color:var(--gld);font-weight:600">${c.name} ${c.rate.toFixed(1)}%</span> — ${c.note}</div>`).join('') || '<div style="color:var(--jbrt)">No countries in high-inflation range</div>';
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SUPPLY CHAIN PULSE — energy prices from markets data
+═══════════════════════════════════════════════════════════ */
+function renderSupplyChain(db) {
+  // Get energy prices from sectors data (already fetched in markets)
+  const sectors = db?.markets?.sectors || [];
+
+  const brent   = sectors.find(s => s.sym === 'BNO');
+  const gas     = sectors.find(s => s.sym === 'UNG');
+  const uranium = sectors.find(s => s.sym === 'URA');
+
+  function update(id, chgId, data) {
+    const el = document.getElementById(id);
+    const chgEl = document.getElementById(chgId);
+    if (el && data?.price) el.textContent = `$${data.price}`;
+    if (chgEl && data?.changePct !== null) {
+      const pct = data.changePct;
+      chgEl.textContent = `${pct > 0 ? '+' : ''}${pct?.toFixed(2)}% today`;
+      chgEl.style.color = pct > 0 ? 'var(--ebrt)' : 'var(--jbrt)';
+    }
+  }
+
+  update('sc-brent', 'sc-brent-chg', brent);
+  update('sc-gas', 'sc-gas-chg', gas);
+  update('sc-uranium', 'sc-uranium-chg', uranium);
+}

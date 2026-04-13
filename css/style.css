@@ -1370,3 +1370,76 @@ section[id] {
     grid-template-columns: 1fr !important;
   }
 }
+
+/* ═══ GLOBAL VISIBILITY IMPROVEMENTS ═══ */
+/* Ensure non-.mod sections have enough contrast */
+#how-it-works {
+  background: #0e0d0a !important;
+  border-bottom: 1px solid var(--bdr);
+}
+#about {
+  background: #0e0d0a !important;
+  border-bottom: 1px solid var(--bdr);
+}
+#how-it-works h2, #about h2 {
+  color: var(--pch);
+}
+
+/* Boost section card backgrounds globally */
+.mod .g2 > div[style*="background:var(--surf)"],
+.mod .g3 > div[style*="background:var(--surf)"],
+.mod .g4 > div[style*="background:var(--surf)"] {
+  border: 1px solid var(--bdr);
+}
+
+/* How It Works quick-nav cards hover */
+#how-it-works a[href]:hover {
+  opacity: 1 !important;
+}
+
+/* Truth Engine + Intel Feed max-height scrollable panels */
+#intel-charges, #intel-power, #intel-tech,
+#te-mainstream, #te-exclusive {
+  scrollbar-width: thin;
+  scrollbar-color: var(--bdr) transparent;
+}
+#intel-charges::-webkit-scrollbar,
+#intel-power::-webkit-scrollbar { width: 4px; }
+#intel-charges::-webkit-scrollbar-track,
+#intel-power::-webkit-scrollbar-track { background: transparent; }
+#intel-charges::-webkit-scrollbar-thumb,
+#intel-power::-webkit-scrollbar-thumb { background: var(--bdr); border-radius: 2px; }
+
+/* Space weather forecast bars */
+#sw-forecast {
+  border-bottom: 1px solid var(--bdr);
+  padding-bottom: 4px;
+}
+
+/* Conflict zone grid responsive */
+@media(max-width:900px) {
+  #cz-grid { grid-template-columns: repeat(2,1fr) !important; }
+}
+@media(max-width:500px) {
+  #cz-grid { grid-template-columns: 1fr !important; }
+}
+
+/* Black Swan grid responsive */
+@media(max-width:900px) {
+  #bs-grid { grid-template-columns: 1fr 1fr !important; }
+}
+@media(max-width:600px) {
+  #bs-grid { grid-template-columns: 1fr !important; }
+}
+
+/* Intelligence feed panels */
+#intel-charges, #intel-power, #intel-tech { max-height: 520px; overflow-y: auto; }
+
+/* Sector rotation grid */
+#sr-grid { margin-top: .5rem; }
+
+/* Narrative source status badges */
+#te-sources { margin: 1rem 0; row-gap: 4px; }
+
+/* ═══ STATUS BAR IMPROVEMENTS ═══ */
+.status-item { display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
