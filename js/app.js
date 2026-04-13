@@ -45,13 +45,30 @@ function initObserver() {
 function revealSection(id) {
   const el = id ? document.getElementById(id) : null;
   if (!el) return;
+
+  // 1. Make target visible immediately
   el.classList.add('visible');
-  // Also reveal all sections above it (they should be visible too)
-  document.querySelectorAll('.mod').forEach(m => {
-    if (m.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING) {
+
+  // 2. Mark all sections above target as visible too
+  document.querySelectorAll('.mod, section').forEach(m => {
+    if (m !== el && (m.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING)) {
       m.classList.add('visible');
     }
   });
+
+  // 3. Close any open dropdowns
+  document.querySelectorAll('.nav-dropdown').forEach(d => {
+    d.style.opacity = '0';
+    d.style.pointerEvents = 'none';
+    d.style.transform = 'translateY(-4px)';
+  });
+
+  // 4. Scroll to section — short delay lets CSS apply first
+  setTimeout(() => {
+    const navH = document.getElementById('nav')?.offsetHeight || 55;
+    const top = el.getBoundingClientRect().top + window.scrollY - navH - 8;
+    window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+  }, 30);
 }
 
 /* ---------- PREDICTION BAR ANIMATIONS ---------- */
@@ -100,12 +117,10 @@ function initNav() {
 
   // On direct URL load with hash — reveal that section immediately
   if (location.hash) {
-    // Small delay so DOM is painted first
+    // Delay so DOM + CSS are fully painted before scrolling
     setTimeout(() => {
       revealSection(location.hash.slice(1));
-      const el = document.getElementById(location.hash.slice(1));
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 200);
+    }, 350);
   }
 
   // Handle browser back/forward hash changes

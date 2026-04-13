@@ -98,13 +98,13 @@
     <div class="nav-group">
       <button class="nav-group-btn">Live Data <span class="nav-arrow">▾</span></button>
       <div class="nav-dropdown">
-        <a href="#live" onclick="revealSection('live')">📡 Live Feed</a>
-        <a href="#livevideo" onclick="revealSection('livevideo')">📺 Live TV — 12 Channels</a>
-        <a href="#globe" onclick="revealSection('globe')">🌍 World Events Globe</a>
-        <a href="#markets" onclick="revealSection('markets')">📈 Markets & Finance</a>
-        <a href="#finance" onclick="revealSection('finance')">💱 FX & Weather</a>
-        <a href="#data" onclick="revealSection('data')">🏛️ World Bank Data</a>
-        <a href="#charts" onclick="revealSection('charts')">📊 Charts</a>
+        <a href="#live" onclick="event.preventDefault();revealSection('live')">📡 Live Feed</a>
+        <a href="#livevideo" onclick="event.preventDefault();revealSection('livevideo')">📺 Live TV — 12 Channels</a>
+        <a href="#globe" onclick="event.preventDefault();revealSection('globe')">🌍 World Events Globe</a>
+        <a href="#markets" onclick="event.preventDefault();revealSection('markets')">📈 Markets & Finance</a>
+        <a href="#finance" onclick="event.preventDefault();revealSection('finance')">💱 FX & Weather</a>
+        <a href="#data" onclick="event.preventDefault();revealSection('data')">🏛️ World Bank Data</a>
+        <a href="#charts" onclick="event.preventDefault();revealSection('charts')">📊 Charts</a>
       </div>
     </div>
 
@@ -112,13 +112,13 @@
     <div class="nav-group">
       <button class="nav-group-btn">The Crisis <span class="nav-arrow">▾</span></button>
       <div class="nav-dropdown">
-        <a href="#csi" onclick="revealSection('csi')">⚠️ CSI Score — Live</a>
-        <a href="#horsemen" onclick="revealSection('horsemen')">🐎 Four Horsemen</a>
-        <a href="#babylon" onclick="revealSection('babylon')">🏛️ Babylon Index</a>
-        <a href="#empire" onclick="revealSection('empire')">⏳ Empire Clock</a>
-        <a href="#tipping" onclick="revealSection('tipping')">🌡️ Tipping Points</a>
-        <a href="#cycle" onclick="revealSection('cycle')">🔄 Cycle Clock</a>
-        <a href="#patterns" onclick="revealSection('patterns')">🔺 Patterns</a>
+        <a href="#csi" onclick="event.preventDefault();revealSection('csi')">⚠️ CSI Score — Live</a>
+        <a href="#horsemen" onclick="event.preventDefault();revealSection('horsemen')">🐎 Four Horsemen</a>
+        <a href="#babylon" onclick="event.preventDefault();revealSection('babylon')">🏛️ Babylon Index</a>
+        <a href="#empire" onclick="event.preventDefault();revealSection('empire')">⏳ Empire Clock</a>
+        <a href="#tipping" onclick="event.preventDefault();revealSection('tipping')">🌡️ Tipping Points</a>
+        <a href="#cycle" onclick="event.preventDefault();revealSection('cycle')">🔄 Cycle Clock</a>
+        <a href="#patterns" onclick="event.preventDefault();revealSection('patterns')">🔺 Patterns</a>
       </div>
     </div>
 
@@ -126,12 +126,12 @@
     <div class="nav-group">
       <button class="nav-group-btn">Intelligence <span class="nav-arrow">▾</span></button>
       <div class="nav-dropdown">
-        <a href="#matcher" onclick="revealSection('matcher')">📜 Prophecy Matcher</a>
-        <a href="#oracle" onclick="revealSection('oracle')">🔮 Oracle</a>
-        <a href="#parallels" onclick="revealSection('parallels')">⚖️ Historical Parallels</a>
-        <a href="#history" onclick="revealSection('history')">📋 History Log</a>
-        <a href="#predictions" onclick="revealSection('predictions')">🎯 Predictions</a>
-        <a href="#synthesis" onclick="revealSection('synthesis')">🧠 Synthesis</a>
+        <a href="#matcher" onclick="event.preventDefault();revealSection('matcher')">📜 Prophecy Matcher</a>
+        <a href="#oracle" onclick="event.preventDefault();revealSection('oracle')">🔮 Oracle</a>
+        <a href="#parallels" onclick="event.preventDefault();revealSection('parallels')">⚖️ Historical Parallels</a>
+        <a href="#history" onclick="event.preventDefault();revealSection('history')">📋 History Log</a>
+        <a href="#predictions" onclick="event.preventDefault();revealSection('predictions')">🎯 Predictions</a>
+        <a href="#synthesis" onclick="event.preventDefault();revealSection('synthesis')">🧠 Synthesis</a>
       </div>
     </div>
 
@@ -139,11 +139,11 @@
     <div class="nav-group">
       <button class="nav-group-btn">Texts <span class="nav-arrow">▾</span></button>
       <div class="nav-dropdown">
-        <a href="#forbidden" onclick="revealSection('forbidden')">📖 Enoch — Forbidden Knowledge</a>
-        <a href="#books" onclick="revealSection('books')">📚 All Ancient Texts</a>
-        <a href="#whispers" onclick="revealSection('whispers')">💬 Whisper Wall</a>
-        <a href="#restore" onclick="revealSection('restore')">🌱 Restoration Signals</a>
-        <a href="#survival" onclick="revealSection('survival')">🛡️ Survival Profile</a>
+        <a href="#forbidden" onclick="event.preventDefault();revealSection('forbidden')">📖 Enoch — Forbidden Knowledge</a>
+        <a href="#books" onclick="event.preventDefault();revealSection('books')">📚 All Ancient Texts</a>
+        <a href="#whispers" onclick="event.preventDefault();revealSection('whispers')">💬 Whisper Wall</a>
+        <a href="#restore" onclick="event.preventDefault();revealSection('restore')">🌱 Restoration Signals</a>
+        <a href="#survival" onclick="event.preventDefault();revealSection('survival')">🛡️ Survival Profile</a>
       </div>
     </div>
 
@@ -151,25 +151,25 @@
     <div class="nav-group">
       <button class="nav-group-btn">Analysis <span class="nav-arrow">▾</span></button>
       <div class="nav-dropdown">
-        <a href="#narrative" onclick="revealSection('narrative')">📰 Narrative Lens</a>
-        <a href="#aibrief" onclick="revealSection('aibrief')">🤖 AI Intel Brief</a>
-        <a href="#antifragile" onclick="revealSection('antifragile')">💪 Antifragility Score</a>
-        <a href="#echo" onclick="revealSection('echo')">🔁 Historical Echo</a>
-        <a href="#terminal" onclick="revealSection('terminal')">⌨️ Terminal</a>
-        <a href="#acceleration" onclick="revealSection('acceleration')">⚡ Accelerationist</a>
-        <a href="#deadreckoning" onclick="revealSection('deadreckoning')">🧭 Dead Reckoning</a>
-        <a href="#lexicon" onclick="revealSection('lexicon')">📖 Collapse Lexicon</a>
+        <a href="#narrative" onclick="event.preventDefault();revealSection('narrative')">📰 Narrative Lens</a>
+        <a href="#aibrief" onclick="event.preventDefault();revealSection('aibrief')">🤖 AI Intel Brief</a>
+        <a href="#antifragile" onclick="event.preventDefault();revealSection('antifragile')">💪 Antifragility Score</a>
+        <a href="#echo" onclick="event.preventDefault();revealSection('echo')">🔁 Historical Echo</a>
+        <a href="#terminal" onclick="event.preventDefault();revealSection('terminal')">⌨️ Terminal</a>
+        <a href="#acceleration" onclick="event.preventDefault();revealSection('acceleration')">⚡ Accelerationist</a>
+        <a href="#deadreckoning" onclick="event.preventDefault();revealSection('deadreckoning')">🧭 Dead Reckoning</a>
+        <a href="#lexicon" onclick="event.preventDefault();revealSection('lexicon')">📖 Collapse Lexicon</a>
       </div>
     </div>
 
     <div class="nav-group">
       <button class="nav-group-btn">Resources <span class="nav-arrow">▾</span></button>
       <div class="nav-dropdown">
-        <a href="#signalnoise" onclick="revealSection('signalnoise')">📡 Signal / Noise Ratio</a>
-        <a href="#resources" onclick="revealSection('resources')">🌍 Resource Depletion</a>
-        <a href="#powermap" onclick="revealSection('powermap')">🗺️ Power Map</a>
-        <a href="#radio" onclick="revealSection('radio')">🎙️ Convergence Radio</a>
-        <a href="#resilience" onclick="revealSection('resilience')">🛡️ Resilience Portfolio</a>
+        <a href="#signalnoise" onclick="event.preventDefault();revealSection('signalnoise')">📡 Signal / Noise Ratio</a>
+        <a href="#resources" onclick="event.preventDefault();revealSection('resources')">🌍 Resource Depletion</a>
+        <a href="#powermap" onclick="event.preventDefault();revealSection('powermap')">🗺️ Power Map</a>
+        <a href="#radio" onclick="event.preventDefault();revealSection('radio')">🎙️ Convergence Radio</a>
+        <a href="#resilience" onclick="event.preventDefault();revealSection('resilience')">🛡️ Resilience Portfolio</a>
       </div>
     </div>
     <a class="nav-solo" href="#about" onclick="revealSection('about')">About</a><a class="nav-solo" href="#sources" onclick="revealSection('sources')">Sources</a>
@@ -189,42 +189,42 @@
 <!-- MOBILE MENU -->
 <div id="mobile-menu" role="navigation" aria-label="Mobile navigation">
   <div class="mobile-menu-section">Live Data</div>
-  <a href="#live" onclick="closeMobileMenu();revealSection('live')">Live Feed</a>
-  <a href="#csi" onclick="closeMobileMenu();revealSection('csi')">CSI Score</a>
-  <a href="#horsemen" onclick="closeMobileMenu();revealSection('horsemen')">Horsemen</a>
-  <a href="#finance" onclick="closeMobileMenu();revealSection('finance')">Markets & Weather</a>
+  <a href="#live" onclick="event.preventDefault();closeMobileMenu();revealSection('live'">Live Feed</a>
+  <a href="#csi" onclick="event.preventDefault();closeMobileMenu();revealSection('csi'">CSI Score</a>
+  <a href="#horsemen" onclick="event.preventDefault();closeMobileMenu();revealSection('horsemen'">Horsemen</a>
+  <a href="#finance" onclick="event.preventDefault();closeMobileMenu();revealSection('finance'">Markets & Weather</a>
   <div class="mobile-menu-section">Analysis</div>
-  <a href="#matcher" onclick="closeMobileMenu();revealSection('matcher')">Prophecy Matcher</a>
-  <a href="#babylon" onclick="closeMobileMenu();revealSection('babylon')">Babylon Index</a>
-  <a href="#empire" onclick="closeMobileMenu();revealSection('empire')">Empire Clock</a>
-  <a href="#tipping" onclick="closeMobileMenu();revealSection('tipping')">Tipping Simulator</a>
-  <a href="#forbidden" onclick="closeMobileMenu();revealSection('forbidden')">Forbidden Knowledge</a>
-  <a href="#cycle" onclick="closeMobileMenu();revealSection('cycle')">Cycle Clock</a>
+  <a href="#matcher" onclick="event.preventDefault();closeMobileMenu();revealSection('matcher'">Prophecy Matcher</a>
+  <a href="#babylon" onclick="event.preventDefault();closeMobileMenu();revealSection('babylon'">Babylon Index</a>
+  <a href="#empire" onclick="event.preventDefault();closeMobileMenu();revealSection('empire'">Empire Clock</a>
+  <a href="#tipping" onclick="event.preventDefault();closeMobileMenu();revealSection('tipping'">Tipping Simulator</a>
+  <a href="#forbidden" onclick="event.preventDefault();closeMobileMenu();revealSection('forbidden'">Forbidden Knowledge</a>
+  <a href="#cycle" onclick="event.preventDefault();closeMobileMenu();revealSection('cycle'">Cycle Clock</a>
   <div class="mobile-menu-section">Intelligence</div>
-  <a href="#patterns" onclick="closeMobileMenu();revealSection('patterns')">Pattern Engine</a>
-  <a href="#history" onclick="closeMobileMenu();revealSection('history')">History Log</a>
-  <a href="#predictions" onclick="closeMobileMenu();revealSection('predictions')">Predictions</a>
-  <a href="#oracle" onclick="closeMobileMenu();revealSection('oracle')">Oracle</a>
+  <a href="#patterns" onclick="event.preventDefault();closeMobileMenu();revealSection('patterns'">Pattern Engine</a>
+  <a href="#history" onclick="event.preventDefault();closeMobileMenu();revealSection('history'">History Log</a>
+  <a href="#predictions" onclick="event.preventDefault();closeMobileMenu();revealSection('predictions'">Predictions</a>
+  <a href="#oracle" onclick="event.preventDefault();closeMobileMenu();revealSection('oracle'">Oracle</a>
   <div class="mobile-menu-section">Foundations</div>
-  <a href="#whispers" onclick="closeMobileMenu();revealSection('whispers')">Whisper Wall</a>
-  <a href="#parallels" onclick="closeMobileMenu();revealSection('parallels')">Pattern Library</a>
-  <a href="#survival" onclick="closeMobileMenu();revealSection('survival')">Survival Profile</a>
-  <a href="#restore" onclick="closeMobileMenu();revealSection('restore')">Restoration Signals</a>
-  <a href="#books" onclick="closeMobileMenu();revealSection('books')">Ancient Texts</a>
-  <a href="#charts" onclick="closeMobileMenu();revealSection('charts')">Charts</a>
-  <a href="#data" onclick="closeMobileMenu();revealSection('data')">World Data</a>
-  <a href="#synthesis" onclick="closeMobileMenu();revealSection('synthesis')">Synthesis</a>
+  <a href="#whispers" onclick="event.preventDefault();closeMobileMenu();revealSection('whispers'">Whisper Wall</a>
+  <a href="#parallels" onclick="event.preventDefault();closeMobileMenu();revealSection('parallels'">Pattern Library</a>
+  <a href="#survival" onclick="event.preventDefault();closeMobileMenu();revealSection('survival'">Survival Profile</a>
+  <a href="#restore" onclick="event.preventDefault();closeMobileMenu();revealSection('restore'">Restoration Signals</a>
+  <a href="#books" onclick="event.preventDefault();closeMobileMenu();revealSection('books'">Ancient Texts</a>
+  <a href="#charts" onclick="event.preventDefault();closeMobileMenu();revealSection('charts'">Charts</a>
+  <a href="#data" onclick="event.preventDefault();closeMobileMenu();revealSection('data'">World Data</a>
+  <a href="#synthesis" onclick="event.preventDefault();closeMobileMenu();revealSection('synthesis'">Synthesis</a>
   <div class="mobile-menu-section">New Concepts</div>
-  <a href="#narrative" onclick="closeMobileMenu();revealSection('narrative')">📰 Narrative Lens</a><a href="#aibrief" onclick="closeMobileMenu();revealSection('aibrief')">🤖 AI Brief</a><a href="#antifragile" onclick="closeMobileMenu();revealSection('antifragile')">💪 Antifragility</a><a href="#echo" onclick="closeMobileMenu();revealSection('echo')">🔁 Historical Echo</a><a href="#terminal" onclick="closeMobileMenu();revealSection('terminal')">⌨️ Terminal</a><a href="#acceleration" onclick="closeMobileMenu();revealSection('acceleration')">Accelerationist Index</a>
-  <a href="#deadreckoning" onclick="closeMobileMenu();revealSection('deadreckoning')">Dead Reckoning</a>
-  <a href="#lexicon" onclick="closeMobileMenu();revealSection('lexicon')">Collapse Lexicon</a>
+  <a href="#narrative" onclick="event.preventDefault();closeMobileMenu();revealSection('narrative'">📰 Narrative Lens</a><a href="#aibrief" onclick="event.preventDefault();closeMobileMenu();revealSection('aibrief'">🤖 AI Brief</a><a href="#antifragile" onclick="event.preventDefault();closeMobileMenu();revealSection('antifragile'">💪 Antifragility</a><a href="#echo" onclick="event.preventDefault();closeMobileMenu();revealSection('echo'">🔁 Historical Echo</a><a href="#terminal" onclick="event.preventDefault();closeMobileMenu();revealSection('terminal'">⌨️ Terminal</a><a href="#acceleration" onclick="event.preventDefault();closeMobileMenu();revealSection('acceleration'">Accelerationist Index</a>
+  <a href="#deadreckoning" onclick="event.preventDefault();closeMobileMenu();revealSection('deadreckoning'">Dead Reckoning</a>
+  <a href="#lexicon" onclick="event.preventDefault();closeMobileMenu();revealSection('lexicon'">Collapse Lexicon</a>
   <div class="mobile-menu-section">Resources</div>
-  <a href="#signalnoise" onclick="closeMobileMenu();revealSection('signalnoise')">📡 Signal / Noise</a>
-  <a href="#resources" onclick="closeMobileMenu();revealSection('resources')">🌍 Resource Tracker</a>
-  <a href="#powermap" onclick="closeMobileMenu();revealSection('powermap')">🗺️ Power Map</a>
-  <a href="#radio" onclick="closeMobileMenu();revealSection('radio')">🎙️ Radio</a>
-  <a href="#resilience" onclick="closeMobileMenu();revealSection('resilience')">🛡️ Resilience Portfolio</a>
-  <a href="#about" onclick="closeMobileMenu();revealSection('about')">ℹ️ About</a><a href="#sources" onclick="closeMobileMenu();revealSection('sources')">Sources</a>
+  <a href="#signalnoise" onclick="event.preventDefault();closeMobileMenu();revealSection('signalnoise'">📡 Signal / Noise</a>
+  <a href="#resources" onclick="event.preventDefault();closeMobileMenu();revealSection('resources'">🌍 Resource Tracker</a>
+  <a href="#powermap" onclick="event.preventDefault();closeMobileMenu();revealSection('powermap'">🗺️ Power Map</a>
+  <a href="#radio" onclick="event.preventDefault();closeMobileMenu();revealSection('radio'">🎙️ Radio</a>
+  <a href="#resilience" onclick="event.preventDefault();closeMobileMenu();revealSection('resilience'">🛡️ Resilience Portfolio</a>
+  <a href="#about" onclick="event.preventDefault();closeMobileMenu();revealSection('about'">ℹ️ About</a><a href="#sources" onclick="event.preventDefault();closeMobileMenu();revealSection('sources'">Sources</a>
   <div style="padding:1rem 1.5rem .5rem;display:flex;gap:.8rem;align-items:center">
     <button onclick="DataEngine.forceUpdate();closeMobileMenu();" style="background:transparent;border:1px solid var(--gld);color:var(--gld);font-family:var(--fm);font-size:9px;letter-spacing:.15em;padding:.6rem 1.2rem;cursor:pointer;min-height:44px">↻ REFRESH DATA</button>
   </div>
