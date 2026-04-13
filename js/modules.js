@@ -1854,3 +1854,77 @@ window.termKeydown = function(e) {
     if (TERM_HI > 0) input.value = TERM_HISTORY[--TERM_HI]; else { TERM_HI = -1; input.value = ''; }
   }
 };
+
+/* ═══════════════════════════════════════════════════
+   SIGNAL/NOISE RATIO — Live news quality analysis
+═══════════════════════════════════════════════════ */
+function renderSignalNoise(db) {
+  const news = db.news || [];
+  if (!news.length) return;
+
+  // EMOTIONAL AMPLIFICATION — count high-affect words
+  const emotionWords = ['war','attack','crisis','catastrophe','disaster','urgent','breaking','shocking','alarming','threat','danger','kill','dead','bomb','strike','surge','chaos','collapse','explosion','terror','violence','flee','mass','grave'];
+  const emotionHits = news.filter(n => emotionWords.some(w => (n.title + ' ' + (n.description||'')).toLowerCase().includes(w))).length;
+  const emotionScore = Math.round((emotionHits / news.length) * 100);
+
+  // NARRATIVE REPETITION — similar keywords appearing 3+ times
+  const wordFreq = {};
+  news.forEach(n => {
+    const words = n.title.toLowerCase().split(/\s+/).filter(w => w.length > 5 && !['about','after','before','while','their','which','where'].includes(w));
+    words.forEach(w => { wordFreq[w] = (wordFreq[w] || 0) + 1; });
+  });
+  const repeated = Object.values(wordFreq).filter(v => v >= 3).length;
+  const repeatScore = Math.min(100, Math.round(repeated * 8));
+
+  // SOURCE DIVERSITY — count unique sources
+  const sources = new Set(news.map(n => n.source));
+  const diversityScore = Math.min(100, sources.size * 16);
+
+  // PRIMARY SOURCE RATE — headlines with named orgs/people/data
+  const primaryMarkers = ['report','data','according','study','survey','research','analysis','percent','million','billion','agency','official','minister','president','secretary'];
+  const primaryHits = news.filter(n => primaryMarkers.some(m => (n.title + ' ' + (n.description||'')).toLowerCase().includes(m))).length;
+  const primaryScore = Math.round((primaryHits / news.length) * 100);
+
+  // COMPOSITE SIGNAL SCORE (higher = more signal, less noise)
+  const signalScore = Math.round(
+    (diversityScore * 0.3) +
+    (primaryScore * 0.35) +
+    ((100 - emotionScore) * 0.25) +
+    ((100 - repeatScore) * 0.1)
+  );
+
+  // Update DOM
+  const scoreEl = document.getElementById('sn-score');
+  const barEl = document.getElementById('sn-bar');
+  const labelEl = document.getElementById('sn-label');
+  if (scoreEl) { scoreEl.textContent = signalScore; scoreEl.style.color = signalScore > 65 ? 'var(--jbrt)' : signalScore > 45 ? 'var(--gld)' : 'var(--ebrt)'; }
+  if (barEl) barEl.style.width = signalScore + '%';
+  if (labelEl) { labelEl.textContent = signalScore > 65 ? 'HIGH SIGNAL — INFORMATION PERIOD' : signalScore > 45 ? 'MODERATE — ELEVATED NOISE' : 'LOW SIGNAL — HIGH MANUFACTURED NOISE'; }
+
+  const emotEl = document.getElementById('sn-emotion');
+  const repEl = document.getElementById('sn-repeat');
+  const divEl = document.getElementById('sn-diversity');
+  const priEl = document.getElementById('sn-primary');
+  if (emotEl) { emotEl.textContent = emotionScore + '%'; emotEl.style.color = emotionScore > 50 ? 'var(--ebrt)' : 'var(--gld)'; }
+  if (repEl) { repEl.textContent = repeated; repEl.style.color = repeated > 5 ? 'var(--ebrt)' : 'var(--jbrt)'; }
+  if (divEl) { divEl.textContent = sources.size; divEl.style.color = sources.size > 4 ? 'var(--jbrt)' : 'var(--gld)'; }
+  if (priEl) { priEl.textContent = primaryScore + '%'; priEl.style.color = primaryScore > 50 ? 'var(--jbrt)' : 'var(--gld)'; }
+
+  // Top signal headlines
+  const topEl = document.getElementById('sn-top-headlines');
+  if (topEl) {
+    const topHeadlines = news
+      .filter(n => primaryMarkers.some(m => (n.title + ' ' + (n.description||'')).toLowerCase().includes(m)))
+      .slice(0, 5);
+    topEl.innerHTML = topHeadlines.map(n =>
+      `<div style="padding:.5rem 0;border-bottom:1px solid var(--bdr);last:border-none">
+        <div style="font-size:.82rem;color:var(--pch);margin-bottom:.15rem">${n.title.slice(0,80)}${n.title.length>80?'...':''}</div>
+        <div style="font-family:var(--fm);font-size:7px;color:var(--ash)">${n.source} · ${n.pubDate?.slice(0,16)||'recent'}</div>
+      </div>`).join('') || '<div style="color:var(--ash);font-style:italic">Calculating from live feed...</div>';
+  }
+}
+
+/* openAudioLink — simple new-tab opener */
+window.openAudioLink = function(url) {
+  window.open(url, '_blank', 'noopener,noreferrer');
+};

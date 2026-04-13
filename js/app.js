@@ -214,6 +214,8 @@ const _baseRenderAll = renderAll;
 window.renderAll = function(db) {
   _baseRenderAll(db);
   try { renderDeadReckoning(db); } catch(e) { console.error('deadreckoning', e); }
+  try { renderSignalNoise(db); } catch(e) { console.error('signalnoise', e); }
+  try { renderNarrativeLens(db); } catch(e) { console.error('narrative', e); }
 };
 
 // Save survival score to sessionStorage when calculated

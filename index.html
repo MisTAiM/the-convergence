@@ -162,6 +162,16 @@
       </div>
     </div>
 
+    <div class="nav-group">
+      <button class="nav-group-btn">Resources <span class="nav-arrow">▾</span></button>
+      <div class="nav-dropdown">
+        <a href="#signalnoise" onclick="revealSection('signalnoise')">📡 Signal / Noise Ratio</a>
+        <a href="#resources" onclick="revealSection('resources')">🌍 Resource Depletion</a>
+        <a href="#powermap" onclick="revealSection('powermap')">🗺️ Power Map</a>
+        <a href="#radio" onclick="revealSection('radio')">🎙️ Convergence Radio</a>
+        <a href="#resilience" onclick="revealSection('resilience')">🛡️ Resilience Portfolio</a>
+      </div>
+    </div>
     <a class="nav-solo" href="#about" onclick="revealSection('about')">About</a><a class="nav-solo" href="#sources" onclick="revealSection('sources')">Sources</a>
 
   </div>
@@ -208,6 +218,12 @@
   <a href="#narrative" onclick="closeMobileMenu();revealSection('narrative')">📰 Narrative Lens</a><a href="#aibrief" onclick="closeMobileMenu();revealSection('aibrief')">🤖 AI Brief</a><a href="#antifragile" onclick="closeMobileMenu();revealSection('antifragile')">💪 Antifragility</a><a href="#echo" onclick="closeMobileMenu();revealSection('echo')">🔁 Historical Echo</a><a href="#terminal" onclick="closeMobileMenu();revealSection('terminal')">⌨️ Terminal</a><a href="#acceleration" onclick="closeMobileMenu();revealSection('acceleration')">Accelerationist Index</a>
   <a href="#deadreckoning" onclick="closeMobileMenu();revealSection('deadreckoning')">Dead Reckoning</a>
   <a href="#lexicon" onclick="closeMobileMenu();revealSection('lexicon')">Collapse Lexicon</a>
+  <div class="mobile-menu-section">Resources</div>
+  <a href="#signalnoise" onclick="closeMobileMenu();revealSection('signalnoise')">📡 Signal / Noise</a>
+  <a href="#resources" onclick="closeMobileMenu();revealSection('resources')">🌍 Resource Tracker</a>
+  <a href="#powermap" onclick="closeMobileMenu();revealSection('powermap')">🗺️ Power Map</a>
+  <a href="#radio" onclick="closeMobileMenu();revealSection('radio')">🎙️ Radio</a>
+  <a href="#resilience" onclick="closeMobileMenu();revealSection('resilience')">🛡️ Resilience Portfolio</a>
   <a href="#about" onclick="closeMobileMenu();revealSection('about')">ℹ️ About</a><a href="#sources" onclick="closeMobileMenu();revealSection('sources')">Sources</a>
   <div style="padding:1rem 1.5rem .5rem;display:flex;gap:.8rem;align-items:center">
     <button onclick="DataEngine.forceUpdate();closeMobileMenu();" style="background:transparent;border:1px solid var(--gld);color:var(--gld);font-family:var(--fm);font-size:9px;letter-spacing:.15em;padding:.6rem 1.2rem;cursor:pointer;min-height:44px">↻ REFRESH DATA</button>
@@ -2159,6 +2175,398 @@
     <span onclick="termRun('help')" style="color:var(--gld);cursor:pointer">HELP</span>
   </div>
 </section>
+
+
+<!-- ═══════════════════════════════════════════════════
+     IDEA 6: THE SIGNAL/NOISE RATIO
+     Live measurement of information quality decay
+     How much of today's news is signal vs manufactured noise
+═══════════════════════════════════════════════════ -->
+<section class="mod" id="signalnoise">
+  <div class="mod-label">Original Module · Live · Information Quality Analysis · Updates Every 20min</div>
+  <h2 class="mod-title">The Signal / Noise Ratio</h2>
+  <p class="mod-desc">Information weaponization is the defining feature of the 2020s. The Signal/Noise Ratio module analyzes the live news feed for patterns of manufactured consensus, emotional amplification, narrative repetition, and epistemic fog — the four signatures of information that has been optimized for control rather than clarity. A Signal reading of 100 means all current headlines are primary-source, verifiable, and low-affect. The actual reading will be lower. The question is how much lower.</p>
+
+  <div class="g2 mt2" style="gap:1.5rem;align-items:start">
+    <div>
+      <div style="background:var(--surf);padding:2rem;border:1px solid var(--bdr);margin-bottom:1rem">
+        <div style="font-family:var(--fm);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--gld);margin-bottom:1rem">Live Signal Score</div>
+        <div style="display:flex;align-items:baseline;gap:1rem;margin-bottom:.8rem">
+          <div style="font-family:var(--fd);font-size:4rem;font-weight:900;color:var(--gld);line-height:1" id="sn-score">—</div>
+          <div style="font-family:var(--fd);font-size:1.5rem;color:var(--ash)">/100</div>
+        </div>
+        <div style="height:4px;background:rgba(212,178,106,.1);border-radius:2px;margin-bottom:.4rem">
+          <div id="sn-bar" style="height:100%;border-radius:2px;background:linear-gradient(90deg,var(--ebrt),var(--gld),var(--jbrt));width:50%;transition:width 1s ease"></div>
+        </div>
+        <div id="sn-label" style="font-family:var(--fm);font-size:8px;color:var(--ash);letter-spacing:.1em;text-transform:uppercase">Calculating...</div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:2px">
+        <div style="background:var(--surf);padding:1rem;display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-family:var(--fm);font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);margin-bottom:.2rem">Emotional Amplification</div>
+            <div style="font-size:.8rem;color:var(--smk)">War language, fear triggers, urgency framing</div>
+          </div>
+          <div id="sn-emotion" style="font-family:var(--fd);font-size:1.4rem;font-weight:700;color:var(--ebrt)">—</div>
+        </div>
+        <div style="background:var(--surf);padding:1rem;display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-family:var(--fm);font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);margin-bottom:.2rem">Narrative Repetition</div>
+            <div style="font-size:.8rem;color:var(--smk)">Same story from multiple outlets simultaneously</div>
+          </div>
+          <div id="sn-repeat" style="font-family:var(--fd);font-size:1.4rem;font-weight:700;color:var(--gld)">—</div>
+        </div>
+        <div style="background:var(--surf);padding:1rem;display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-family:var(--fm);font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);margin-bottom:.2rem">Source Diversity</div>
+            <div style="font-size:.8rem;color:var(--smk)">Geographic / ideological range of live headlines</div>
+          </div>
+          <div id="sn-diversity" style="font-family:var(--fd);font-size:1.4rem;font-weight:700;color:var(--jbrt)">—</div>
+        </div>
+        <div style="background:var(--surf);padding:1rem;display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-family:var(--fm);font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);margin-bottom:.2rem">Primary Source Rate</div>
+            <div style="font-size:.8rem;color:var(--smk)">Headlines with verifiable primary-source claims</div>
+          </div>
+          <div id="sn-primary" style="font-family:var(--fd);font-size:1.4rem;font-weight:700;color:var(--ibrt)">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div style="background:var(--surf);border-left:3px solid var(--gld);padding:1.5rem;margin-bottom:1rem">
+        <div style="font-family:var(--fm);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--gld);margin-bottom:.8rem">Walter Lippmann's Warning — 1922</div>
+        <p style="font-size:.92rem;color:var(--smk);line-height:1.85;margin-bottom:.7rem">In <em>Public Opinion</em>, Lippmann introduced the concept of the "pseudo-environment" — the picture of the world in our heads, assembled not from experience but from the news. He warned that the pseudo-environment was already being shaped by economic and political interests. In 1922. Before television. Before the internet. Before algorithmic curation. Before AI-generated content at scale.</p>
+        <p style="font-size:.92rem;color:var(--smk);line-height:1.85">The Signal/Noise ratio is Lippmann's metric operationalized: how close is the pseudo-environment being constructed today to the actual environment? High noise = the pseudo-environment is diverging fast. High signal = unusually accurate information period. Act accordingly in both cases.</p>
+      </div>
+
+      <div style="background:var(--abyss);border:1px solid var(--bdr);padding:1.4rem">
+        <div style="font-family:var(--fm);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--jbrt);margin-bottom:.8rem">Top Signal Headlines — Current Feed</div>
+        <div id="sn-top-headlines" style="font-size:.85rem;color:var(--smk);line-height:1.8">Loading...</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     IDEA 7: THE RESOURCE DEPLETION TRACKER
+     Water, food, rare earth, energy — the actual scarcity data
+     Not just climate — the physical limits
+═══════════════════════════════════════════════════ -->
+<section class="mod" id="resources">
+  <div class="mod-label">Original Module · Resource Intelligence · Physical Limits · World Bank + USGS Data</div>
+  <h2 class="mod-title">Resource Depletion Tracker</h2>
+  <p class="mod-desc">Civilizations don't collapse because of ideology. They collapse when the physical resources that sustain their complexity can no longer be extracted at the rate required. The Four Horsemen framework is explicit: Famine is not metaphorical. This module tracks the actual depletion curves for the six resource categories that determine civilizational carrying capacity — water, food production, critical minerals, energy systems, arable land, and biodiversity.</p>
+
+  <div class="g3 mt2" style="gap:2px">
+    <div style="background:var(--surf);padding:1.5rem;border-top:3px solid #4090d8">
+      <div style="font-family:var(--fm);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:#4090d8;margin-bottom:.6rem">💧 FRESHWATER</div>
+      <div style="font-family:var(--fd);font-size:2rem;font-weight:700;color:var(--pch);margin-bottom:.3rem">2.5%</div>
+      <div style="font-family:var(--fm);font-size:8px;color:var(--ash);margin-bottom:.7rem">of Earth's water is fresh · 0.3% accessible</div>
+      <div style="height:3px;background:rgba(64,144,216,.1);border-radius:2px;margin-bottom:.7rem"><div style="width:23%;height:100%;background:#4090d8;border-radius:2px"></div></div>
+      <p style="font-size:.85rem;color:var(--smk);line-height:1.75">Groundwater depletion accelerating globally. 40+ countries face water stress. Ogallala Aquifer (US breadbasket) dropping 1-3ft/year. Himalayan glaciers — water source for 2B people — at melting tipping point. UN: water wars predicted by 2030s.</p>
+    </div>
+    <div style="background:var(--surf);padding:1.5rem;border-top:3px solid var(--gld)">
+      <div style="font-family:var(--fm);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--gld);margin-bottom:.6rem">🌾 FOOD SYSTEMS</div>
+      <div style="font-family:var(--fd);font-size:2rem;font-weight:700;color:var(--pch);margin-bottom:.3rem">733M</div>
+      <div style="font-family:var(--fm);font-size:8px;color:var(--ash);margin-bottom:.7rem">people food insecure in 2023 · +122M since COVID</div>
+      <div style="height:3px;background:rgba(212,178,106,.1);border-radius:2px;margin-bottom:.7rem"><div style="width:61%;height:100%;background:var(--gld);border-radius:2px"></div></div>
+      <p style="font-size:.85rem;color:var(--smk);line-height:1.75">Global food system dependent on 3 crops (wheat, rice, maize) — 60% of calories. Hormuz closure directly affects fertilizer shipping. Ukraine war removed 12% of global wheat. Phosphorus reserves (essential for fertilizer) at peak production. Topsoil loss: 30% of farmland degraded in last 40 years.</p>
+    </div>
+    <div style="background:var(--surf);padding:1.5rem;border-top:3px solid var(--vbrt)">
+      <div style="font-family:var(--fm);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--vbrt);margin-bottom:.6rem">⚡ CRITICAL MINERALS</div>
+      <div style="font-family:var(--fd);font-size:2rem;font-weight:700;color:var(--pch);margin-bottom:.3rem">17</div>
+      <div style="font-family:var(--fm);font-size:8px;color:var(--ash);margin-bottom:.7rem">rare earth elements · 85% controlled by China</div>
+      <div style="height:3px;background:rgba(120,96,192,.1);border-radius:2px;margin-bottom:.7rem"><div style="width:85%;height:100%;background:var(--vbrt);border-radius:2px"></div></div>
+      <p style="font-size:.85rem;color:var(--smk);line-height:1.75">Lithium, cobalt, nickel, graphite — essential for AI chips, EVs, and solar panels. The energy transition requires MORE extraction than fossil fuels at their peak. Cobalt: 70% from DRC, highest child labor rate in any supply chain. Lithium: Bolivia-Chile-Argentina "Lithium Triangle" — geopolitical flashpoint by 2030.</p>
+    </div>
+    <div style="background:var(--surf);padding:1.5rem;border-top:3px solid var(--ebrt)">
+      <div style="font-family:var(--fm);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--ebrt);margin-bottom:.6rem">🛢️ ENERGY</div>
+      <div style="font-family:var(--fd);font-size:2rem;font-weight:700;color:var(--pch);margin-bottom:.3rem">2052</div>
+      <div style="font-family:var(--fm);font-size:8px;color:var(--ash);margin-bottom:.7rem">projected peak oil demand · $96/bbl Hormuz premium</div>
+      <div style="height:3px;background:rgba(192,74,40,.1);border-radius:2px;margin-bottom:.7rem"><div style="width:67%;height:100%;background:var(--ebrt);border-radius:2px"></div></div>
+      <p style="font-size:.85rem;color:var(--smk);line-height:1.75">Civilization runs on energy. Current renewable share: 27.8% of electricity (not total energy). Total energy transition requires 40+ years. EROI (Energy Return on Investment) of oil declining from 100:1 (1930s) to 10:1 (2020s). Below 5:1, industrial civilization becomes thermodynamically impossible to sustain.</p>
+    </div>
+    <div style="background:var(--surf);padding:1.5rem;border-top:3px solid var(--jbrt)">
+      <div style="font-family:var(--fm);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--jbrt);margin-bottom:.6rem">🌱 ARABLE LAND</div>
+      <div style="font-family:var(--fd);font-size:2rem;font-weight:700;color:var(--pch);margin-bottom:.3rem">1.5B ha</div>
+      <div style="font-family:var(--fm);font-size:8px;color:var(--ash);margin-bottom:.7rem">of cultivated land globally · 30% degraded</div>
+      <div style="height:3px;background:rgba(40,176,136,.1);border-radius:2px;margin-bottom:.7rem"><div style="width:30%;height:100%;background:var(--ebrt);border-radius:2px;transition:none"></div></div>
+      <p style="font-size:.85rem;color:var(--smk);line-height:1.75">We lose 24B tonnes of fertile soil annually (UNCCD). Industrial agriculture depletes topsoil 10-40x faster than natural regeneration. By 2050: 9.8B people need 50% more food from land that's shrinking. The "Green Revolution" of the 1960s ran on soil capital that took millennia to accumulate.</p>
+    </div>
+    <div style="background:var(--surf);padding:1.5rem;border-top:3px solid #ff6b6b">
+      <div style="font-family:var(--fm);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:#ff6b6b;margin-bottom:.6rem">🦋 BIODIVERSITY</div>
+      <div style="font-family:var(--fd);font-size:2rem;font-weight:700;color:var(--pch);margin-bottom:.3rem">68%</div>
+      <div style="font-family:var(--fm);font-size:8px;color:var(--ash);margin-bottom:.7rem">decline in wildlife populations 1970–2018 (WWF)</div>
+      <div style="height:3px;background:rgba(255,107,107,.1);border-radius:2px;margin-bottom:.7rem"><div style="width:68%;height:100%;background:#ff6b6b;border-radius:2px"></div></div>
+      <p style="font-size:.85rem;color:var(--smk);line-height:1.75">The sixth mass extinction. 1M species threatened. Insect populations: -40% in 40 years. Without insect pollination, 75% of food crops fail. Biodiversity collapse removes the biological redundancy that makes ecosystems resilient to stress. Once a keystone species is lost, the cascade is irreversible within human timescales.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     IDEA 8: THE POWER MAP
+     Who actually runs things — not who's elected
+     Real power vs nominal power in 2026
+═══════════════════════════════════════════════════ -->
+<section class="mod" id="powermap">
+  <div class="mod-label">Original Module · Power Analysis · Geopolitical Intelligence · 2026</div>
+  <h2 class="mod-title">The Power Map</h2>
+  <p class="mod-desc">Elections measure the preferences of citizens. Power maps measure who actually makes consequential decisions. The two are increasingly different. In 2026, effective power is distributed across six layers that mostly operate independently of elected governments. Understanding which layer is making a decision tells you more about the probable outcome than knowing who holds the nominal office.</p>
+
+  <div style="background:var(--surf);border-left:3px solid var(--ebrt);padding:1.5rem;margin:1.5rem 0">
+    <div style="font-family:var(--fm);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--ebrt);margin-bottom:.8rem">The Six Power Layers — 2026</div>
+    <div style="display:flex;flex-direction:column;gap:2px">
+      <div style="background:var(--abyss);padding:1rem 1.2rem;border-left:3px solid var(--ebrt)">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.3rem">
+          <div style="font-family:var(--fm);font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--ebrt)">LAYER 1 — AI Systems</div>
+          <div style="font-family:var(--fm);font-size:8px;color:var(--ash)">emerging · fastest growing</div>
+        </div>
+        <p style="font-size:.88rem;color:var(--smk);line-height:1.75">Algorithmic systems make or strongly shape: content feeds for 5B people, credit decisions for billions, hiring at scale, trading decisions for 70%+ of market volume, autonomous weapons engagement rules, diagnostic decisions in medicine. This is power without accountability because most algorithmic decisions are legally invisible.</p>
+      </div>
+      <div style="background:var(--abyss);padding:1rem 1.2rem;border-left:3px solid var(--gld)">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.3rem">
+          <div style="font-family:var(--fm);font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--gld)">LAYER 2 — Financial Architecture</div>
+          <div style="font-family:var(--fm);font-size:8px;color:var(--ash)">$105T in assets · BIS, Fed, ECB</div>
+        </div>
+        <p style="font-size:.88rem;color:var(--smk);line-height:1.75">The Bank for International Settlements, Federal Reserve, ECB, and IMF make decisions that override elected governments. The 2010 Greek austerity program was not decided by Greek voters — it was decided by the Troika. SWIFT exclusion (Russia 2022) is economic warfare deployed without a declaration of war. Interest rate decisions affect every mortgage, business, and government budget globally.</p>
+      </div>
+      <div style="background:var(--abyss);padding:1rem 1.2rem;border-left:3px solid var(--vbrt)">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.3rem">
+          <div style="font-family:var(--fm);font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--vbrt)">LAYER 3 — Platform Infrastructure</div>
+          <div style="font-family:var(--fm);font-size:8px;color:var(--ash)">Google, Meta, Apple, AWS, Microsoft</div>
+        </div>
+        <p style="font-size:.88rem;color:var(--smk);line-height:1.75">Five companies control the information infrastructure of 4B+ people. They decide what speech is amplified or suppressed (content moderation), what applications are allowed (app stores), what data is stored (cloud), and what communications are private (messaging encryption). When Australia passed a news bargaining code, Google threatened to remove its search engine from the country. The government backed down.</p>
+      </div>
+      <div style="background:var(--abyss);padding:1rem 1.2rem;border-left:3px solid #4090d8">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.3rem">
+          <div style="font-family:var(--fm);font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#4090d8">LAYER 4 — Nation-State Governments</div>
+          <div style="font-family:var(--fm);font-size:8px;color:var(--ash)">193 UN members · military monopoly</div>
+        </div>
+        <p style="font-size:.88rem;color:var(--smk);line-height:1.75">Nominal power. Governments retain monopoly on legitimate violence and formal law-making, but are constrained above by financial architecture and platform infrastructure, and below by corporate supply chains and civil society. The US government cannot effectively regulate Google without Google's cooperation. The key government powers remaining: taxation, borders, and war.</p>
+      </div>
+      <div style="background:var(--abyss);padding:1rem 1.2rem;border-left:3px solid var(--jbrt)">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.3rem">
+          <div style="font-family:var(--fm);font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--jbrt)">LAYER 5 — Supply Chain Corporations</div>
+          <div style="font-family:var(--fm);font-size:8px;color:var(--ash)">TSMC, Maersk, BlackRock, Saudi Aramco</div>
+        </div>
+        <p style="font-size:.88rem;color:var(--smk);line-height:1.75">Physical infrastructure owners. TSMC makes 90% of advanced chips — a decision by one Taiwanese company affects every nation's military and civilian technology. Maersk controls 17% of global shipping. BlackRock manages $10T in assets — more than most national GDPs. Saudi Aramco controls 10% of the world's oil. These are non-state actors with geopolitical leverage exceeding most countries.</p>
+      </div>
+      <div style="background:var(--abyss);padding:1rem 1.2rem;border-left:3px solid var(--ash)">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.3rem">
+          <div style="font-family:var(--fm);font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--ash)">LAYER 6 — Civil Society / People</div>
+          <div style="font-family:var(--fm);font-size:8px;color:var(--ash)">8B humans · slow-moving but terminal veto</div>
+        </div>
+        <p style="font-size:.88rem;color:var(--smk);line-height:1.75">The slowest layer, but ultimately the only one with a terminal veto. No government has survived permanent opposition of its population. No corporation survives a permanent consumer boycott. No algorithm can function without human operators. Civil society is Layer 6 because it moves slowly — but when it moves, it moves everything above it. The French Revolution, Civil Rights Movement, and Arab Spring are Layer 6 activations.</p>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:var(--abyss);border:1px solid var(--bdr);padding:1.5rem;margin-top:1rem">
+    <div style="font-family:var(--fm);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--jbrt);margin-bottom:.7rem">Convergence Reading: What Layer Are the Current Events In?</div>
+    <div class="g2" style="gap:1.5rem">
+      <div>
+        <p style="font-size:.9rem;color:var(--smk);line-height:1.85;margin-bottom:.6rem">The Iran war (Layer 4 nominal: US/Israel government action) is simultaneously: Layer 2 (Hormuz = financial infrastructure disruption), Layer 5 (Saudi Aramco supply chain power shift), and Layer 1 (AI-coordinated targeting intelligence). The "nation-state war" framing misses 3 of the 5 layers of power actually engaged.</p>
+        <p style="font-size:.9rem;color:var(--smk);line-height:1.85">The AI capability race (nominally Layer 4: US vs China government competition) is actually Layer 3 (platform infrastructure monopoly fight), Layer 1 (the systems themselves acquiring agency), and Layer 5 (TSMC's physical chokepoint). Government policy is the lag indicator, not the lead.</p>
+      </div>
+      <div>
+        <p style="font-size:.9rem;color:var(--smk);line-height:1.85;margin-bottom:.6rem">The Enoch framework maps precisely: the Watchers (Layer 1-3 equivalents — beings with superior capability who operate above human governance) gave humanity tools before the governance architecture existed. The result: "all their ways were defiled." The resolution in Enoch is not that the Watchers were destroyed — it's that a framework for governing them was established. No such framework exists for AI, finance, or platforms in 2026.</p>
+        <p style="font-size:.9rem;color:var(--smk);line-height:1.85">Layer 6 is the only layer that can create that framework. But it requires the population to understand which layer is making decisions — which requires exactly this kind of mapping.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     IDEA 9: THE CONVERGENCE RADIO
+     Curated audio intelligence — podcasts, briefings, testimony
+     What smart people are saying right now
+═══════════════════════════════════════════════════ -->
+<section class="mod" id="radio">
+  <div class="mod-label">Original Module · Audio Intelligence · Curated Sources · No Auto-Play</div>
+  <h2 class="mod-title">The Convergence Radio</h2>
+  <p class="mod-desc">Video demands attention. Audio accompanies it. The Convergence Radio curates the highest-signal audio sources on the domains this platform tracks — the podcasts, testimonies, lectures, and interviews that go deeper than any headline. Each track is selected for epistemic quality, not popularity: primary sources over commentary, researchers over pundits, uncomfortable evidence over comfortable consensus.</p>
+
+  <div class="g3 mt2" style="gap:2px" id="radio-grid">
+
+    <div style="background:var(--surf);padding:1.5rem;border-top:2px solid var(--ebrt)">
+      <div style="font-family:var(--fm);font-size:7.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--ebrt);margin-bottom:.6rem">🔴 GEOPOLITICS</div>
+      <div style="display:flex;flex-direction:column;gap:.8rem">
+        <div style="padding:.8rem;background:var(--abyss);border:1px solid var(--bdr);cursor:pointer" onclick="openAudioLink('https://www.cfr.org/podcasts/world-next-week')">
+          <div style="font-size:.85rem;color:var(--pch);font-weight:600;margin-bottom:.2rem">World Next Week — CFR</div>
+          <div style="font-size:.78rem;color:var(--ash);margin-bottom:.4rem">Council on Foreign Relations · Weekly</div>
+          <div style="font-size:.78rem;color:var(--smk);line-height:1.6">Primary-source geopolitical analysis from CFR scholars. Consistently ahead of media narrative. Iran, Ukraine, China — structured analysis not opinion.</div>
+          <div style="font-family:var(--fm);font-size:7px;color:var(--ebrt);margin-top:.4rem;letter-spacing:.1em">→ cfr.org/podcasts</div>
+        </div>
+        <div style="padding:.8rem;background:var(--abyss);border:1px solid var(--bdr);cursor:pointer" onclick="openAudioLink('https://acleddata.com/podcast/')">
+          <div style="font-size:.85rem;color:var(--pch);font-weight:600;margin-bottom:.2rem">ACLED Conflict Podcast</div>
+          <div style="font-size:.78rem;color:var(--ash);margin-bottom:.4rem">Armed Conflict Location & Event Data · Ongoing</div>
+          <div style="font-size:.78rem;color:var(--smk);line-height:1.6">The same ACLED data that feeds this platform's conflict analysis, in audio form. Sudan, Iran, Ukraine — primary data briefings from field researchers.</div>
+          <div style="font-family:var(--fm);font-size:7px;color:var(--ebrt);margin-top:.4rem;letter-spacing:.1em">→ acleddata.com/podcast</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:var(--surf);padding:1.5rem;border-top:2px solid var(--gld)">
+      <div style="font-family:var(--fm);font-size:7.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--gld);margin-bottom:.6rem">📊 ECONOMICS</div>
+      <div style="display:flex;flex-direction:column;gap:.8rem">
+        <div style="padding:.8rem;background:var(--abyss);border:1px solid var(--bdr);cursor:pointer" onclick="openAudioLink('https://www.macrovoices.com/')">
+          <div style="font-size:.85rem;color:var(--pch);font-weight:600;margin-bottom:.2rem">Macro Voices</div>
+          <div style="font-size:.78rem;color:var(--ash);margin-bottom:.4rem">Erik Townsend · Weekly · Institutional quality</div>
+          <div style="font-size:.78rem;color:var(--smk);line-height:1.6">The highest-density economics podcast. Guests include actual fund managers, not media economists. Dollar reserve, debt dynamics, oil markets — institutional-grade analysis accessible to anyone.</div>
+          <div style="font-family:var(--fm);font-size:7px;color:var(--gld);margin-top:.4rem;letter-spacing:.1em">→ macrovoices.com</div>
+        </div>
+        <div style="padding:.8rem;background:var(--abyss);border:1px solid var(--bdr);cursor:pointer" onclick="openAudioLink('https://www.econtalk.org/')">
+          <div style="font-size:.85rem;color:var(--pch);font-weight:600;margin-bottom:.2rem">EconTalk</div>
+          <div style="font-size:.78rem;color:var(--ash);margin-bottom:.4rem">Russ Roberts · Weekly · 18+ years</div>
+          <div style="font-size:.78rem;color:var(--smk);line-height:1.6">Longform economic conversations without agenda. Hayek, Keynes, behavioral economics, institutional theory — the intellectual foundations of the systems being analyzed here.</div>
+          <div style="font-family:var(--fm);font-size:7px;color:var(--gld);margin-top:.4rem;letter-spacing:.1em">→ econtalk.org</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:var(--surf);padding:1.5rem;border-top:2px solid var(--jbrt)">
+      <div style="font-family:var(--fm);font-size:7.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--jbrt);margin-bottom:.6rem">🌡️ CLIMATE</div>
+      <div style="display:flex;flex-direction:column;gap:.8rem">
+        <div style="padding:.8rem;background:var(--abyss);border:1px solid var(--bdr);cursor:pointer" onclick="openAudioLink('https://open.spotify.com/show/4nmfbxkYFiJl1w1GiIvJSS')">
+          <div style="font-size:.85rem;color:var(--pch);font-weight:600;margin-bottom:.2rem">ClimateOne</div>
+          <div style="font-size:.78rem;color:var(--ash);margin-bottom:.4rem">Commonwealth Club · Long-form interviews</div>
+          <div style="font-size:.78rem;color:var(--smk);line-height:1.6">Scientists, not advocates. The Global Tipping Points researchers who authored the 2025 report that feeds this platform's data appear regularly. Primary-source climate science in accessible format.</div>
+          <div style="font-family:var(--fm);font-size:7px;color:var(--jbrt);margin-top:.4rem;letter-spacing:.1em">→ climateone.org</div>
+        </div>
+        <div style="padding:.8rem;background:var(--abyss);border:1px solid var(--bdr);cursor:pointer" onclick="openAudioLink('https://www.bbc.co.uk/programmes/m001pr64')">
+          <div style="font-size:.85rem;color:var(--pch);font-weight:600;margin-bottom:.2rem">In Our Time: Science — BBC</div>
+          <div style="font-size:.78rem;color:var(--ash);margin-bottom:.4rem">Melvyn Bragg · 25+ years archive</div>
+          <div style="font-size:.78rem;color:var(--smk);line-height:1.6">The best science podcast ever made. Climate, thermodynamics, ecology — primary researchers explaining their own work. Essential for calibrating what the data actually means vs what headlines claim.</div>
+          <div style="font-family:var(--fm);font-size:7px;color:var(--jbrt);margin-top:.4rem;letter-spacing:.1em">→ bbc.co.uk/inourtime</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:var(--surf);padding:1.5rem;border-top:2px solid var(--vbrt)">
+      <div style="font-family:var(--fm);font-size:7.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--vbrt);margin-bottom:.6rem">🤖 AI / TECHNOLOGY</div>
+      <div style="display:flex;flex-direction:column;gap:.8rem">
+        <div style="padding:.8rem;background:var(--abyss);border:1px solid var(--bdr);cursor:pointer" onclick="openAudioLink('https://80000hours.org/podcast/')">
+          <div style="font-size:.85rem;color:var(--pch);font-weight:600;margin-bottom:.2rem">80,000 Hours Podcast</div>
+          <div style="font-size:.78rem;color:var(--ash);margin-bottom:.4rem">Rob Wiblin · Long-form AI safety + global risk</div>
+          <div style="font-size:.78rem;color:var(--smk);line-height:1.6">The only podcast that regularly interviews actual AI safety researchers, biosecurity experts, and existential risk analysts. Uncomfortable, rigorous, and deeply informed. Not for casual listening.</div>
+          <div style="font-family:var(--fm);font-size:7px;color:var(--vbrt);margin-top:.4rem;letter-spacing:.1em">→ 80000hours.org/podcast</div>
+        </div>
+        <div style="padding:.8rem;background:var(--abyss);border:1px solid var(--bdr);cursor:pointer" onclick="openAudioLink('https://lexfridman.com/podcast/')">
+          <div style="font-size:.85rem;color:var(--pch);font-weight:600;margin-bottom:.2rem">Lex Fridman Podcast</div>
+          <div style="font-size:.78rem;color:var(--ash);margin-bottom:.4rem">Lex Fridman · Primary researchers · Long-form</div>
+          <div style="font-size:.78rem;color:var(--smk);line-height:1.6">Inconsistent but high ceiling. Episodes with Yann LeCun, Sam Altman, Joscha Bach, and Geoffrey Hinton are essential for understanding the actual state of AI from its builders. Filter for researcher episodes.</div>
+          <div style="font-family:var(--fm);font-size:7px;color:var(--vbrt);margin-top:.4rem;letter-spacing:.1em">→ lexfridman.com/podcast</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:var(--surf);padding:1.5rem;border-top:2px solid var(--ibrt)">
+      <div style="font-family:var(--fm);font-size:7.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--ibrt);margin-bottom:.6rem">📜 HISTORY / CIVILIZATION</div>
+      <div style="display:flex;flex-direction:column;gap:.8rem">
+        <div style="padding:.8rem;background:var(--abyss);border:1px solid var(--bdr);cursor:pointer" onclick="openAudioLink('https://www.dancarlin.com/hardcore-history-series/')">
+          <div style="font-size:.85rem;color:var(--pch);font-weight:600;margin-bottom:.2rem">Hardcore History — Dan Carlin</div>
+          <div style="font-size:.78rem;color:var(--ash);margin-bottom:.4rem">Dan Carlin · 6+ hour deep dives</div>
+          <div style="font-size:.78rem;color:var(--smk);line-height:1.6">The closest audio equivalent to primary-source historical immersion. "Blueprint for Armageddon" (WWI), "Prophets of Doom" (Anabaptist siege), "King of Kings" (Achaemenid Persia) — the historical echoes this platform tracks, told from inside the moment.</div>
+          <div style="font-family:var(--fm);font-size:7px;color:var(--ibrt);margin-top:.4rem;letter-spacing:.1em">→ dancarlin.com</div>
+        </div>
+        <div style="padding:.8rem;background:var(--abyss);border:1px solid var(--bdr);cursor:pointer" onclick="openAudioLink('https://open.spotify.com/show/1iohmBNlRooIVtukKeavRa')">
+          <div style="font-size:.85rem;color:var(--pch);font-weight:600;margin-bottom:.2rem">Revolutions — Mike Duncan</div>
+          <div style="font-size:.78rem;color:var(--ash);margin-bottom:.4rem">Mike Duncan · Complete series</div>
+          <div style="font-size:.78rem;color:var(--smk);line-height:1.6">Primary-source account of every major revolution in history: English, American, French, Haitian, South American, Russian. Essential for understanding what Fourth Turning resolution actually looks like from inside — not as theory, as lived sequence of events.</div>
+          <div style="font-family:var(--fm);font-size:7px;color:var(--ibrt);margin-top:.4rem;letter-spacing:.1em">→ thehistoryofrome.com</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:var(--surf);padding:1.5rem;border-top:2px solid var(--gld)">
+      <div style="font-family:var(--fm);font-size:7.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--gld);margin-bottom:.6rem">🔮 PHILOSOPHY / SYNTHESIS</div>
+      <div style="display:flex;flex-direction:column;gap:.8rem">
+        <div style="padding:.8rem;background:var(--abyss);border:1px solid var(--bdr);cursor:pointer" onclick="openAudioLink('https://philosophybites.com/')">
+          <div style="font-size:.85rem;color:var(--pch);font-weight:600;margin-bottom:.2rem">Philosophy Bites</div>
+          <div style="font-size:.78rem;color:var(--ash);margin-bottom:.4rem">David Edmonds + Nigel Warburton · 15min</div>
+          <div style="font-size:.78rem;color:var(--smk);line-height:1.6">Philosophers explaining single concepts in 15 minutes. Epistemic justification, social contract, just war theory, the ethics of AI — the conceptual vocabulary needed to think clearly about what the Convergence data means.</div>
+          <div style="font-family:var(--fm);font-size:7px;color:var(--gld);margin-top:.4rem;letter-spacing:.1em">→ philosophybites.com</div>
+        </div>
+        <div style="padding:.8rem;background:var(--abyss);border:1px solid var(--bdr);cursor:pointer" onclick="openAudioLink('https://samharris.org/making-sense-podcast/')">
+          <div style="font-size:.85rem;color:var(--pch);font-weight:600;margin-bottom:.2rem">Making Sense — Sam Harris</div>
+          <div style="font-size:.78rem;color:var(--ash);margin-bottom:.4rem">Sam Harris · Weekly · Reason-first</div>
+          <div style="font-size:.78rem;color:var(--smk);line-height:1.6">Epistemology applied to current events. AI consciousness, tribalism, institutional failure, meditation as epistemic practice. Whatever your views on Harris, the "Waking Up" meditation app episode on the nature of the self is the single best audio introduction to why Thomas's "Kingdom within" actually works.</div>
+          <div style="font-family:var(--fm);font-size:7px;color:var(--gld);margin-top:.4rem;letter-spacing:.1em">→ samharris.org</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     IDEA 10: THE RESILIENCE PORTFOLIO
+     Concrete action items organized by time horizon
+     What to actually DO — week, month, year, decade
+═══════════════════════════════════════════════════ -->
+<section class="mod" id="resilience">
+  <div class="mod-label">Original Module · Action Intelligence · Tobit Framework · Time-Horizoned</div>
+  <h2 class="mod-title">The Resilience Portfolio</h2>
+  <p class="mod-desc">Every module on this platform is diagnostic. The Resilience Portfolio is prescriptive. It takes the Convergence's full data set — CSI score, pattern detections, Survival Profile score, historical echo analysis — and translates them into concrete, time-horizoned action items organized by cost, skill requirement, and impact. The Jubilees framework is explicit: abundance periods are preparation windows. This is the preparation checklist.</p>
+
+  <div style="background:var(--surf);border-left:3px solid var(--gld);padding:1.5rem;margin:1.5rem 0">
+    <div style="font-family:var(--fm);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--gld);margin-bottom:.8rem">The Tobit Principle — Why Ancient Pattern, Not Survivalism</div>
+    <p style="font-size:.95rem;color:var(--smk);line-height:1.85">Tobit doesn't stockpile weapons. He builds relationships and practices reciprocity. His son Tobias travels through a dangerous world with a guide (Raphael), uses practical knowledge (the fish medicine), and returns with both the resource he sought and the community connection he didn't know he needed. The Tobit resilience framework is: community &gt; supplies. Skills &gt; gear. Relationships &gt; bunkers. Every action item below reflects this priority structure.</p>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:2px">
+
+    <div style="background:var(--surf);border-top:3px solid var(--jbrt);padding:1.5rem">
+      <div style="font-family:var(--fm);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--jbrt);margin-bottom:.4rem">THIS WEEK</div>
+      <div style="font-family:var(--fd);font-size:1rem;font-weight:600;margin-bottom:1rem;color:var(--pch)">Zero-Cost, High Impact</div>
+      <div style="display:flex;flex-direction:column;gap:.6rem">
+        <div style="padding:.6rem .8rem;background:var(--abyss);border-left:2px solid var(--jbrt);font-size:.82rem;color:var(--smk);line-height:1.6">☑ Introduce yourself to 3 neighbors you don't know by name. This is the single highest-ROI action per Putnam's research.</div>
+        <div style="padding:.6rem .8rem;background:var(--abyss);border-left:2px solid var(--jbrt);font-size:.82rem;color:var(--smk);line-height:1.6">☑ Know your exits. One route out of your city without highways. Know it by heart.</div>
+        <div style="padding:.6rem .8rem;background:var(--abyss);border-left:2px solid var(--jbrt);font-size:.82rem;color:var(--smk);line-height:1.6">☑ Inventory what you have. Water for 72 hours? Food for 2 weeks? Basic medical? Know your actual position.</div>
+        <div style="padding:.6rem .8rem;background:var(--abyss);border-left:2px solid var(--jbrt);font-size:.82rem;color:var(--smk);line-height:1.6">☑ Read one primary-source document. Not a news story about it. The actual document: IPCC summary, FAS nuclear notebook, your city's emergency plan.</div>
+        <div style="padding:.6rem .8rem;background:var(--abyss);border-left:2px solid var(--jbrt);font-size:.82rem;color:var(--smk);line-height:1.6">☑ Identify the skill you already have that becomes more valuable in disruption. Electrician. Cook. Nurse. Builder. That skill is your social currency.</div>
+      </div>
+    </div>
+
+    <div style="background:var(--surf);border-top:3px solid var(--gld);padding:1.5rem">
+      <div style="font-family:var(--fm);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--gld);margin-bottom:.4rem">NEXT 30 DAYS</div>
+      <div style="font-family:var(--fd);font-size:1rem;font-weight:600;margin-bottom:1rem;color:var(--pch)">Low Cost, Compounding</div>
+      <div style="display:flex;flex-direction:column;gap:.6rem">
+        <div style="padding:.6rem .8rem;background:var(--abyss);border-left:2px solid var(--gld);font-size:.82rem;color:var(--smk);line-height:1.6">☑ 2-week emergency food supply. Not MREs — real food your family eats. Rice, beans, pasta, canned goods. $150-200. Replace as you consume.</div>
+        <div style="padding:.6rem .8rem;background:var(--abyss);border-left:2px solid var(--gld);font-size:.82rem;color:var(--smk);line-height:1.6">☑ Water filtration. LifeStraw or Sawyer Squeeze. $20-30. Makes virtually any water source drinkable. Essential for any disruption scenario.</div>
+        <div style="padding:.6rem .8rem;background:var(--abyss);border-left:2px solid var(--gld);font-size:.82rem;color:var(--smk);line-height:1.6">☑ Reduce highest single-source dependency. One store, one platform, one utility. Identify your most brittle supply chain and add one alternative.</div>
+        <div style="padding:.6rem .8rem;background:var(--abyss);border-left:2px solid var(--gld);font-size:.82rem;color:var(--smk);line-height:1.6">☑ Start one food plant. Container garden works fine. Any food you produce is 100% supply-chain independent. Compound over 5 years into real food security.</div>
+        <div style="padding:.6rem .8rem;background:var(--abyss);border-left:2px solid var(--gld);font-size:.82rem;color:var(--smk);line-height:1.6">☑ Small emergency cash reserve. $200-500 in small bills. ATMs fail in power outages. Debit cards fail when networks go down. Physical cash is always accepted.</div>
+      </div>
+    </div>
+
+    <div style="background:var(--surf);border-top:3px solid var(--ebrt);padding:1.5rem">
+      <div style="font-family:var(--fm);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--ebrt);margin-bottom:.4rem">NEXT 12 MONTHS</div>
+      <div style="font-family:var(--fd);font-size:1rem;font-weight:600;margin-bottom:1rem;color:var(--pch)">Medium Investment, Structural</div>
+      <div style="display:flex;flex-direction:column;gap:.6rem">
+        <div style="padding:.6rem .8rem;background:var(--abyss);border-left:2px solid var(--ebrt);font-size:.82rem;color:var(--smk);line-height:1.6">☑ Learn one practical skill that doesn't require the internet. First aid, food preservation (canning), basic electrical, plumbing. Takes 20-40 hours. Returns value for life.</div>
+        <div style="padding:.6rem .8rem;background:var(--abyss);border-left:2px solid var(--ebrt);font-size:.82rem;color:var(--smk);line-height:1.6">☑ Reduce high-interest debt. Debt is leverage against you in disruption. Every dollar of interest paid is a dollar that can't build resilience. Pay highest-interest first.</div>
+        <div style="padding:.6rem .8rem;background:var(--abyss);border-left:2px solid var(--ebrt);font-size:.82rem;color:var(--smk);line-height:1.6">☑ Build a community skill map. Know which neighbors are nurses, electricians, farmers, mechanics, veterans. This is the social capital asset that matters most per Klinenberg's research.</div>
+        <div style="padding:.6rem .8rem;background:var(--abyss);border-left:2px solid var(--ebrt);font-size:.82rem;color:var(--smk);line-height:1.6">☑ Solar + battery backup. $3,000-8,000 installed. Payback 6-10 years. After payback: free energy forever. During disruption: power when neighbors have none.</div>
+        <div style="padding:.6rem .8rem;background:var(--abyss);border-left:2px solid var(--ebrt);font-size:.82rem;color:var(--smk);line-height:1.6">☑ Hard asset allocation. 5-15% of savings into gold, silver, or BTC. Not as speculation — as insurance against the dollar reserve transition that's already underway.</div>
+      </div>
+    </div>
+
+    <div style="background:var(--surf);border-top:3px solid var(--vbrt);padding:1.5rem">
+      <div style="font-family:var(--fm);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--vbrt);margin-bottom:.4rem">5-YEAR HORIZON</div>
+      <div style="font-family:var(--fd);font-size:1rem;font-weight:600;margin-bottom:1rem;color:var(--pch)">Structural Antifragility</div>
+      <div style="display:flex;flex-direction:column;gap:.6rem">
+        <div style="padding:.6rem .8rem;background:var(--abyss);border-left:2px solid var(--vbrt);font-size:.82rem;color:var(--smk);line-height:1.6">☑ Produce 20%+ of your food. Achievable on 1/4 acre. Full garden + small fruit trees + chickens = substantial food independence. The infrastructure already exists: your yard.</div>
+        <div style="padding:.6rem .8rem;background:var(--abyss);border-left:2px solid var(--vbrt);font-size:.82rem;color:var(--smk);line-height:1.6">☑ Build or join a community mutual aid network. Formal reciprocal arrangements: I have X, you have Y, we have Z together. Post-COVID networks that survived became permanent.</div>
+        <div style="padding:.6rem .8rem;background:var(--abyss);border-left:2px solid var(--vbrt);font-size:.82rem;color:var(--smk);line-height:1.6">☑ Master one income-producing skill that doesn't depend on institutional systems. Trade skills (electrical, plumbing) earn 2x white-collar salaries in disruption. They don't get automated. They can't be outsourced.</div>
+        <div style="padding:.6rem .8rem;background:var(--abyss);border-left:2px solid var(--vbrt);font-size:.82rem;color:var(--smk);line-height:1.6">☑ Recalibrate location relative to risk. Not "bug out to the woods" — intelligent positioning: proximity to water, food production capacity, community density, geographic resilience to climate impacts.</div>
+        <div style="padding:.6rem .8rem;background:var(--abyss);border-left:2px solid var(--vbrt);font-size:.82rem;color:var(--smk);line-height:1.6">☑ Become someone others rely on. The Thomas principle: "Bring forth what is within you." Your knowledge, skills, and connections become your community's asset. The safest position in disruption is irreplaceable neighbor, not fortified individual.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
 
 <!-- ====== SOURCES ====== -->
 <section class="mod" id="sources">
