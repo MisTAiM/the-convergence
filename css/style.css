@@ -1176,12 +1176,13 @@ section[id] {
   align-items: center;
   justify-content: center;
   padding: 2rem;
+  min-width: 0;  /* CRITICAL: prevents min-content blowout in CSS Grid */
 }
 .hero-orb {
   width: 100%;
-  max-width: 560px;
+  max-width: 540px;
   height: auto;
-  filter: drop-shadow(0 0 60px rgba(212,178,106,0.08));
+  filter: drop-shadow(0 0 80px rgba(212,178,106,0.18)) drop-shadow(0 0 30px rgba(192,74,40,0.1));
   animation: heroOrbIn 1.2s cubic-bezier(.2,0,.1,1) both;
 }
 @keyframes heroOrbIn {
@@ -1191,8 +1192,10 @@ section[id] {
 
 /* Content — right column */
 .hero-content-wrap {
-  padding: 2rem 4rem 2rem 2rem;
+  padding: 2rem 3rem 2rem 1.5rem;
   animation: heroContentIn 1s .25s cubic-bezier(.2,0,.1,1) both;
+  min-width: 0;  /* CRITICAL: prevents ticker whitespace-nowrap from blowing grid column */
+  overflow: hidden;
 }
 @keyframes heroContentIn {
   from { opacity: 0; transform: translateX(20px); }
@@ -1354,3 +1357,16 @@ section[id] {
 /* ============ FOOTER UPDATES ============ */
 .footer-brand { font-family: var(--fd); font-size: 1.4rem; font-weight: 600; color: var(--gld); margin-bottom: .8rem; }
 .footer-mono { font-family: var(--fm); font-size: 8px; color: var(--ash); line-height: 2.2; letter-spacing: .03em; }
+
+/* ============ ADDITIONAL GRID SAFETY ============ */
+/* Prevent any grid child from blowing out 1fr columns */
+#hero > * { min-width: 0; }
+.hero-orb-wrap { overflow: hidden; }
+
+/* How it works section grid mobile */
+@media(max-width:700px) {
+  #how-it-works [style*="repeat(3,1fr)"],
+  #how-it-works [style*="repeat(4,1fr)"] {
+    grid-template-columns: 1fr !important;
+  }
+}
