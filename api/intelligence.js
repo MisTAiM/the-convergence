@@ -59,13 +59,15 @@ module.exports = async (req, res) => {
   res.setHeader('Cache-Control', 'public, max-age=900'); // 15 min cache
 
   try {
-    const [fbiRes, fedRegRes, hnRes] = await Promise.allSettled([
+    const [fbiRes, fedRegRes, hnRes, dojRes] = await Promise.allSettled([
       // 1. FBI News RSS
       fetch('https://www.fbi.gov/feeds/fbi-in-the-news/rss.xml'),
       // 2. Federal Register - executive docs
-      fetch('https://www.federalregister.gov/api/v1/documents.json?conditions[type][]=PRESDOCU&per_page=20&order=newest', { headers: { 'Accept': 'application/json' } }),
+      fetch('https://www.federalregister.gov/api/v1/documents.json?conditions[type][]=PRESDOCU&per_page=25&order=newest', { headers: { 'Accept': 'application/json' } }),
       // 3. Hacker News top 30 stories
       fetch('https://hacker-news.firebaseio.com/v0/topstories.json'),
+      // 4. DOJ press releases (scrape news page - .gov, public)
+      fetch('https://www.justice.gov/news?f%5B0%5D=field_pr_category%3A1', {}),
     ]);
 
     // --- FBI ---
@@ -77,10 +79,27 @@ module.exports = async (req, res) => {
         const hits = CHARGES_KW.filter(k => combined.includes(k));
         if (hits.length > 0) {
           // Classify
-          const isHighProfile = combined.includes('official') || combined.includes('senator') ||
-            combined.includes('congressman') || combined.includes('million') || combined.includes('billion') ||
-            combined.includes('mayor') || combined.includes('governor') || combined.includes('executive') ||
-            combined.includes('police chief') || combined.includes('federal agent');
+          const isHighProfile = 
+            // Government officials
+            combined.includes('senator') || combined.includes('congressman') ||
+            combined.includes('representative') || combined.includes('mayor') ||
+            combined.includes('governor') || combined.includes('state official') ||
+            combined.includes('city council') || combined.includes('county') ||
+            // Law enforcement
+            combined.includes('police chief') || combined.includes('sheriff') ||
+            combined.includes('officer charged') || combined.includes('detective') ||
+            combined.includes('federal agent') || combined.includes('dea agent') ||
+            // Financial scale
+            combined.includes('million') || combined.includes('billion') ||
+            combined.includes('ponzi') || combined.includes('securities fraud') ||
+            combined.includes('wire fraud') || combined.includes('tax evasion') ||
+            // Corporate
+            combined.includes('ceo') || combined.includes('executive') ||
+            combined.includes('president of') || combined.includes('founder') ||
+            // Power signals
+            combined.includes('bribery') || combined.includes('extortion') ||
+            combined.includes('racketeering') || combined.includes('obstruction') ||
+            combined.includes('conspiracy to') || combined.includes('scheme to');
           charges.push({
             title: item.title,
             desc: item.desc,
@@ -150,8 +169,40 @@ module.exports = async (req, res) => {
       } catch (_) {}
     }
 
+    // DOJ HTML parse (government public press releases)
+    if (dojRes.status === 'fulfilled' && dojRes.value.status === 200) {
+      const html = dojRes.value.body || '';
+      const titleRx = /<h3[^>]*class="[^"]*card--title[^"]*"[^>]*>[\s\S]*?<a[^>]*href="([^"]*)"[^>]*>([\s\S]*?)<\/a>/gi;
+      const dateRx = /<time[^>]*datetime="([^"]*)"[^>]*>([\s\S]*?)<\/time>/gi;
+      let tm; const dojTitles = [];
+      while ((tm = titleRx.exec(html)) !== null) {
+        dojTitles.push({ link: 'https://www.justice.gov' + tm[1], title: tm[2].replace(/<[^>]+>/g,'').trim() });
+      }
+      let dm; const dojDates = [];
+      while ((dm = dateRx.exec(html)) !== null) dojDates.push(dm[2].trim());
+      dojTitles.slice(0, 15).forEach((item, i) => {
+        const combined = item.title.toLowerCase();
+        const hits = CHARGES_KW.filter(k => combined.includes(k));
+        if (hits.length > 0) {
+          const isHighProfile = combined.includes('million') || combined.includes('billion') ||
+            combined.includes('senator') || combined.includes('official') || combined.includes('bribery') ||
+            combined.includes('conspiracy') || combined.includes('racketeering') || combined.includes('ponzi');
+          charges.unshift({
+            title: item.title,
+            desc: 'DOJ Press Release',
+            date: dojDates[i] || '',
+            link: item.link,
+            keywords: hits.slice(0, 4),
+            highProfile: isHighProfile,
+            source: 'DOJ'
+          });
+        }
+      });
+      charges.sort((a, b) => b.highProfile - a.highProfile);
+    }
+
     res.json({
-      charges: charges.slice(0, 20),
+      charges: charges.slice(0, 25),
       powerMoves: powerMoves.slice(0, 15),
       techIntel: techIntel.slice(0, 10),
       updated: new Date().toISOString()

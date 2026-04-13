@@ -246,12 +246,23 @@ async function initAsyncModules() {
   try { await renderTruthEngine(); } catch(e) { console.error('truthengine', e); }
 }
 
+// DataEngine-dependent async modules (need db data first)
+DataEngine.on('updated', async db => {
+  try { await renderBlackSwanMonitor(db); } catch(e) { console.error('blackswan', e); }
+});
+DataEngine.on('cached', async db => {
+  try { await renderBlackSwanMonitor(db); } catch(e) { console.error('blackswan', e); }
+});
+
 // Refresh async modules every 15 minutes alongside data engine
 setInterval(() => {
   renderSpaceWeather().catch(()=>{});
   renderSectors().catch(()=>{});
   renderIntelligenceFeed().catch(()=>{});
   renderTruthEngine().catch(()=>{});
+  // Black Swan refresh uses cached db
+  const db = DataEngine.getDB();
+  if (db) renderBlackSwanMonitor(db).catch(()=>{});
 }, 15 * 60 * 1000);
 
 // Refresh conflict zones every 30 minutes

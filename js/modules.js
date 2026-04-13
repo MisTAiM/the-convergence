@@ -2160,3 +2160,154 @@ async function renderTruthEngine() {
     }
   } catch(e) { console.error('truth engine', e); }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   BLACK SWAN MONITOR — tail-risk aggregation from all modules
+═══════════════════════════════════════════════════════════ */
+async function renderBlackSwanMonitor(db) {
+  const grid = document.getElementById('bs-grid');
+  if (!grid) return;
+
+  const signals = [];
+
+  // 1. Geomagnetic storm signal (from space weather module)
+  try {
+    const sw = await fetch('/api/spaceweather').then(r=>r.json());
+    const kp = sw.kpCurrent?.kp || 0;
+    if (kp >= 5) {
+      signals.push({
+        label: 'GEOMAGNETIC STORM', icon: '☀️',
+        severity: kp >= 7 ? 'EXTREME' : kp >= 5 ? 'HIGH' : 'ELEVATED',
+        color: kp >= 7 ? '#ff4444' : 'var(--ebrt)',
+        value: `Kp ${kp.toFixed(1)}`,
+        desc: `G${kp>=8?'4-5':kp>=7?'3':kp>=6?'2':'1'} storm active. Power grid stress. GPS degradation. ${kp>=8?'GRID COLLAPSE RISK':'Satellite drag elevated.'}`,
+        source: 'NOAA SWPC'
+      });
+    } else {
+      signals.push({
+        label: 'GEOMAGNETIC', icon: '☀️', severity: 'BASELINE',
+        color: 'var(--jbrt)', value: `Kp ${kp.toFixed(1)}`,
+        desc: 'Geomagnetic conditions quiet. No infrastructure threat.',
+        source: 'NOAA SWPC'
+      });
+    }
+  } catch(_) {}
+
+  // 2. Major seismic events (from globe data)
+  try {
+    const globeData = db?.globe || {};
+    const quakes = (globeData.earthquakes || []).filter(q => q.magnitude >= 6.5);
+    if (quakes.length > 0) {
+      const biggest = quakes.sort((a,b) => b.magnitude - a.magnitude)[0];
+      signals.push({
+        label: 'MAJOR SEISMIC', icon: '🌋',
+        severity: biggest.magnitude >= 7.5 ? 'EXTREME' : biggest.magnitude >= 7.0 ? 'HIGH' : 'ELEVATED',
+        color: biggest.magnitude >= 7.5 ? '#ff4444' : 'var(--ebrt)',
+        value: `M${biggest.magnitude.toFixed(1)}`,
+        desc: `${biggest.place || 'Unknown region'} — ${quakes.length} M6.5+ events in current monitoring window. Tsunami watch possible for M7.5+.`,
+        source: 'USGS'
+      });
+    }
+  } catch(_) {}
+
+  // 3. CSI threshold breach
+  try {
+    const csi = db?.csi?.[0];
+    if (csi) {
+      const score = csi.composite || 0;
+      const severity = score >= 90 ? 'CRITICAL' : score >= 80 ? 'HIGH' : score >= 70 ? 'ELEVATED' : 'BASELINE';
+      signals.push({
+        label: 'CSI THRESHOLD', icon: '⚠️', severity,
+        color: score >= 90 ? '#ff4444' : score >= 80 ? 'var(--ebrt)' : 'var(--gld)',
+        value: `${score}/100`,
+        desc: score >= 90 ? 'CSI above 90 — historically precedes acute civilizational crisis events within 6-18 months.'
+            : score >= 80 ? 'CSI in critical range. Multiple horsemen active simultaneously.'
+            : 'CSI elevated but below crisis threshold.',
+        source: 'Convergence Engine'
+      });
+    }
+  } catch(_) {}
+
+  // 4. Narrative saturation spike (from narrative engine)
+  try {
+    const narr = await fetch('/api/narrative').then(r=>r.json());
+    const saturation = narr.analysis?.highSaturation || 0;
+    const total = narr.analysis?.totalStories || 0;
+    const workingSources = (narr.sources||[]).filter(s=>s.ok).length;
+    if (saturation >= 3) {
+      signals.push({
+        label: 'NARRATIVE SATURATION', icon: '📡',
+        severity: saturation >= 5 ? 'EXTREME' : saturation >= 3 ? 'HIGH' : 'ELEVATED',
+        color: saturation >= 5 ? '#ff4444' : 'var(--ebrt)',
+        value: `${saturation} stories`,
+        desc: `${saturation} stories covered by 4+ sources simultaneously across ${workingSources} global outlets. Historical pattern: high saturation precedes major interventions or events.`,
+        source: `${workingSources} Global Sources`
+      });
+    } else {
+      signals.push({
+        label: 'NARRATIVE SATURATION', icon: '📡', severity: 'BASELINE',
+        color: 'var(--jbrt)', value: `${saturation} stories`,
+        desc: `${total} stories analyzed across ${workingSources} sources. No coordinated saturation detected.`,
+        source: `${workingSources} Global Sources`
+      });
+    }
+  } catch(_) {}
+
+  // 5. Market dislocation (Fear & Greed extreme)
+  try {
+    const fng = db?.markets?.fearGreed?.latest;
+    if (fng) {
+      const val = parseInt(fng.value);
+      const severity = val <= 10 ? 'EXTREME' : val <= 20 ? 'HIGH' : val >= 80 ? 'HIGH' : 'BASELINE';
+      signals.push({
+        label: 'MARKET DISLOCATION', icon: '📉',
+        severity,
+        color: val <= 10 ? '#ff4444' : val <= 25 ? 'var(--ebrt)' : val >= 75 ? 'var(--jbrt)' : 'var(--ash)',
+        value: `${val} — ${fng.value_classification}`,
+        desc: val <= 10 ? 'Extreme Fear. Capitulation risk. Systemic stress. Historical: readings this low precede either sharp recovery or systemic failure — rarely anything in between.'
+            : val >= 80 ? 'Extreme Greed. Blow-off top risk. Historically precedes sharp corrections or regime changes.'
+            : `Fear & Greed at ${val}. Elevated stress but not at panic threshold.`,
+        source: 'CNN Fear & Greed / Alternative.me'
+      });
+    }
+  } catch(_) {}
+
+  // 6. Active disaster count (from globe)
+  try {
+    const gd = db?.globe;
+    if (gd) {
+      const disasters = (gd.disasters||[]).length;
+      const critical = (gd.critical||[]).length;
+      if (critical >= 3 || disasters >= 20) {
+        signals.push({
+          label: 'ACTIVE DISASTERS', icon: '🌊',
+          severity: critical >= 5 ? 'EXTREME' : critical >= 3 ? 'HIGH' : 'ELEVATED',
+          color: critical >= 5 ? '#ff4444' : 'var(--ebrt)',
+          value: `${disasters} disasters · ${critical} critical`,
+          desc: `GDACS tracking ${disasters} active global disasters with ${critical} in critical alert status. Includes cyclones, floods, droughts, wildfires. Supply chain and displacement risk.`,
+          source: 'NASA EONET / GDACS'
+        });
+      }
+    }
+  } catch(_) {}
+
+  // RENDER
+  const sevOrder = { 'EXTREME': 0, 'HIGH': 1, 'ELEVATED': 2, 'BASELINE': 3 };
+  signals.sort((a,b) => (sevOrder[a.severity]||3) - (sevOrder[b.severity]||3));
+
+  grid.innerHTML = signals.map(s => `
+    <div style="background:var(--surf);padding:1.5rem;border-top:3px solid ${s.color};position:relative">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.8rem">
+        <div>
+          <div style="font-size:1.3rem;margin-bottom:.3rem">${s.icon}</div>
+          <div style="font-family:var(--fm);font-size:7.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--ash)">${s.label}</div>
+        </div>
+        <div style="font-family:var(--fm);font-size:7px;padding:2px 7px;background:${s.severity!=='BASELINE'?`${s.color.replace('var(--ebrt)','rgba(192,74,40').replace('var(--jbrt)','rgba(40,176,136').replace('#ff4444','rgba(255,68,68').replace('var(--gld)','rgba(212,178,106')},.15)`:'rgba(255,255,255,.04)'};color:${s.color};border:1px solid ${s.severity!=='BASELINE'?s.color:'var(--bdr)'}">
+          ${s.severity}
+        </div>
+      </div>
+      <div style="font-family:var(--fd);font-size:1.4rem;font-weight:700;color:${s.color};margin-bottom:.5rem">${s.value}</div>
+      <p style="font-size:.82rem;color:var(--smk);line-height:1.7;margin-bottom:.5rem">${s.desc}</p>
+      <div style="font-family:var(--fm);font-size:7px;color:var(--faint)">Source: ${s.source}</div>
+    </div>`).join('');
+}

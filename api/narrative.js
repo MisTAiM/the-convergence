@@ -32,14 +32,16 @@ function fetchUrl(url) {
 }
 
 const SOURCES = [
-  { id: 'bbc',       name: 'BBC World',         url: 'https://feeds.bbci.co.uk/news/world/rss.xml',          perspective: 'UK State',     bias: 'center-left' },
-  { id: 'aljazeera', name: 'Al Jazeera',         url: 'https://www.aljazeera.com/xml/rss/all.xml',            perspective: 'Gulf/Qatar',   bias: 'non-western' },
-  { id: 'reuters',   name: 'Reuters',            url: 'https://feeds.reuters.com/reuters/topNews',            perspective: 'Wire',         bias: 'center' },
-  { id: 'guardian',  name: 'The Guardian',       url: 'https://www.theguardian.com/world/rss',               perspective: 'UK Liberal',   bias: 'center-left' },
-  { id: 'ap',        name: 'Associated Press',   url: 'https://rsshub.app/apnews/topics/apf-topnews',         perspective: 'Wire',         bias: 'center' },
-  { id: 'npr',       name: 'NPR News',           url: 'https://feeds.npr.org/1001/rss.xml',                  perspective: 'US Public',    bias: 'center-left' },
-  { id: 'rt',        name: 'RT (Russia Today)',  url: 'https://www.rt.com/rss/news/',                        perspective: 'Russian State','bias': 'pro-kremlin' },
-  { id: 'xinhua',    name: 'Xinhua',             url: 'https://www.xinhuanet.com/english/rss/worldnews.xml',  perspective: 'Chinese State','bias': 'pro-beijing' },
+  { id: 'bbc',       name: 'BBC World',         url: 'https://feeds.bbci.co.uk/news/world/rss.xml',                     perspective: 'UK State',      bias: 'center-left' },
+  { id: 'aljazeera', name: 'Al Jazeera',         url: 'https://www.aljazeera.com/xml/rss/all.xml',                       perspective: 'Gulf/Qatar',    bias: 'non-western' },
+  { id: 'reuters',   name: 'Reuters',            url: 'https://feeds.reuters.com/reuters/worldNews',                     perspective: 'Wire',          bias: 'center' },
+  { id: 'guardian',  name: 'The Guardian',       url: 'https://www.theguardian.com/world/rss',                          perspective: 'UK Liberal',    bias: 'center-left' },
+  { id: 'ap',        name: 'Associated Press',   url: 'https://apnews.com/rss/apf-topnews',                             perspective: 'Wire',          bias: 'center' },
+  { id: 'npr',       name: 'NPR News',           url: 'https://feeds.npr.org/1001/rss.xml',                             perspective: 'US Public',     bias: 'center-left' },
+  { id: 'rt',        name: 'RT (Russia Today)',  url: 'https://www.rt.com/rss/news/',                                   perspective: 'Russian State', bias: 'pro-kremlin' },
+  { id: 'xinhua',    name: 'Xinhua',             url: 'https://www.xinhuanet.com/english/rss/worldnews.xml',            perspective: 'Chinese State', bias: 'pro-beijing' },
+  { id: 'dw',        name: 'DW News',            url: 'https://rss.dw.com/rss/engl/rss-news-global',                   perspective: 'German State',  bias: 'center' },
+  { id: 'france24',  name: 'France 24',          url: 'https://www.france24.com/en/rss',                               perspective: 'French State',  bias: 'center-left' },
 ];
 
 function parseRSS(xml, sourceId) {
