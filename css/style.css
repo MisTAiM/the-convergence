@@ -1443,3 +1443,161 @@ section[id] {
 
 /* ═══ STATUS BAR IMPROVEMENTS ═══ */
 .status-item { display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
+
+/* ═══════════════════════════════════════════════════
+   ANIMATED BACKGROUND CANVAS + CONTENT LAYERING
+═══════════════════════════════════════════════════ */
+
+/* Canvas sits behind everything at z-index 0 */
+#bg-canvas { z-index: 0 !important; }
+
+/* All content sits above canvas */
+#nav, #breaking-banner, #live-pulse,
+#hero, #how-it-works,
+.mod, section, footer, #status-bar {
+  position: relative;
+  z-index: 1;
+}
+
+/* Make sections slightly transparent so aurora glows through */
+.mod {
+  background: rgba(5, 5, 4, 0.82) !important;
+  backdrop-filter: blur(0px);
+}
+.mod.visible {
+  background: rgba(5, 5, 4, 0.85) !important;
+}
+
+/* Hero — more transparent to show background cosmic effect */
+#hero {
+  background:
+    radial-gradient(ellipse 55% 60% at 20% 50%, rgba(212,178,106,.04) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 50% at 85% 70%, rgba(192,74,40,.03) 0%, transparent 55%),
+    rgba(5, 5, 4, 0.65) !important;
+}
+
+/* How it works / About — slightly transparent */
+#how-it-works, #about {
+  background: rgba(14, 13, 10, 0.88) !important;
+}
+
+/* Nav — solid but glassy */
+#nav {
+  background: rgba(5, 5, 4, 0.94) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Breaking banner glassy */
+#breaking-banner {
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+}
+
+/* Status bar glassy */
+#status-bar {
+  background: rgba(5, 5, 4, 0.9) !important;
+  backdrop-filter: blur(8px);
+}
+
+/* ═══ NUMBER PULSE ANIMATIONS ═══ */
+@keyframes numPulse {
+  0%, 100% { text-shadow: 0 0 0px transparent; }
+  50%       { text-shadow: 0 0 18px currentColor; }
+}
+@keyframes borderPulse {
+  0%, 100% { border-color: rgba(192,74,40,.25); }
+  50%       { border-color: rgba(192,74,40,.7); }
+}
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* CSI score pulses when critical */
+#hero-csi { animation: numPulse 3s ease-in-out infinite; }
+
+/* Blinking indicators */
+.blink {
+  animation: blink-kf 1.2s step-end infinite;
+}
+@keyframes blink-kf {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* ═══ SECTION ENTRY ANIMATIONS ═══ */
+.mod {
+  transition: opacity .7s cubic-bezier(.2,0,.1,1),
+              transform .7s cubic-bezier(.2,0,.1,1),
+              background .3s;
+}
+.mod.visible { animation: fadeSlideUp 0s; } /* handled by inline transition */
+
+/* Hover lift on surface cards */
+.mod [style*="background:var(--surf)"],
+.mod [style*="background:var(--abyss)"] {
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.mod [style*="background:var(--surf)"]:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(212,178,106,.06);
+}
+
+/* ═══ GLOWING STAT NUMBERS ═══ */
+.hsv2-n, .hst .n {
+  text-shadow: 0 0 20px rgba(212,178,106,.12);
+  transition: text-shadow .3s;
+}
+.hsv2-n:hover { text-shadow: 0 0 30px rgba(212,178,106,.3); }
+
+/* ═══ ANIMATED GRADIENT BORDERS ═══ */
+@keyframes borderRotate {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* CSI bar gradient animation */
+#hero-csi-bar {
+  background: linear-gradient(90deg,
+    var(--jbrt) 0%, var(--gld) 35%, var(--ebrt) 70%, #ff4444 100%) !important;
+  background-size: 200% 100% !important;
+  animation: borderRotate 4s ease infinite !important;
+}
+
+/* ═══ ORBITAL DIAGRAM GLOW ON HOVER ═══ */
+.hero-orb:hover {
+  filter: drop-shadow(0 0 100px rgba(212,178,106,.25)) drop-shadow(0 0 40px rgba(192,74,40,.15)) !important;
+  transition: filter .4s ease;
+}
+
+/* ═══ NAV DROPDOWN ANIMATION ═══ */
+.nav-dropdown {
+  transition: opacity .18s cubic-bezier(.2,0,.1,1),
+              transform .18s cubic-bezier(.2,0,.1,1) !important;
+}
+
+/* ═══ TICKER SCROLL ANIMATION ═══ */
+.ticker-inner { will-change: transform; }
+
+/* ═══ SECTION REVEAL ANIMATION ENHANCEMENT ═══ */
+.mod {
+  transform: translateY(20px);
+}
+.mod.visible {
+  transform: translateY(0) !important;
+}
+
+/* ═══ FOOTER ═══ */
+footer {
+  position: relative;
+  z-index: 1;
+  background: rgba(5, 5, 4, 0.95) !important;
+}
+
+/* ═══ MOBILE: no blur (performance) ═══ */
+@media(max-width:768px) {
+  #nav { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+  .mod { background: rgba(5,5,4,.96) !important; }
+}

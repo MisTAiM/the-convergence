@@ -1,29 +1,33 @@
-// /api/markets.js
-// Market data via Stooq (OHLCV, no API key) + CoinGecko (crypto) + Alternative.me (Fear&Greed)
+// /api/markets.js — Stooq (ETFs/indices) + CoinGecko (crypto) + Alternative.me (F&G)
+// Stooq requests batched in groups of 4 with 180ms delay to avoid rate limiting
 
 const https = require('https');
 
-// Stooq CSV fetch — returns {price, open, high, low, changePct, date}
 function stooq(sym) {
   return new Promise((resolve) => {
     const url = `https://stooq.com/q/l/?s=${encodeURIComponent(sym)}&f=sd2t2ohlcv&h&e=csv`;
     const req = https.get(url, {
-      timeout: 9000,
+      timeout: 8000,
       headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' }
     }, (res) => {
       let d = '';
       res.on('data', c => d += c);
       res.on('end', () => {
         try {
-          const lines = d.trim().split('\n').filter(l => l && !l.startsWith('Symbol'));
-          if (!lines.length) return resolve(null);
-          const p = lines[0].trim().split(',');
+          const line = d.split('\n').find(l => l && !l.startsWith('Symbol') && !l.startsWith('Get'));
+          if (!line) return resolve(null);
+          const p = line.trim().split(',');
           if (p.length < 7) return resolve(null);
-          const [,date,,open,high,low,close] = p;
-          const o = parseFloat(open), h = parseFloat(high), l2 = parseFloat(low), c = parseFloat(close);
-          if (isNaN(c) || c === 0) return resolve(null);
-          const changePct = o ? +((c - o) / o * 100).toFixed(2) : 0;
-          resolve({ price: +c.toFixed(2), open: +o.toFixed(2), high: +h.toFixed(2), low: +l2.toFixed(2), changePct, date });
+          const o = parseFloat(p[3]), c2 = parseFloat(p[6]);
+          if (isNaN(c2) || c2 === 0) return resolve(null);
+          resolve({
+            price: +c2.toFixed(2),
+            open: +o.toFixed(2),
+            high: +parseFloat(p[4]).toFixed(2),
+            low: +parseFloat(p[5]).toFixed(2),
+            changePct: o ? +((c2 - o) / o * 100).toFixed(2) : 0,
+            date: p[1]
+          });
         } catch { resolve(null); }
       });
     });
@@ -38,8 +42,23 @@ function fetchJSON(url) {
       let d = '';
       res.on('data', c => d += c);
       res.on('end', () => { try { resolve(JSON.parse(d)); } catch { resolve(null); } });
-    }).on('error', () => resolve(null)).on('timeout', function() { this.destroy(); resolve(null); });
+    }).on('error', () => resolve(null)).on('timeout', function () { this.destroy(); resolve(null); });
   });
+}
+
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+// Batch fetch — groups of 4 with 180ms gap to avoid Stooq rate limit
+async function batchStooq(syms) {
+  const results = [];
+  const BATCH = 4, DELAY = 180;
+  for (let i = 0; i < syms.length; i += BATCH) {
+    const chunk = syms.slice(i, i + BATCH);
+    const chunk_results = await Promise.all(chunk.map(s => stooq(s)));
+    results.push(...chunk_results);
+    if (i + BATCH < syms.length) await sleep(DELAY);
+  }
+  return results;
 }
 
 const SECTOR_SYMS = [
@@ -61,35 +80,26 @@ module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate=60');
 
-  // Fetch everything in parallel
-  const [spy, qqq, gold, oil, soxx, btcData, ethData, fearData, ...sectorData] = await Promise.all([
-    stooq('spy.us'),
-    stooq('qqq.us'),
-    stooq('gld.us'),
-    stooq('cl.f'),       // WTI crude futures on Stooq
-    stooq('soxx.us'),
+  // Fetch indices + crypto in parallel while sectors batch sequentially
+  const mainSyms  = ['spy.us', 'qqq.us', 'gld.us', 'cl.f', 'soxx.us'];
+  const [mainData, sectorData, cryptoData, btcChart, fearData] = await Promise.all([
+    batchStooq(mainSyms),
+    batchStooq(SECTOR_SYMS.map(s => s.sym)),
     fetchJSON('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=usd&include_24hr_change=true&include_market_cap=true'),
     fetchJSON('https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=30&interval=daily'),
     fetchJSON('https://api.alternative.me/fng/?limit=7'),
-    ...SECTOR_SYMS.map(s => stooq(s.sym)),
   ]);
 
-  // Build sectors array
+  const [spy, qqq, gold, oil, soxx] = mainData;
+  const crypto = cryptoData || {};
+
   const sectors = SECTOR_SYMS.map((s, i) => {
     const d = sectorData[i];
-    return {
-      sym: s.ticker,
-      name: s.name,
-      color: s.color,
-      icon: s.icon,
-      price: d?.price ?? null,
-      changePct: d?.changePct ?? null,
-      open: d?.open ?? null,
-      date: d?.date ?? null,
-    };
+    return { sym: s.ticker, name: s.name, color: s.color, icon: s.icon,
+      price: d?.price ?? null, changePct: d?.changePct ?? null,
+      open: d?.open ?? null, date: d?.date ?? null };
   });
 
-  // Rotation signal
   const goldSec   = sectors.find(s => s.sym === 'GLD');
   const energySec = sectors.find(s => s.sym === 'XLE');
   const techSec   = sectors.find(s => s.sym === 'XLK');
@@ -98,36 +108,25 @@ module.exports = async (req, res) => {
   const techDown  = (techSec?.changePct ?? 0) < -0.5;
   const rotationSignal =
     goldUp && energyUp && techDown ? 'FLIGHT TO SAFETY — war/crisis premium. Gold+Energy up, Tech down.' :
-    goldUp && !energyUp            ? 'MONETARY STRESS — gold rising without energy: dollar/inflation concern' :
+    goldUp && !energyUp ? 'MONETARY STRESS — gold rising without energy: dollar/inflation concern' :
     !goldUp && !energyUp && techDown ? 'RISK-OFF — broad selloff. No safe-haven buying yet.' :
     'RISK-ON — growth sectors leading. Calm market conditions.';
 
-  // Crypto
-  const crypto = btcData || {};
-  const btcChart = (ethData?.prices || []).map(p => +p[1].toFixed(2));
-  const fearGreedHistory = fearData?.data || [];
+  const mkIdx = d => d ? { price: d.price, change: d.changePct, high: d.high, low: d.low, date: d.date } : null;
 
   res.setHeader('Content-Type', 'application/json');
   res.end(JSON.stringify({
     fetchedAt: new Date().toISOString(),
     indices: {
-      spy:  spy  ? { price: spy.price,  change: spy.changePct,  ...spy  } : null,
-      qqq:  qqq  ? { price: qqq.price,  change: qqq.changePct,  ...qqq  } : null,
-      gold: gold ? { price: gold.price, change: gold.changePct, ...gold } : null,
-      oil:  oil  ? { price: oil.price,  change: oil.changePct,  ...oil  } : null,
-      soxx: soxx ? { price: soxx.price, change: soxx.changePct, ...soxx } : null,
+      spy: mkIdx(spy), qqq: mkIdx(qqq), gold: mkIdx(gold), oil: mkIdx(oil), soxx: mkIdx(soxx),
       btc:  crypto.bitcoin  ? { price: crypto.bitcoin.usd,  change: +(crypto.bitcoin.usd_24h_change||0).toFixed(2)  } : null,
       eth:  crypto.ethereum ? { price: crypto.ethereum.usd, change: +(crypto.ethereum.usd_24h_change||0).toFixed(2) } : null,
     },
     crypto,
-    charts: { btc: btcChart },
-    fearGreed: {
-      latest: fearGreedHistory[0] || null,
-      history: fearGreedHistory,
-    },
-    sectors,
-    rotationSignal,
+    charts: { btc: (btcChart?.prices || []).map(p => +p[1].toFixed(2)) },
+    fearGreed: { latest: fearData?.data?.[0] || null, history: fearData?.data || [] },
+    sectors, rotationSignal,
     dataSource: 'stooq.com + coingecko.com + alternative.me',
-    note: 'changePct = intraday (close vs open), not vs previous close',
+    note: 'changePct = intraday (close vs open)',
   }));
 };
