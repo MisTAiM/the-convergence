@@ -147,8 +147,25 @@ module.exports = async (req, res) => {
           fetch(`https://hacker-news.firebaseio.com/v0/item/${id}.json`)
         );
         const results = await Promise.allSettled(fetches);
-        const techKW = ['ai','gpt','claude','llm','china','government','military','nsa','cia','surveillance',
-          'crypto','regulation','ban','court','patent','monopoly','antitrust','nuclear','war','hack','breach','leak'];
+        const techKW = [
+          // AI & Tech
+          'ai','gpt','claude','llm','model','openai','anthropic','gemini','nvidia','chip','semiconductor',
+          // Power & Government
+          'government','military','congress','senate','white house','pentagon','doj','fbi','cia','nsa',
+          'trump','biden','china','russia','iran','israel','ukraine','taiwan',
+          // Financial
+          'fed','interest rate','inflation','market','stock','crypto','bitcoin','collapse','recession',
+          // Security
+          'surveillance','hack','breach','leak','espionage','classified','whistleblower',
+          // Legal/Power
+          'court','supreme','regulation','ban','antitrust','monopoly','lawsuit','charged','indicted',
+          // Critical infrastructure
+          'nuclear','power grid','energy','oil','pipeline','satellite','cyber',
+          // Geopolitical
+          'war','sanction','tariff','trade war','blockade','invasion','ceasefire',
+          // Big Tech
+          'apple','google','meta','microsoft','amazon','x.com','musk','bezos','zuckerberg'
+        ];
         for (const r of results) {
           if (r.status !== 'fulfilled' || r.value.status !== 200) continue;
           try {

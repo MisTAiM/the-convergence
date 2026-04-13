@@ -198,6 +198,15 @@
   </div>
 </nav>
 
+<!-- ═══ LIVE BREAKING EVENTS BANNER ═══ -->
+<div id="breaking-banner" style="display:none;position:sticky;top:50px;z-index:150;background:linear-gradient(90deg,rgba(192,74,40,.95),rgba(160,40,20,.95));border-bottom:1px solid rgba(192,74,40,.5);padding:6px 1.5rem;backdrop-filter:blur(8px)">
+  <div style="display:flex;align-items:center;gap:1rem;max-width:1400px;margin:0 auto">
+    <span style="font-family:var(--fm);font-size:8px;letter-spacing:.3em;text-transform:uppercase;color:#fff;white-space:nowrap;flex-shrink:0">⚡ BREAKING</span>
+    <div id="breaking-text" style="font-family:var(--fm);font-size:9px;color:rgba(255,255,255,.9);letter-spacing:.04em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></div>
+    <button onclick="document.getElementById('breaking-banner').style.display='none'" style="background:none;border:none;color:rgba(255,255,255,.6);font-size:14px;cursor:pointer;flex-shrink:0;padding:0;margin-left:auto;line-height:1">✕</button>
+  </div>
+</div>
+
 <!-- MOBILE MENU -->
 <div id="mobile-menu" role="navigation" aria-label="Mobile navigation">
   <div class="mobile-menu-section">Live Data</div>

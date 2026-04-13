@@ -380,3 +380,63 @@ document.addEventListener('click', e => {
     document.querySelectorAll('.nav-dropdown').forEach(d => { d.style.opacity = ''; d.style.pointerEvents = ''; d.style.transform = ''; });
   }
 });
+
+/* ═══ BREAKING EVENTS BANNER ═══ */
+async function checkBreakingEvents(db) {
+  const alerts = [];
+
+  // 1. Narrative saturation spike
+  try {
+    const narr = await fetch('/api/narrative').then(r=>r.json());
+    const sat = narr.analysis?.highSaturation || 0;
+    const groups = narr.analysis?.groups || [];
+    if (sat >= 3) {
+      const top = groups.find(g => g.coverageCount >= 4);
+      if (top) alerts.push(`NARRATIVE SATURATION: "${top.topic.slice(0,60)}" — covered by ${top.coverageCount} global sources simultaneously`);
+    }
+  } catch(_) {}
+
+  // 2. Space weather storm
+  try {
+    const sw = await fetch('/api/spaceweather').then(r=>r.json());
+    const kp = sw.kpCurrent?.kp || 0;
+    if (kp >= 5) alerts.push(`GEOMAGNETIC STORM Kp${kp.toFixed(1)} — ${sw.stormLevel} · Infrastructure risk elevated`);
+  } catch(_) {}
+
+  // 3. Major earthquake from db
+  try {
+    const quakes = (db?.globe?.earthquakes || []).filter(q => q.magnitude >= 7.0);
+    if (quakes.length > 0) {
+      const top = quakes.sort((a,b) => b.magnitude - a.magnitude)[0];
+      alerts.push(`M${top.magnitude.toFixed(1)} EARTHQUAKE — ${top.place || 'Unknown region'} · Tsunami watch possible`);
+    }
+  } catch(_) {}
+
+  // 4. CSI above 85
+  try {
+    const csi = db?.csi?.[0]?.composite || 0;
+    if (csi >= 85) alerts.push(`CSI ALERT: ${csi}/100 — CRITICAL THRESHOLD · Historical pattern: acute crisis window`);
+  } catch(_) {}
+
+  // 5. Fear & Greed extreme
+  try {
+    const fng = db?.markets?.fearGreed?.latest;
+    if (fng && parseInt(fng.value) <= 10) {
+      alerts.push(`MARKET EXTREME FEAR: ${fng.value}/100 — ${fng.value_classification} · Capitulation or systemic stress signal`);
+    }
+  } catch(_) {}
+
+  const banner = document.getElementById('breaking-banner');
+  const text = document.getElementById('breaking-text');
+  if (banner && text && alerts.length > 0) {
+    text.textContent = alerts.join('  ·  ');
+    banner.style.display = 'block';
+  }
+}
+
+DataEngine.on('updated', db => {
+  checkBreakingEvents(db).catch(()=>{});
+});
+DataEngine.on('cached', db => {
+  checkBreakingEvents(db).catch(()=>{});
+});
