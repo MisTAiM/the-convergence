@@ -71,12 +71,50 @@ module.exports = async (req, res) => {
     yf('^VIX'), yf('SOXX'), cg(), cgChart('bitcoin'), cgChart('ethereum'), fng(),
   ]);
 
+  // Sector ETFs for rotation tracker
+  const SECTOR_SYMS = [
+    { sym:'XLK',name:'Technology',color:'#4090d8',icon:'💻'},
+    { sym:'XLE',name:'Energy',color:'#c04a28',icon:'⚡'},
+    { sym:'XLF',name:'Financials',color:'#d4b26a',icon:'🏦'},
+    { sym:'XLV',name:'Healthcare',color:'#28b088',icon:'💊'},
+    { sym:'XLU',name:'Utilities',color:'#7860c0',icon:'🔌'},
+    { sym:'XLI',name:'Industrials',color:'#a0a0a0',icon:'🏭'},
+    { sym:'GLD',name:'Gold',color:'#f5c518',icon:'🥇'},
+    { sym:'SLV',name:'Silver',color:'#c0c0c0',icon:'🥈'},
+    { sym:'VNQ',name:'Real Estate',color:'#ff6b6b',icon:'🏠'},
+    { sym:'BNO',name:'Brent Oil',color:'#8B4513',icon:'🛢️'},
+    { sym:'UNG',name:'Natural Gas',color:'#4fc3f7',icon:'🔥'},
+    { sym:'URA',name:'Uranium',color:'#b39ddb',icon:'☢️'},
+  ];
+  const sectorResults = await Promise.allSettled(SECTOR_SYMS.map(s => yf(s.sym)));
+  const sectors = SECTOR_SYMS.map((s,i) => {
+    const r = sectorResults[i];
+    if (r.status !== 'fulfilled' || !r.value) return { ...s, price:null, changePct:null };
+    const { last, closes } = r.value;
+    const prev = closes?.[closes.length-2] || last;
+    const changePct = prev ? +((last-prev)/prev*100).toFixed(2) : null;
+    return { ...s, price: last, changePct };
+  });
+
+  // Rotation signal
+  const goldSec = sectors.find(s=>s.sym==='GLD');
+  const energySec = sectors.find(s=>s.sym==='XLE');
+  const techSec = sectors.find(s=>s.sym==='XLK');
+  const goldUp = goldSec?.changePct > 0;
+  const energyUp = energySec?.changePct > 0;
+  const techDown = techSec?.changePct < -1;
+  const rotationSignal = goldUp && energyUp && techDown ? 'FLIGHT TO SAFETY — war/crisis premium. Gold+Energy up, Tech down.'
+    : goldUp && !energyUp ? 'MONETARY STRESS — gold rising without energy suggests dollar/inflation concern'
+    : !goldUp && !energyUp && techDown ? 'RISK-OFF — broad selloff, no safe-haven buying yet'
+    : 'RISK-ON — growth sectors leading, calm market conditions';
+
   const out = {
     fetchedAt: new Date().toISOString(),
     indices: { spy, qqq, gold, oil, btc: btcY, eth: ethY, vix, soxx },
     crypto: cryptoP || {},
     charts: { btc: btcC, eth: ethC },
     fearGreed: { latest: fear[0] || null, history: fear },
+    sectors, rotationSignal,
   };
 
   res.setHeader('Content-Type', 'application/json');

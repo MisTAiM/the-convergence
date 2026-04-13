@@ -1977,12 +1977,12 @@ async function renderSpaceWeather() {
 ═══════════════════════════════════════════════════════════ */
 async function renderConflictZones() {
   try {
-    const r = await fetch('/api/conflictzones');
+    const r = await fetch('/api/weather');
     if (!r.ok) return;
     const d = await r.json();
     const grid = document.getElementById('cz-grid');
     if (!grid) return;
-    grid.innerHTML = (d.zones||[]).map(z => `
+    grid.innerHTML = (d.zones||d||[]).map(z => `
       <div style="background:var(--surf);padding:1.2rem;border-top:2px solid ${z.color};position:relative">
         <div style="font-family:var(--fm);font-size:7px;letter-spacing:.15em;text-transform:uppercase;color:${z.color};margin-bottom:.3rem">${z.status}</div>
         <div style="font-family:var(--fd);font-size:1rem;font-weight:600;color:var(--pch);margin-bottom:.6rem">${z.name}</div>
@@ -2001,7 +2001,7 @@ async function renderConflictZones() {
 ═══════════════════════════════════════════════════════════ */
 async function renderSectors() {
   try {
-    const r = await fetch('/api/sectors');
+    const r = await fetch('/api/markets');
     if (!r.ok) return;
     const d = await r.json();
     
