@@ -440,3 +440,55 @@ DataEngine.on('updated', db => {
 DataEngine.on('cached', db => {
   checkBreakingEvents(db).catch(()=>{});
 });
+
+/* ═══ LIVE PULSE BAR ═══ */
+async function updateLivePulse() {
+  const pulseEl = document.getElementById('pulse-text');
+  const timeEl = document.getElementById('pulse-time');
+  if (!pulseEl) return;
+
+  const db = DataEngine.getDB();
+  const items = [];
+
+  // CSI score
+  const csi = db?.csi?.[0]?.composite;
+  if (csi) items.push(`CSI ${csi}/100`);
+
+  // Top confirmed story from narrative engine
+  try {
+    const narr = await fetch('/api/narrative').then(r => r.json());
+    const top = (narr.analysis?.groups || []).sort((a,b) => b.coverageCount - a.coverageCount)[0];
+    if (top) items.push(`[${top.coverageCount} SOURCES] ${top.topic.slice(0, 80)}`);
+    const sat = narr.analysis?.highSaturation || 0;
+    if (sat >= 3) items.push(`⚠ ${sat} SATURATED NARRATIVES ACTIVE`);
+  } catch(_) {}
+
+  // Space weather
+  try {
+    const sw = await fetch('/api/spaceweather').then(r => r.json());
+    const kp = sw.kpCurrent?.kp || 0;
+    items.push(`KP-INDEX ${kp.toFixed(1)} — ${sw.stormLevel}`);
+    items.push(`SOLAR WIND ${sw.solarWind?.speed?.toFixed(0)} km/s`);
+  } catch(_) {}
+
+  // Latest headline
+  const news = db?.news || [];
+  if (news[0]) items.push(`[${news[0].source}] ${news[0].title.slice(0, 80)}`);
+
+  // Markets
+  const markets = db?.markets;
+  if (markets?.fearGreed?.latest) {
+    items.push(`FEAR & GREED ${markets.fearGreed.latest.value} — ${markets.fearGreed.latest.value_classification}`);
+  }
+
+  if (items.length > 0) {
+    pulseEl.textContent = items.join('  ·  ');
+  }
+  if (timeEl) {
+    timeEl.textContent = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', timeZoneName: 'short' });
+  }
+}
+
+DataEngine.on('updated', db => { updateLivePulse().catch(()=>{}); });
+DataEngine.on('cached',  db => { updateLivePulse().catch(()=>{}); });
+setInterval(() => updateLivePulse().catch(()=>{}), 5 * 60 * 1000);

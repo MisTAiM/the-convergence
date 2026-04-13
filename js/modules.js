@@ -1586,57 +1586,76 @@ window.generateBrief = async function() {
   out.textContent = 'Claude is reading the live data and generating your brief...';
 
   const db = DataEngine.getDB();
-  const csi = db.csi?.[0] || {};
-  const news = (db.news || []).slice(0, 8).map(n => `[${n.source}] ${n.title}`).join('\n');
-  const wb = db.worldbank || {};
-  const pats = (db.patterns || []).map(p => p.name || p.type).join(', ');
+  const csi = db?.csi?.[0] || {};
+  const news = (db?.news || []).slice(0, 10);
+  const wb = db?.worldbank || {};
 
-  const prompt = `You are an intelligence analyst for The Convergence, a civilizational monitoring platform. Synthesize this live data into a concise 400-word morning intelligence brief. Use clear headers. Be specific, analytical, and direct. Avoid filler.
+  // Gather narrative intelligence
+  let narrativeCtx = '';
+  let intelCtx = '';
+  try {
+    const narr = await fetch('/api/narrative').then(r => r.json());
+    const groups = narr.analysis?.groups || [];
+    const top5 = groups.slice(0, 5).map(g => `"${g.topic}" (${g.coverageCount} sources)`).join(', ');
+    const sat = narr.analysis?.highSaturation || 0;
+    narrativeCtx = `
 
-LIVE DATA (${new Date().toLocaleDateString('en-US', {weekday:'long', month:'long', day:'numeric', year:'numeric'})}):
+NARRATIVE ENGINE (${(narr.sources||[]).filter(s=>s.ok).length} global sources): Top confirmed stories: ${top5}. Narrative saturation: ${sat} stories at 4+ source saturation.`;
+  } catch(_) {}
 
-CSI Score: ${csi.composite || 74}/100 (${csi.composite >= 80 ? 'CRITICAL' : csi.composite >= 70 ? 'HIGH' : 'ELEVATED'})
-CSI Components: Climate ${csi.climate || 72}, Geopolitical ${csi.geopolitical || 85}, Financial ${csi.financial || 78}, Technological ${csi.technological || 70}, Social ${csi.social || 68}, Nuclear ${csi.nuclear || 62}
+  try {
+    const intel = await fetch('/api/intelligence').then(r => r.json());
+    const hp = (intel.charges || []).filter(c => c.highProfile).slice(0, 4);
+    const execs = (intel.powerMoves || []).slice(0, 3);
+    if (hp.length) intelCtx += `
 
-Active Patterns Detected: ${pats || 'War-Inflation correlation, Dollar decline acceleration'}
+FBI HIGH-PROFILE CHARGES: ${hp.map(c => c.title).join(' | ')}`;
+    if (execs.length) intelCtx += `
 
-Top Headlines (live):
-${news || '[BBC] Iran ceasefire talks continue\n[AJ] Hormuz shipping crisis deepens\n[NASA] Artemis II crew return successful'}
+FEDERAL REGISTER EXECUTIVE ACTIONS: ${execs.map(p => p.title).join(' | ')}`;
+  } catch(_) {}
 
-World Bank Indicators: Life expectancy ${(wb.lifeExpectancy ? Object.values(wb.lifeExpectancy).slice(-1)[0] : 73.5)}, Military spending ${(wb.militarySpending ? Object.values(wb.militarySpending).slice(-1)[0] : 2.47)}% GDP, US Debt/GDP ${(wb.usDebtGDP ? Object.values(wb.usDebtGDP).slice(-1)[0] : 118)}%
+  try {
+    const sw = await fetch('/api/spaceweather').then(r => r.json());
+    if (sw.kpCurrent?.kp >= 3) {
+      intelCtx += `
 
-Write a structured morning brief with these sections: SITUATION OVERVIEW, KEY DEVELOPMENTS (3 bullets), PATTERN ANALYSIS, CONVERGENCE READING (tie to ancient text frameworks), TODAY'S WATCH ITEM.`;
+SPACE WEATHER: Kp-index ${sw.kpCurrent.kp} — ${sw.stormLevel}. Solar wind ${sw.solarWind?.speed?.toFixed(0)} km/s.`;
+    }
+  } catch(_) {}
+
+  const prompt = `You are The Convergence — a civilizational intelligence platform. Generate a concise intelligence brief (400-500 words) based on this live data.
+
+CSI SCORE: ${csi.composite || '?'}/100 — ${csi.composite >= 80 ? 'CRITICAL' : csi.composite >= 70 ? 'HIGH STRESS' : 'ELEVATED'}
+CLIMATE: ${wb.temp2024 ? `+${wb.temp2024}°C anomaly` : '1.47°C 2024 anomaly (NASA)'}
+DOLLAR RESERVE: ${wb.dollarReserve ? `${wb.dollarReserve}%` : '57.8%'} of global reserves (IMF)
+NUCLEAR WARHEADS: 10,929 active (FAS 2024)
+LIVE HEADLINES (${news.length}): ${news.map(n => `[${n.source}] ${n.title}`).join(' | ')}${narrativeCtx}${intelCtx}
+
+Write a professional intelligence brief with: 1) Situation Assessment (what is the dominant pattern today), 2) Key Developments (3-4 most significant confirmed events), 3) Civilizational Signal (what does the Enoch/Fourth Turning/Empire Cycle framework say about this moment), 4) Watch List (2-3 things to monitor in next 48 hours). Be direct, analytical, and precise. No fluff. This is for informed adults who want clarity, not anxiety.`;
 
   try {
     const resp = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
-        max_tokens: 800,
+        max_tokens: 1000,
         messages: [{ role: 'user', content: prompt }]
       })
     });
     const data = await resp.json();
-    const text = data.content?.[0]?.text || '';
-    if (text) {
-      // Format: convert **bold** and ## headers to styled spans
-      out.innerHTML = text
-        .replace(/##\s*(.+)/g, '<div style="font-family:var(--fm);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--gld);margin:.8rem 0 .3rem">$1</div>')
-        .replace(/\*\*(.+?)\*\*/g, '<strong style="color:var(--pch)">$1</strong>')
-        .replace(/\n/g, '<br>');
-      out.style.color = 'var(--smk)';
-      meta.style.display = 'block';
-      document.getElementById('brief-timestamp').textContent = new Date().toLocaleTimeString();
-    } else {
-      out.textContent = 'Brief generation failed. The API returned an unexpected response.';
-    }
+    const text = data.content?.find(c => c.type === 'text')?.text || 'Brief unavailable.';
+    out.style.color = 'var(--pch)';
+    out.textContent = text;
+    if (meta) meta.textContent = `Generated ${new Date().toLocaleTimeString()} · CSI ${csi.composite || '?'}/100 · ${news.length} live headlines · Narrative engine active`;
   } catch(e) {
-    out.textContent = 'Brief generation requires an active Anthropic API connection. The platform is running without an API key in this session. Check the console for details.';
-    console.error('Brief error:', e);
+    out.style.color = 'var(--ebrt)';
+    out.textContent = 'Error generating brief. Check console.';
+    console.error('brief error', e);
   }
 
-  btn.textContent = '⚡ Generate Brief';
+  btn.textContent = '⟳ Generate New Brief';
   btn.disabled = false;
 };
 

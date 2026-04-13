@@ -207,6 +207,21 @@
   </div>
 </div>
 
+
+<!-- ═══ LIVE PULSE TICKER - top of every page ═══ -->
+<div id="live-pulse" style="background:rgba(10,9,8,.98);border-bottom:1px solid var(--bdr);padding:5px 1.5rem;overflow:hidden">
+  <div style="display:flex;align-items:center;gap:1.2rem;max-width:1600px;margin:0 auto">
+    <div style="font-family:var(--fm);font-size:7.5px;letter-spacing:.25em;text-transform:uppercase;color:var(--gld);white-space:nowrap;flex-shrink:0;display:flex;align-items:center;gap:5px">
+      <span class="blink" style="width:5px;height:5px;border-radius:50%;background:var(--ebrt);display:inline-block"></span>
+      LIVE PULSE
+    </div>
+    <div id="pulse-text" style="font-family:var(--fm);font-size:8px;color:var(--ash);letter-spacing:.04em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
+      Loading live intelligence...
+    </div>
+    <div style="font-family:var(--fm);font-size:7px;color:var(--faint);white-space:nowrap;flex-shrink:0" id="pulse-time"></div>
+  </div>
+</div>
+
 <!-- MOBILE MENU -->
 <div id="mobile-menu" role="navigation" aria-label="Mobile navigation">
   <div class="mobile-menu-section">Live Data</div>
