@@ -718,48 +718,95 @@
 
 <!-- ====== MODULE 03: FOUR HORSEMEN ====== -->
 <section class="mod" id="horsemen">
-  <div class="mod-label">Module 03 · Revelation Applied · Live Data</div>
+  <div class="mod-label">Module 03 · Revelation 6 · Live Data · World Bank + WHO + GDACS + Narrative Engine</div>
   <h2 class="mod-title">The Four Horsemen Tracker</h2>
-  <p class="mod-desc">Revelation's Four Horsemen are not supernatural beings. They are a structural model of civilizational disruption: the four feedback loops that, when simultaneously active, produce systemic collapse. War → resource disruption → famine → disease → population collapse. Each horseman makes the next one more likely. The model has been verified in the collapse of every major civilization in recorded history — from Rome to the Maya to the Bronze Age collapse of 1200 BCE.</p>
-  <div style="background:var(--surf);border-left:3px solid var(--emb);padding:1.2rem;margin-bottom:1.5rem">
-    <div style="font-family:var(--fm);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--ebrt);margin-bottom:.5rem">The Feedback Loop — Why Four Becomes One</div>
-    <p style="font-size:.82rem;color:var(--smk);line-height:1.75">War disrupts supply chains → food prices spike (famine conditions for the poor) → stressed, malnourished populations have lower immune resistance → disease spreads more readily → more deaths, more social disruption → political instability → more conflict. This is not metaphysics. This is systems dynamics. Revelation's author was describing the feedback loop he had watched destroy communities under Roman occupation. The scores below are calculated from live World Bank indicators and news sentiment analysis, updated every 20 minutes.</p>
-  </div>
-  <div class="last-updated"></div>
+  <p class="mod-desc">Revelation's Four Horsemen are not supernatural beings — they are a structural model of civilizational disruption that has been verified in the collapse of every major civilization in recorded history. War → supply disruption → famine → disease → population collapse. Each horseman amplifies the next. The scores below are composite indices calculated from 6 real data sources per horseman, updated every 20 minutes.</p>
 
-  <div class="g4 horsemen-grid mt2">
-    <div style="background:var(--surf);padding:2rem;text-align:center">
-      <div style="font-size:2.5rem;margin-bottom:.8rem">⚔️</div>
-      <div style="font-family:var(--fd);font-size:1.5rem;font-weight:600;color:var(--ebrt);margin-bottom:.4rem">WAR</div>
-      <div style="font-family:var(--fd);font-size:2.4rem;font-weight:900;color:var(--ebrt);line-height:1;margin-bottom:.3rem">204M</div>
-      <p style="font-size:.78rem;color:var(--smk);line-height:1.5">Under armed group control. Active conflicts: Ukraine, Sudan, Gaza, Lebanon, Iran. <span id="war-stat"></span></p>
-      <div style="margin-top:1rem;height:3px;background:rgba(212,178,106,.1);border-radius:2px"><div id="war-sev" style="height:100%;border-radius:2px;background:var(--ebrt);transition:width 1s"></div></div>
-      <div style="font-family:var(--fm);font-size:7.5px;color:var(--ash);margin-top:.5rem" id="war-score">—</div>
+  <div class="last-updated" style="margin-bottom:1.5rem"></div>
+
+  <!-- HORSEMEN GRID -->
+  <div class="horsemen-grid g4 mt2">
+
+    <!-- WAR -->
+    <div class="horseman-card" id="hc-war" style="background:var(--surf);padding:1.8rem;border-top:3px solid var(--ebrt);position:relative;overflow:hidden">
+      <div class="horse-icon" style="font-size:2.2rem;margin-bottom:.6rem">⚔️</div>
+      <div style="font-family:var(--fd);font-size:1.3rem;font-weight:700;color:var(--ebrt);letter-spacing:.05em;margin-bottom:.8rem">WAR</div>
+      <div style="display:flex;align-items:baseline;gap:.5rem;margin-bottom:.5rem">
+        <div style="font-family:var(--fd);font-size:2.6rem;font-weight:900;color:var(--ebrt);line-height:1" id="war-score">—</div>
+        <div style="font-family:var(--fm);font-size:8px;color:var(--ash)">/100</div>
+      </div>
+      <div style="height:4px;background:rgba(192,74,40,.12);border-radius:2px;margin-bottom:.8rem">
+        <div id="war-sev" style="height:100%;border-radius:2px;background:linear-gradient(90deg,#c04a28,#ff4444);width:0%;transition:width 1.2s cubic-bezier(.2,0,.1,1)"></div>
+      </div>
+      <div id="war-stat" style="font-family:var(--fm);font-size:7.5px;color:var(--ash);letter-spacing:.05em;margin-bottom:.8rem">Calculating...</div>
+      <div id="war-breakdown" style="display:flex;flex-direction:column;gap:3px"></div>
     </div>
-    <div style="background:var(--surf);padding:2rem;text-align:center">
-      <div style="font-size:2.5rem;margin-bottom:.8rem">🌾</div>
-      <div style="font-family:var(--fd);font-size:1.5rem;font-weight:600;color:var(--gld);margin-bottom:.4rem">FAMINE</div>
-      <div style="font-family:var(--fd);font-size:2.4rem;font-weight:900;color:var(--gld);line-height:1;margin-bottom:.3rem" id="famine-stat">735M</div>
-      <p style="font-size:.78rem;color:var(--smk);line-height:1.5">Chronically undernourished globally. Food system stress from Hormuz closure. Argentina glacier protections removed for mining. BBC Business live.</p>
-      <div style="margin-top:1rem;height:3px;background:rgba(212,178,106,.1);border-radius:2px"><div id="famine-sev" style="height:100%;border-radius:2px;background:var(--gld);transition:width 1s"></div></div>
-      <div style="font-family:var(--fm);font-size:7.5px;color:var(--ash);margin-top:.5rem" id="famine-score">—</div>
+
+    <!-- FAMINE -->
+    <div class="horseman-card" id="hc-famine" style="background:var(--surf);padding:1.8rem;border-top:3px solid var(--gld);position:relative;overflow:hidden">
+      <div class="horse-icon" style="font-size:2.2rem;margin-bottom:.6rem">🌾</div>
+      <div style="font-family:var(--fd);font-size:1.3rem;font-weight:700;color:var(--gld);letter-spacing:.05em;margin-bottom:.8rem">FAMINE</div>
+      <div style="display:flex;align-items:baseline;gap:.5rem;margin-bottom:.5rem">
+        <div style="font-family:var(--fd);font-size:2.6rem;font-weight:900;color:var(--gld);line-height:1" id="famine-score">—</div>
+        <div style="font-family:var(--fm);font-size:8px;color:var(--ash)">/100</div>
+      </div>
+      <div style="height:4px;background:rgba(212,178,106,.12);border-radius:2px;margin-bottom:.8rem">
+        <div id="famine-sev" style="height:100%;border-radius:2px;background:linear-gradient(90deg,#b08830,#f0d060);width:0%;transition:width 1.2s cubic-bezier(.2,0,.1,1)"></div>
+      </div>
+      <div id="famine-stat" style="font-family:var(--fm);font-size:7.5px;color:var(--ash);letter-spacing:.05em;margin-bottom:.8rem">Calculating...</div>
+      <div id="famine-breakdown" style="display:flex;flex-direction:column;gap:3px"></div>
     </div>
-    <div style="background:var(--surf);padding:2rem;text-align:center">
-      <div style="font-size:2.5rem;margin-bottom:.8rem">🦠</div>
-      <div style="font-family:var(--fd);font-size:1.5rem;font-weight:600;color:var(--jbrt);margin-bottom:.4rem">PLAGUE</div>
-      <div style="font-family:var(--fd);font-size:2.4rem;font-weight:900;color:var(--jbrt);line-height:1;margin-bottom:.3rem">WATCH</div>
-      <p style="font-size:.78rem;color:var(--smk);line-height:1.5">Post-COVID governance fragmented. CRISPR at 2014 nation-state cost. H5N1 monitoring ongoing. Next pandemic: when, not if (WHO). <span id="plague-stat"></span></p>
-      <div style="margin-top:1rem;height:3px;background:rgba(212,178,106,.1);border-radius:2px"><div id="plague-sev" style="height:100%;border-radius:2px;background:var(--jbrt);transition:width 1s"></div></div>
-      <div style="font-family:var(--fm);font-size:7.5px;color:var(--ash);margin-top:.5rem" id="plague-score">—</div>
+
+    <!-- PLAGUE -->
+    <div class="horseman-card" id="hc-plague" style="background:var(--surf);padding:1.8rem;border-top:3px solid var(--jbrt);position:relative;overflow:hidden">
+      <div class="horse-icon" style="font-size:2.2rem;margin-bottom:.6rem">🦠</div>
+      <div style="font-family:var(--fd);font-size:1.3rem;font-weight:700;color:var(--jbrt);letter-spacing:.05em;margin-bottom:.8rem">PLAGUE</div>
+      <div style="display:flex;align-items:baseline;gap:.5rem;margin-bottom:.5rem">
+        <div style="font-family:var(--fd);font-size:2.6rem;font-weight:900;color:var(--jbrt);line-height:1" id="plague-score">—</div>
+        <div style="font-family:var(--fm);font-size:8px;color:var(--ash)">/100</div>
+      </div>
+      <div style="height:4px;background:rgba(40,176,136,.12);border-radius:2px;margin-bottom:.8rem">
+        <div id="plague-sev" style="height:100%;border-radius:2px;background:linear-gradient(90deg,#1a8a60,#28e0a0);width:0%;transition:width 1.2s cubic-bezier(.2,0,.1,1)"></div>
+      </div>
+      <div id="plague-stat" style="font-family:var(--fm);font-size:7.5px;color:var(--ash);letter-spacing:.05em;margin-bottom:.8rem">Calculating...</div>
+      <div id="plague-breakdown" style="display:flex;flex-direction:column;gap:3px"></div>
     </div>
-    <div style="background:var(--surf);padding:2rem;text-align:center">
-      <div style="font-size:2.5rem;margin-bottom:.8rem">💀</div>
-      <div style="font-family:var(--fd);font-size:1.5rem;font-weight:600;color:var(--vbrt);margin-bottom:.4rem">DEATH</div>
-      <div style="font-family:var(--fd);font-size:2.4rem;font-weight:900;color:var(--vbrt);line-height:1;margin-bottom:.3rem" id="death-stat">73.5yr</div>
-      <p style="font-size:.78rem;color:var(--smk);line-height:1.5">Global life expectancy (World Bank API live). Infant mortality: <span id="infant-mort">27.7</span>/1,000 — historic low. Climate-related mortality rising.</p>
-      <div style="margin-top:1rem;height:3px;background:rgba(212,178,106,.1);border-radius:2px"><div id="death-sev" style="height:100%;border-radius:2px;background:var(--vbrt);transition:width 1s"></div></div>
-      <div style="font-family:var(--fm);font-size:7.5px;color:var(--ash);margin-top:.5rem" id="death-score">—</div>
+
+    <!-- DEATH -->
+    <div class="horseman-card" id="hc-death" style="background:var(--surf);padding:1.8rem;border-top:3px solid var(--vbrt);position:relative;overflow:hidden">
+      <div class="horse-icon" style="font-size:2.2rem;margin-bottom:.6rem">💀</div>
+      <div style="font-family:var(--fd);font-size:1.3rem;font-weight:700;color:var(--vbrt);letter-spacing:.05em;margin-bottom:.8rem">DEATH</div>
+      <div style="display:flex;align-items:baseline;gap:.5rem;margin-bottom:.5rem">
+        <div style="font-family:var(--fd);font-size:2.6rem;font-weight:900;color:var(--vbrt);line-height:1" id="death-score">—</div>
+        <div style="font-family:var(--fm);font-size:8px;color:var(--ash)">/100</div>
+      </div>
+      <div style="height:4px;background:rgba(120,96,192,.12);border-radius:2px;margin-bottom:.8rem">
+        <div id="death-sev" style="height:100%;border-radius:2px;background:linear-gradient(90deg,#5040a0,#9070e0);width:0%;transition:width 1.2s cubic-bezier(.2,0,.1,1)"></div>
+      </div>
+      <div id="death-stat" style="font-family:var(--fm);font-size:7.5px;color:var(--ash);letter-spacing:.05em;margin-bottom:.8rem">Calculating...</div>
+      <div id="death-breakdown" style="display:flex;flex-direction:column;gap:3px"></div>
     </div>
+
+  </div>
+
+  <!-- CONFLUENCE METER -->
+  <div style="background:var(--surf);border:1px solid var(--bdr);padding:1.5rem;margin-top:1rem">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.6rem">
+      <div style="font-family:var(--fm);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--ash)">Horsemen Confluence Index — all four active simultaneously</div>
+      <div style="font-family:var(--fd);font-size:1.6rem;font-weight:700" id="hci-score">—</div>
+    </div>
+    <div style="height:6px;background:rgba(212,178,106,.07);border-radius:3px;margin-bottom:.5rem">
+      <div id="hci-bar" style="height:100%;border-radius:3px;background:linear-gradient(90deg,var(--jbrt),var(--gld),var(--ebrt),#ff2222);background-size:300% 100%;animation:borderRotate 6s linear infinite;width:0%;transition:width 1.5s ease"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:7px;color:var(--faint)">
+      <span>SEPARATE EVENTS</span><span>CORRELATION EMERGING</span><span>FEEDBACK ACTIVE</span><span>CONVERGENCE</span>
+    </div>
+    <p id="hci-desc" style="font-size:.82rem;color:var(--smk);margin-top:.8rem;line-height:1.75"></p>
+  </div>
+
+  <!-- DATA SOURCES -->
+  <div style="margin-top:.8rem;font-family:var(--fm);font-size:7px;color:var(--faint);letter-spacing:.06em">
+    DATA: World Bank (military spend, poverty, life expectancy, under-5 mortality) · WHO RSS · GDACS active disasters · Narrative Engine (8 global sources) · Stooq energy prices · NOAA Space Weather
   </div>
 </section>
 

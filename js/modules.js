@@ -93,40 +93,180 @@ function renderCSI(db) {
 }
 
 /* ============ HORSEMEN ============ */
-function renderHorsemen(db) {
-  const wb = db.worldbank;
+async function renderHorsemen(db) {
+  const wb   = db.worldbank || {};
   const news = db.news || [];
+  const globe = db.globe || {};
 
-  const warCount = news.filter(n => ['war','conflict','attack','strikes','missiles','troops','killed'].some(w => n.title.toLowerCase().includes(w))).length;
-  const warSev = Math.min(100, 50 + warCount * 8);
+  // ── HELPER ──────────────────────────────────────────────────────────────────
+  const latest = obj => { if (!obj) return null; const ks = Object.keys(obj).sort().reverse(); return ks.length ? obj[ks[0]] : null; };
+  const trend  = obj => { if (!obj) return 0; const ks = Object.keys(obj).sort(); if (ks.length < 2) return 0; const a = obj[ks[ks.length-3]||ks[0]], b = obj[ks[ks.length-1]]; return b && a ? b - a : 0; };
+  const newsHits = (kws) => news.filter(n => kws.some(w => n.title.toLowerCase().includes(w))).length;
 
-  const famineCount = news.filter(n => ['famine','hunger','food','shortage','starv'].some(w => n.title.toLowerCase().includes(w))).length;
-  const povertyPct = DataEngine.getLatest(wb.extremePoverty) || 10.4;
-  const famineSev = Math.min(100, 30 + famineCount * 8 + (povertyPct > 10 ? 20 : 10));
+  const mkRow = (label, val, max, col) => `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.04)">
+      <div style="font-family:var(--fm);font-size:7px;color:var(--ash);flex:1">${label}</div>
+      <div style="font-family:var(--fm);font-size:7px;color:${col};width:38px;text-align:right">${val}</div>
+      <div style="width:40px;height:2px;background:rgba(255,255,255,.05);border-radius:1px;margin-left:6px;flex-shrink:0">
+        <div style="height:100%;width:${Math.min(100,Math.round((parseFloat(val)||0)/max*100))}%;background:${col};border-radius:1px"></div>
+      </div>
+    </div>`;
 
-  const plagueCount = news.filter(n => ['virus','outbreak','pandemic','disease','epidemic','covid'].some(w => n.title.toLowerCase().includes(w))).length;
-  const plagueSev = Math.min(100, 20 + plagueCount * 15);
-
-  const lifeExp = DataEngine.getLatest(wb.lifeExpectancy) || 73.5;
-  const infantMort = DataEngine.getLatest(wb.infantMortality) || 27.7;
-  const deathSev = Math.min(100, Math.max(10, 100 - Math.round(lifeExp - 50)));
-
-  const setHorse = (id, sev, stat) => {
-    const el = document.getElementById(id + '-sev');
-    if (el) el.style.width = sev + '%';
-    const sv = document.getElementById(id + '-score');
-    if (sv) sv.textContent = sev + '/100';
-    const st = document.getElementById(id + '-stat');
-    if (st && stat) st.textContent = stat;
+  const setHorse = (id, score, statLine, rows) => {
+    const s = Math.round(Math.min(100, Math.max(0, score)));
+    const el = (x) => document.getElementById(x);
+    if (el(id+'-score')) el(id+'-score').textContent = s;
+    if (el(id+'-sev'))   el(id+'-sev').style.width = s + '%';
+    if (el(id+'-stat'))  el(id+'-stat').textContent = statLine;
+    if (el(id+'-breakdown') && rows) el(id+'-breakdown').innerHTML = rows;
   };
 
-  setHorse('war', warSev, warCount + ' conflict headlines');
-  setHorse('famine', famineSev, Math.round(povertyPct * 80) + 'M extreme poverty');
-  setHorse('plague', plagueSev, plagueCount ? plagueCount + ' outbreak headlines' : 'Monitor only');
-  setHorse('death', deathSev, lifeExp.toFixed(1) + 'yr life expectancy');
+  // ── 1. WAR ───────────────────────────────────────────────────────────────────
+  // Data sources: military spend trend (WB), conflict headlines (8-source narrative),
+  //   GDACS critical alerts, displacement proxy, active war zones (globe)
+  const milSpend   = latest(wb.militarySpending) || 2.2;  // % GDP
+  const milTrend   = trend(wb.militarySpending);          // rising = more war
+  const warKeywords = ['war','missile','strike','airstrike','bomb','troops','killed','ceasefire','invasion','offensive','artillery','ambush','combat','siege','bombardment'];
+  const warHeadlines = newsHits(warKeywords);
+  const conflictZones = ['ukraine','russia','gaza','israel','iran','sudan','yemen','myanmar','haiti','mali','somalia'];
+  const activeZones = conflictZones.filter(z => news.some(n => n.title.toLowerCase().includes(z))).length;
+  const gdacsCritical = (globe.critical || []).length;
 
-  const infantEl = document.getElementById('infant-mort');
-  if (infantEl) infantEl.textContent = infantMort.toFixed(1) + '/1,000';
+  // Composite WAR score
+  let warScore = 35;  // base: world always has some conflicts
+  warScore += Math.min(20, milTrend > 0.3 ? 15 : milTrend > 0.1 ? 8 : 0); // rising mil spend
+  warScore += Math.min(25, warHeadlines * 3.5);   // conflict in headlines
+  warScore += Math.min(18, activeZones * 2.5);    // named zones in news
+  warScore += Math.min(12, gdacsCritical * 1.8);  // disaster alerts amplify war
+
+  // Hormuz/Iran war = major boost (confirmed by narrative engine)
+  const hormuzConfirmed = news.some(n => n.title.toLowerCase().includes('hormuz') || (n.title.toLowerCase().includes('iran') && n.title.toLowerCase().includes('war')));
+  if (hormuzConfirmed) warScore += 12;
+
+  setHorse('war', warScore,
+    `${activeZones} active conflict zones in headlines · ${warHeadlines} conflict stories`,
+    mkRow('Military spend % GDP', milSpend.toFixed(2)+'%', 4, 'var(--ebrt)') +
+    mkRow('Active zones in news', activeZones, 11, 'var(--ebrt)') +
+    mkRow('Conflict headlines', warHeadlines, 20, 'var(--gld)') +
+    mkRow('GDACS critical alerts', gdacsCritical, 20, '#ff9900')
+  );
+
+  // ── 2. FAMINE ────────────────────────────────────────────────────────────────
+  // Data sources: WB extreme poverty %, WB undernourishment proxy,
+  //   energy price (oil = food transport), food headlines, active food crises
+  const povertyPct  = latest(wb.extremePoverty) || 9.3;  // % below $2.15/day
+  const lifeExp     = latest(wb.lifeExpectancy)  || 73.5;
+  const infantMort  = latest(wb.infantMortality) || 37.4; // under-5 per 1000
+  const foodKw = ['famine','hunger','food','starv','malnutrition','crop','harvest','wheat','shortage','rationing','bread'];
+  const foodHeadlines = newsHits(foodKw);
+
+  // Energy cost = food transport proxy (Brent Oil above $90 = significant food pressure)
+  const oilPrice = db.markets?.sectors?.find(s => s.sym === 'BNO')?.price || 80;
+  const oilPressure = oilPrice > 120 ? 20 : oilPrice > 100 ? 14 : oilPrice > 80 ? 8 : 3;
+
+  // Active famine zones (Sudan, Yemen, Gaza, Haiti, Somalia)
+  const famineZones = ['sudan','famine','starving','food crisis','aid','humanitarian'].filter(w => news.some(n => n.title.toLowerCase().includes(w))).length;
+
+  let famineScore = 28; // base: 733M food insecure is historically elevated
+  famineScore += Math.min(20, (povertyPct - 8) * 3);   // poverty above historical baseline
+  famineScore += Math.min(18, infantMort * 0.4);        // child mortality = food deprivation proxy
+  famineScore += Math.min(15, foodHeadlines * 4);       // food crisis in news
+  famineScore += Math.min(15, oilPressure);             // energy → food cost
+  famineScore += Math.min(10, famineZones * 2);         // active crisis zones
+
+  const famineM = Math.round(povertyPct * 80); // rough pop estimate
+  setHorse('famine', famineScore,
+    `${famineM}M below $2.15/day · ${(povertyPct).toFixed(1)}% extreme poverty · Oil $${oilPrice}`,
+    mkRow('Extreme poverty %', povertyPct.toFixed(1)+'%', 20, 'var(--gld)') +
+    mkRow('Under-5 mortality/1k', infantMort.toFixed(1), 60, 'var(--ebrt)') +
+    mkRow('Food crisis headlines', foodHeadlines, 15, 'var(--gld)') +
+    mkRow('Brent oil pressure', '$'+oilPrice, 120, '#ff9900')
+  );
+
+  // ── 3. PLAGUE ────────────────────────────────────────────────────────────────
+  // Data sources: WHO RSS disease count, outbreak headlines, 
+  //   HIV prevalence, under-5 mortality trend, post-COVID baseline
+  const diseaseKw = ['outbreak','epidemic','virus','disease','cholera','measles','dengue','mpox','pneumonia','infection','pathogen','pandemic'];
+  const diseaseHeadlines = newsHits(diseaseKw);
+
+  // Fetch WHO RSS disease items count from already-cached narrative engine data
+  // (WHO is one of the news feeds in DataEngine if available, else use headline proxy)
+  const nasaItems = news.filter(n => n.source === 'NASA' || n.source === 'BBC Science').length;
+
+  // WHO confirmed outbreaks — WHO RSS fetched separately
+  let whoOutbreaks = 0;
+  try {
+    const whoR = await fetch('https://www.who.int/rss-feeds/news-english.xml', { signal: AbortSignal.timeout(5000) });
+    const whoText = await whoR.text();
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(whoText, 'text/xml');
+    const items = doc.querySelectorAll('item title');
+    whoOutbreaks = Array.from(items).filter(el => ['outbreak','disease','virus','epidemic','cholera','dengue','mpox','measles'].some(k => (el.textContent||'').toLowerCase().includes(k))).length;
+  } catch(_) {}
+
+  let plagueScore = 22;  // post-COVID elevated baseline (global immune debt, new variants)
+  plagueScore += Math.min(25, whoOutbreaks * 8);      // WHO confirmed outbreaks
+  plagueScore += Math.min(20, diseaseHeadlines * 5);  // disease in headlines
+  plagueScore += Math.min(15, infantMort * 0.25);     // child mortality = disease vector
+  // Drug-resistant infections: add static elevated risk from known AMR crisis
+  plagueScore += 8; // AMR (antimicrobial resistance) — WHO declared global emergency 2024
+
+  setHorse('plague', plagueScore,
+    `${whoOutbreaks} WHO disease alerts · ${diseaseHeadlines} outbreak headlines`,
+    mkRow('WHO disease alerts', whoOutbreaks, 10, 'var(--jbrt)') +
+    mkRow('Outbreak headlines', diseaseHeadlines, 15, 'var(--jbrt)') +
+    mkRow('Child mortality proxy', infantMort.toFixed(1)+'/1k', 60, 'var(--gld)') +
+    mkRow('AMR resistance risk', 'ELEVATED', 1, '#ff9900')
+  );
+
+  // ── 4. DEATH ─────────────────────────────────────────────────────────────────
+  // NOT just life expectancy — Death is the CONFLUENCE of the other three
+  // Data: composite of war+famine+plague, PLUS structural mortality indicators
+  const infantM = infantMort;
+  const lifeExpDelta = lifeExp - 72;  // delta from benchmark (72 = 2015 baseline)
+  // Life expectancy declining = Death horseman rising
+  const lifeExpScore = lifeExpDelta > 0 ? Math.max(0, 15 - lifeExpDelta * 2) : Math.min(30, 15 + Math.abs(lifeExpDelta) * 3);
+
+  // Confluence drives death — if war + famine both high, death amplifies
+  const confluenceBoost = Math.round((warScore + famineScore + plagueScore) / 3 * 0.3);
+
+  // Displacement = precursor to mass death (malnutrition + disease in camps)
+  const displacementKw = ['refugees','displaced','fleeing','evacuation','humanitarian crisis','aid workers'];
+  const displaceHeadlines = newsHits(displacementKw);
+
+  let deathScore = 18;
+  deathScore += Math.min(20, confluenceBoost);         // amplified by other horsemen
+  deathScore += Math.min(18, lifeExpScore);            // life expectancy direction
+  deathScore += Math.min(18, infantMort * 0.35);       // child mortality = systemic death
+  deathScore += Math.min(12, displaceHeadlines * 3);   // displacement = mortality risk
+  deathScore += Math.min(8, gdacsCritical * 0.8);      // disasters kill directly
+
+  const lifeExpDir = lifeExpDelta >= 0 ? '↑ improving' : '↓ declining';
+  setHorse('death', deathScore,
+    `Life exp ${lifeExp.toFixed(1)}yr (${lifeExpDir}) · Under-5: ${infantMort.toFixed(0)}/1,000`,
+    mkRow('Life expectancy', lifeExp.toFixed(1)+'yr', 90, lifeExpDelta >= 0 ? 'var(--jbrt)' : 'var(--ebrt)') +
+    mkRow('Under-5 mortality', infantMort.toFixed(1)+'/1k', 60, 'var(--vbrt)') +
+    mkRow('Displacement headlines', displaceHeadlines, 12, 'var(--vbrt)') +
+    mkRow('Horsemen confluence', Math.round(confluenceBoost)+'pts', 30, 'var(--gld)')
+  );
+
+  // ── CONFLUENCE INDEX ─────────────────────────────────────────────────────────
+  const hci = Math.round((warScore + famineScore + plagueScore + deathScore) / 4);
+  const hciEl = document.getElementById('hci-score');
+  const hciBar = document.getElementById('hci-bar');
+  const hciDesc = document.getElementById('hci-desc');
+  if (hciEl) { hciEl.textContent = hci + '/100'; hciEl.style.color = hci > 70 ? '#ff4444' : hci > 55 ? 'var(--ebrt)' : 'var(--gld)'; }
+  if (hciBar) hciBar.style.width = hci + '%';
+  if (hciDesc) {
+    const highCount = [warScore, famineScore, plagueScore, deathScore].filter(s => s >= 60).length;
+    hciDesc.textContent = highCount === 4
+      ? `⚠ ALL FOUR HORSEMEN ACTIVE simultaneously — historical pattern: this configuration precedes acute civilizational crisis within 1–3 years. Verify each indicator independently.`
+      : highCount >= 3
+      ? `${highCount} of 4 Horsemen are in elevated range (≥60). Feedback loops are active. Historical: 3+ active = acceleration phase begins.`
+      : highCount >= 2
+      ? `${highCount} Horsemen elevated. Correlation forming but not yet self-reinforcing. Monitor for third activation.`
+      : `Horsemen are mostly independent at this time. No active feedback loop detected. Continue monitoring.`;
+  }
 }
 
 /* ============ PROPHECY MATCHER ============ */

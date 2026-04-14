@@ -176,7 +176,7 @@ function renderAll(db) {
   try { renderHeroStats(db); } catch(e) { console.error('heroStats', e); }
   try { renderLiveFeed(db); } catch(e) { console.error('feed', e); }
   try { renderCSI(db); } catch(e) { console.error('csi', e); }
-  try { renderHorsemen(db); } catch(e) { console.error('horsemen', e); }
+  try { renderHorsemen(db).catch(e => console.error('horsemen', e)); } catch(e) { console.error('horsemen', e); }
   try { renderProphecyMatcher(db); } catch(e) { console.error('matcher', e); }
   try { renderFinance(db); } catch(e) { console.error('finance', e); }
   try { renderWeather(db); } catch(e) { console.error('weather', e); }
