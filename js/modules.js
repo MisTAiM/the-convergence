@@ -122,29 +122,32 @@ async function renderHorsemen(db) {
   };
 
   // ── 1. WAR ───────────────────────────────────────────────────────────────────
-  // Data sources: military spend trend (WB), conflict headlines (8-source narrative),
-  //   GDACS critical alerts, displacement proxy, active war zones (globe)
-  const milSpend   = latest(wb.militarySpending) || 2.2;  // % GDP
-  const milTrend   = trend(wb.militarySpending);          // rising = more war
-  const warKeywords = ['war','missile','strike','airstrike','bomb','troops','killed','ceasefire','invasion','offensive','artillery','ambush','combat','siege','bombardment'];
+  // Sources: WB military spend trend, 8-source news conflict keywords,
+  //   named active conflict zones, GDACS alerts, Hormuz/major escalation
+  // Target range for 2026 (active but not WWI/II): 62–75
+  const milSpend   = latest(wb.militarySpending) || 2.2;
+  const milTrend   = trend(wb.militarySpending);
+  const warKeywords = ['war','missile','strike','airstrike','bomb','troops','killed','ceasefire',
+    'invasion','offensive','artillery','ambush','combat','siege','bombardment','frontline'];
   const warHeadlines = newsHits(warKeywords);
   const conflictZones = ['ukraine','russia','gaza','israel','iran','sudan','yemen','myanmar','haiti','mali','somalia'];
   const activeZones = conflictZones.filter(z => news.some(n => n.title.toLowerCase().includes(z))).length;
   const gdacsCritical = (globe.critical || []).length;
 
-  // Composite WAR score
-  let warScore = 35;  // base: world always has some conflicts
-  warScore += Math.min(20, milTrend > 0.3 ? 15 : milTrend > 0.1 ? 8 : 0); // rising mil spend
-  warScore += Math.min(25, warHeadlines * 3.5);   // conflict in headlines
-  warScore += Math.min(18, activeZones * 2.5);    // named zones in news
-  warScore += Math.min(12, gdacsCritical * 1.8);  // disaster alerts amplify war
+  let warScore = 28;  // base: structurally elevated (post-2022 invasion era)
+  warScore += milTrend > 0.2 ? 10 : milTrend > 0.05 ? 5 : 0;  // mil spend rising
+  warScore += Math.min(18, warHeadlines * 2.2);   // reduced multiplier
+  warScore += Math.min(14, activeZones * 2.0);    // named conflict zones
+  warScore += Math.min(8,  gdacsCritical * 1.2);  // disaster → conflict amplifier
+  const hormuzConfirmed = news.some(n =>
+    n.title.toLowerCase().includes('hormuz') ||
+    (n.title.toLowerCase().includes('iran') && n.title.toLowerCase().includes('war')));
+  if (hormuzConfirmed) warScore += 8;   // major escalation bonus (reduced from 12)
 
-  // Hormuz/Iran war = major boost (confirmed by narrative engine)
-  const hormuzConfirmed = news.some(n => n.title.toLowerCase().includes('hormuz') || (n.title.toLowerCase().includes('iran') && n.title.toLowerCase().includes('war')));
-  if (hormuzConfirmed) warScore += 12;
+  warScore = Math.min(85, Math.max(0, warScore)); // hard cap 85 (100 = WWIII)
 
   setHorse('war', warScore,
-    `${activeZones} active conflict zones in headlines · ${warHeadlines} conflict stories`,
+    `${activeZones} conflict zones · ${warHeadlines} conflict headlines · mil spend ${milSpend.toFixed(2)}% GDP`,
     mkRow('Military spend % GDP', milSpend.toFixed(2)+'%', 4, 'var(--ebrt)') +
     mkRow('Active zones in news', activeZones, 11, 'var(--ebrt)') +
     mkRow('Conflict headlines', warHeadlines, 20, 'var(--gld)') +
@@ -152,102 +155,114 @@ async function renderHorsemen(db) {
   );
 
   // ── 2. FAMINE ────────────────────────────────────────────────────────────────
-  // Data sources: WB extreme poverty %, WB undernourishment proxy,
-  //   energy price (oil = food transport), food headlines, active food crises
-  const povertyPct  = latest(wb.extremePoverty) || 9.3;  // % below $2.15/day
+  // Sources: WB extreme poverty %, infant/child mortality, food headlines,
+  //   energy price (oil → food transport cost), active famine zone news
+  // Target range for 2026 (elevated but not mass starvation): 42–55
+  const povertyPct  = latest(wb.extremePoverty) || 9.3;
   const lifeExp     = latest(wb.lifeExpectancy)  || 73.5;
-  const infantMort  = latest(wb.infantMortality) || 37.4; // under-5 per 1000
-  const foodKw = ['famine','hunger','food','starv','malnutrition','crop','harvest','wheat','shortage','rationing','bread'];
+  const infantMort  = latest(wb.infantMortality) || 27.7;
+  const foodKw = ['famine','hunger','food','starv','malnutrition','wheat','shortage','rationing','crop failure'];
   const foodHeadlines = newsHits(foodKw);
 
-  // Energy cost = food transport proxy (Brent Oil above $90 = significant food pressure)
-  const oilPrice = db.markets?.sectors?.find(s => s.sym === 'BNO')?.price || 80;
-  const oilPressure = oilPrice > 120 ? 20 : oilPrice > 100 ? 14 : oilPrice > 80 ? 8 : 3;
+  const oilPrice = db.markets?.sectors?.find(s => s.sym === 'BNO')?.price
+                || db.markets?.indices?.oil?.price || 80;
+  const oilPressure = oilPrice > 110 ? 12 : oilPrice > 90 ? 7 : oilPrice > 70 ? 3 : 1;
 
-  // Active famine zones (Sudan, Yemen, Gaza, Haiti, Somalia)
-  const famineZones = ['sudan','famine','starving','food crisis','aid','humanitarian'].filter(w => news.some(n => n.title.toLowerCase().includes(w))).length;
+  const famineZoneKw = ['sudan famine','starving','food crisis','acute hunger','wfp'];
+  const famineZoneHits = famineZoneKw.filter(w => news.some(n => n.title.toLowerCase().includes(w))).length;
 
-  let famineScore = 28; // base: 733M food insecure is historically elevated
-  famineScore += Math.min(20, (povertyPct - 8) * 3);   // poverty above historical baseline
-  famineScore += Math.min(18, infantMort * 0.4);        // child mortality = food deprivation proxy
-  famineScore += Math.min(15, foodHeadlines * 4);       // food crisis in news
-  famineScore += Math.min(15, oilPressure);             // energy → food cost
-  famineScore += Math.min(10, famineZones * 2);         // active crisis zones
+  let famineScore = 22; // base: 733M food insecure is historically high but not max
+  famineScore += Math.min(12, (povertyPct - 8) * 2.5);  // poverty above ~8% baseline
+  famineScore += Math.min(12, infantMort * 0.28);        // child mortality proxy
+  famineScore += Math.min(10, foodHeadlines * 3.5);      // food crisis news
+  famineScore += Math.min(8,  oilPressure);              // energy → food cost
+  famineScore += Math.min(6,  famineZoneHits * 3);       // confirmed active famine zones
 
-  const famineM = Math.round(povertyPct * 80); // rough pop estimate
+  famineScore = Math.min(80, Math.max(0, famineScore));
+
+  const famineM = Math.round(povertyPct * 80);
   setHorse('famine', famineScore,
-    `${famineM}M below $2.15/day · ${(povertyPct).toFixed(1)}% extreme poverty · Oil $${oilPrice}`,
+    `~${famineM}M below $2.15/day · ${povertyPct.toFixed(1)}% poverty · Oil $${oilPrice}`,
     mkRow('Extreme poverty %', povertyPct.toFixed(1)+'%', 20, 'var(--gld)') +
-    mkRow('Under-5 mortality/1k', infantMort.toFixed(1), 60, 'var(--ebrt)') +
-    mkRow('Food crisis headlines', foodHeadlines, 15, 'var(--gld)') +
+    mkRow('Under-5 mortality/1k', infantMort.toFixed(1), 50, 'var(--ebrt)') +
+    mkRow('Food crisis headlines', foodHeadlines, 12, 'var(--gld)') +
     mkRow('Brent oil pressure', '$'+oilPrice, 120, '#ff9900')
   );
 
   // ── 3. PLAGUE ────────────────────────────────────────────────────────────────
-  // Data sources: WHO RSS disease count, outbreak headlines, 
-  //   HIV prevalence, under-5 mortality trend, post-COVID baseline
-  const diseaseKw = ['outbreak','epidemic','virus','disease','cholera','measles','dengue','mpox','pneumonia','infection','pathogen','pandemic'];
+  // Sources: WHO RSS disease count, outbreak headlines, child mortality,
+  //   AMR resistance static risk — NO active pandemic in 2026 = moderate base
+  // Target range for 2026 (post-COVID, no pandemic): 28–42
+  const diseaseKw = ['outbreak','epidemic','cholera','measles','dengue','mpox','plague',
+    'ebola','marburg','infection surge','pathogen','antimicrobial','bird flu'];
   const diseaseHeadlines = newsHits(diseaseKw);
 
-  // Fetch WHO RSS disease items count from already-cached narrative engine data
-  // (WHO is one of the news feeds in DataEngine if available, else use headline proxy)
-  const nasaItems = news.filter(n => n.source === 'NASA' || n.source === 'BBC Science').length;
-
-  // WHO confirmed outbreaks — WHO RSS fetched separately
   let whoOutbreaks = 0;
   try {
-    const whoR = await fetch('https://www.who.int/rss-feeds/news-english.xml', { signal: AbortSignal.timeout(5000) });
+    const whoR = await fetch('https://www.who.int/rss-feeds/news-english.xml',
+      { signal: AbortSignal.timeout(5000) });
     const whoText = await whoR.text();
     const parser = new DOMParser();
     const doc = parser.parseFromString(whoText, 'text/xml');
     const items = doc.querySelectorAll('item title');
-    whoOutbreaks = Array.from(items).filter(el => ['outbreak','disease','virus','epidemic','cholera','dengue','mpox','measles'].some(k => (el.textContent||'').toLowerCase().includes(k))).length;
+    const diseaseKwWHO = ['outbreak','disease','virus','epidemic','cholera','dengue','mpox','measles','emergency'];
+    whoOutbreaks = Array.from(items).filter(el =>
+      diseaseKwWHO.some(k => (el.textContent||'').toLowerCase().includes(k))).length;
   } catch(_) {}
 
-  let plagueScore = 22;  // post-COVID elevated baseline (global immune debt, new variants)
-  plagueScore += Math.min(25, whoOutbreaks * 8);      // WHO confirmed outbreaks
-  plagueScore += Math.min(20, diseaseHeadlines * 5);  // disease in headlines
-  plagueScore += Math.min(15, infantMort * 0.25);     // child mortality = disease vector
-  // Drug-resistant infections: add static elevated risk from known AMR crisis
-  plagueScore += 8; // AMR (antimicrobial resistance) — WHO declared global emergency 2024
+  let plagueScore = 12; // base: no active pandemic in 2026
+  plagueScore += Math.min(15, whoOutbreaks * 5);    // WHO confirmed disease alerts
+  plagueScore += Math.min(10, diseaseHeadlines * 3); // disease in news
+  plagueScore += Math.min(8,  infantMort * 0.18);   // mortality proxy
+  plagueScore += 4; // AMR (antimicrobial resistance) — static background risk
+
+  // No "pandemic multiplier" unless a true pandemic is signaled in headlines
+  const pandemicSignal = news.some(n =>
+    ['pandemic','global health emergency','pheic'].some(k => n.title.toLowerCase().includes(k)));
+  if (pandemicSignal) plagueScore += 20;
+
+  plagueScore = Math.min(75, Math.max(0, plagueScore));
 
   setHorse('plague', plagueScore,
     `${whoOutbreaks} WHO disease alerts · ${diseaseHeadlines} outbreak headlines`,
-    mkRow('WHO disease alerts', whoOutbreaks, 10, 'var(--jbrt)') +
-    mkRow('Outbreak headlines', diseaseHeadlines, 15, 'var(--jbrt)') +
-    mkRow('Child mortality proxy', infantMort.toFixed(1)+'/1k', 60, 'var(--gld)') +
+    mkRow('WHO disease alerts', whoOutbreaks, 8, 'var(--jbrt)') +
+    mkRow('Outbreak headlines', diseaseHeadlines, 12, 'var(--jbrt)') +
+    mkRow('Child mortality proxy', infantMort.toFixed(1)+'/1k', 50, 'var(--gld)') +
     mkRow('AMR resistance risk', 'ELEVATED', 1, '#ff9900')
   );
 
   // ── 4. DEATH ─────────────────────────────────────────────────────────────────
-  // NOT just life expectancy — Death is the CONFLUENCE of the other three
-  // Data: composite of war+famine+plague, PLUS structural mortality indicators
-  const infantM = infantMort;
-  const lifeExpDelta = lifeExp - 72;  // delta from benchmark (72 = 2015 baseline)
-  // Life expectancy declining = Death horseman rising
-  const lifeExpScore = lifeExpDelta > 0 ? Math.max(0, 15 - lifeExpDelta * 2) : Math.min(30, 15 + Math.abs(lifeExpDelta) * 3);
+  // Death = confluence amplifier + structural mortality
+  // Life expectancy IMPROVING = lower death score (life exp 73.5 > historical avg)
+  // Target range for 2026: 38–52
+  const lifeExpDelta = lifeExp - 72; // positive = improving (lowers score)
+  const lifeExpFactor = lifeExpDelta >= 0
+    ? Math.max(0, 12 - lifeExpDelta * 2)  // improving life exp → lower death
+    : Math.min(25, 12 + Math.abs(lifeExpDelta) * 4); // declining → higher death
 
-  // Confluence drives death — if war + famine both high, death amplifies
-  const confluenceBoost = Math.round((warScore + famineScore + plagueScore) / 3 * 0.3);
+  // Confluence: only boosted if multiple horsemen are SIMULTANEOUSLY elevated
+  const highHorsemen = [warScore, famineScore, plagueScore].filter(s => s >= 55).length;
+  const confluenceBoost = highHorsemen >= 3 ? 15 : highHorsemen >= 2 ? 8 : 3;
 
-  // Displacement = precursor to mass death (malnutrition + disease in camps)
-  const displacementKw = ['refugees','displaced','fleeing','evacuation','humanitarian crisis','aid workers'];
+  const displacementKw = ['refugees','displaced','fleeing','humanitarian crisis','aid camp'];
   const displaceHeadlines = newsHits(displacementKw);
 
-  let deathScore = 18;
-  deathScore += Math.min(20, confluenceBoost);         // amplified by other horsemen
-  deathScore += Math.min(18, lifeExpScore);            // life expectancy direction
-  deathScore += Math.min(18, infantMort * 0.35);       // child mortality = systemic death
-  deathScore += Math.min(12, displaceHeadlines * 3);   // displacement = mortality risk
-  deathScore += Math.min(8, gdacsCritical * 0.8);      // disasters kill directly
+  let deathScore = 15; // base: life expectancy at record high, positive trajectory
+  deathScore += Math.min(15, confluenceBoost);        // horsemen feedback
+  deathScore += Math.min(12, lifeExpFactor);          // life exp direction
+  deathScore += Math.min(12, infantMort * 0.28);      // child mortality
+  deathScore += Math.min(8,  displaceHeadlines * 2);  // displacement = mass mortality risk
+  deathScore += Math.min(6,  gdacsCritical * 0.7);   // disasters → direct deaths
+
+  deathScore = Math.min(75, Math.max(0, deathScore));
 
   const lifeExpDir = lifeExpDelta >= 0 ? '↑ improving' : '↓ declining';
   setHorse('death', deathScore,
     `Life exp ${lifeExp.toFixed(1)}yr (${lifeExpDir}) · Under-5: ${infantMort.toFixed(0)}/1,000`,
     mkRow('Life expectancy', lifeExp.toFixed(1)+'yr', 90, lifeExpDelta >= 0 ? 'var(--jbrt)' : 'var(--ebrt)') +
-    mkRow('Under-5 mortality', infantMort.toFixed(1)+'/1k', 60, 'var(--vbrt)') +
-    mkRow('Displacement headlines', displaceHeadlines, 12, 'var(--vbrt)') +
-    mkRow('Horsemen confluence', Math.round(confluenceBoost)+'pts', 30, 'var(--gld)')
+    mkRow('Under-5 mortality', infantMort.toFixed(1)+'/1k', 50, 'var(--vbrt)') +
+    mkRow('Displacement headlines', displaceHeadlines, 10, 'var(--vbrt)') +
+    mkRow('Horsemen confluence', `${highHorsemen}/3 elevated`, 3, 'var(--gld)')
   );
 
   // ── CONFLUENCE INDEX ─────────────────────────────────────────────────────────
@@ -496,165 +511,260 @@ function renderDataTable(db) {
 }
 
 /* ============ CHARTS ============ */
-let chartsInited = false;
-function renderCharts(db) {
-  if (chartsInited) return;
-  chartsInited = true;
+// Real NASA GISTEMP v4 annual global temperature anomaly (°C above 1951-1980 baseline)
+// Source: data.giss.nasa.gov/gistemp — updated each year, hardcoded for performance
+const NASA_GISTEMP = {
+  '1990':0.44,'1991':0.41,'1992':0.23,'1993':0.24,'1994':0.31,
+  '1995':0.45,'1996':0.35,'1997':0.46,'1998':0.63,'1999':0.40,
+  '2000':0.33,'2001':0.54,'2002':0.63,'2003':0.62,'2004':0.54,
+  '2005':0.68,'2006':0.61,'2007':0.66,'2008':0.54,'2009':0.64,
+  '2010':0.72,'2011':0.61,'2012':0.64,'2013':0.68,'2014':0.75,
+  '2015':0.90,'2016':1.01,'2017':0.92,'2018':0.83,'2019':0.98,
+  '2020':1.02,'2021':0.85,'2022':0.89,'2023':1.17,'2024':1.29
+};
 
-  const wb = db.worldbank;
+// IMF COFER dollar reserve share (%) — annual + quarterly from 2022
+// Source: IMF Currency Composition of Official Foreign Exchange Reserves
+// Annual data: end-year Q4 reading. Recent data: quarterly for resolution.
+// Last updated from IMF COFER report: Q2 2025 = 56.32%
+const IMF_DOLLAR = {
+  '1999':71.0, '2000':71.1, '2001':71.5, '2002':67.1, '2003':65.8,
+  '2004':65.5, '2005':66.4, '2006':65.5, '2007':64.1, '2008':64.0,
+  '2009':62.1, '2010':61.8, '2011':62.2, '2012':61.4, '2013':61.1,
+  '2014':65.2, '2015':65.3, '2016':65.4, '2017':63.8, '2018':62.0,
+  '2019':60.9, '2020':59.0, '2021':58.5,
+  // Quarterly from 2022 for precision tracking
+  '22Q1':58.9, '22Q2':59.2, '22Q3':59.5, '22Q4':58.4,
+  '23Q1':58.5, '23Q2':59.0, '23Q3':58.9, '23Q4':58.4,
+  '24Q1':58.2, '24Q2':57.96,'24Q3':57.85,'24Q4':57.82,
+  '25Q1':57.79,'25Q2':56.32  // IMF COFER Q2 2025 — latest available
+};
+
+const chartInstances = {};
+
+function mkOrUpdate(id, type, labels, data, dsOpts, extraOptions = {}) {
+  const el = document.getElementById(id);
+  if (!el) return;
+
   const CDef = {
     responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
+    animation: { duration: 600, easing: 'easeOutCubic' },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: 'rgba(5,5,4,0.95)',
+        titleColor: '#d4b26a',
+        bodyColor: '#a09880',
+        borderColor: 'rgba(212,178,106,0.2)',
+        borderWidth: 1,
+        titleFont: { family: "'JetBrains Mono'", size: 9 },
+        bodyFont: { family: "'JetBrains Mono'", size: 9 },
+      }
+    },
     scales: {
-      x: { ticks: { color: '#6a6458', font: { family: "'JetBrains Mono'", size: 9 }, maxRotation: 45 }, grid: { color: 'rgba(212,178,106,0.06)' }, border: { color: 'rgba(212,178,106,0.1)' } },
-      y: { ticks: { color: '#6a6458', font: { family: "'JetBrains Mono'", size: 9 } }, grid: { color: 'rgba(212,178,106,0.07)' }, border: { color: 'rgba(212,178,106,0.1)' } }
-    }
+      x: { ticks: { color: '#6a6458', font: { family:"'JetBrains Mono'", size: 9 }, maxRotation: 45, maxTicksLimit: 10 }, grid: { color: 'rgba(212,178,106,0.06)' }, border: { color: 'rgba(212,178,106,0.1)' } },
+      y: { ticks: { color: '#6a6458', font: { family:"'JetBrains Mono'", size: 9 } }, grid: { color: 'rgba(212,178,106,0.07)' }, border: { color: 'rgba(212,178,106,0.1)' } }
+    },
+    ...extraOptions
   };
 
-  const mkChart = (id, type, labels, data, opts) => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    try { new Chart(el, { type, data: { labels, datasets: [{ data, ...opts }] }, options: CDef }); }
-    catch(e) { console.warn('Chart fail', id, e); }
-  };
-
-  // Temperature
-  mkChart('chart-temp', 'bar', ['00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25'],
-    [0.34,0.48,0.56,0.55,0.49,0.62,0.54,0.62,0.44,0.57,0.65,0.54,0.57,0.62,0.68,0.83,0.99,0.90,0.81,0.95,1.01,0.84,0.89,1.17,1.28,1.19],
-    { backgroundColor: (ctx) => { const v = ctx.raw; return v >= 1.0 ? '#c04a28' : v >= 0.8 ? '#c8913a' : v >= 0.6 ? '#a07030' : '#6a6458'; }, borderWidth: 0 });
-
-  // Dollar share
-  mkChart('chart-dollar', 'line', ['2000','02','04','06','08','10','12','14','16','18','20','22','24'],
-    [71.1,67.0,65.5,65.7,64.0,61.7,61.4,65.2,65.3,62.0,59.0,58.4,57.8],
-    { borderColor: '#d4b26a', backgroundColor: 'rgba(212,178,106,0.07)', borderWidth: 2, tension: .4, fill: true, pointRadius: 4, pointBackgroundColor: '#d4b26a' });
-
-  // US Debt
-  const debtData = wb.usDebtGDP ? Object.entries(wb.usDebtGDP).sort().map(([y,v]) => ({ x: y, y: v })) : null;
-  if (debtData) {
-    mkChart('chart-debt', 'line', debtData.map(d => d.x.slice(2)), debtData.map(d => d.y),
-      { borderColor: '#c04a28', backgroundColor: 'rgba(192,74,40,0.07)', borderWidth: 2, tension: .4, fill: true, pointRadius: 3, pointBackgroundColor: '#c04a28' });
+  if (chartInstances[id]) {
+    // Update existing chart
+    chartInstances[id].data.labels = labels;
+    chartInstances[id].data.datasets[0] = { data, ...dsOpts };
+    chartInstances[id].update('active');
+    return;
   }
 
-  // Military
-  const milData = wb.militarySpending ? Object.entries(wb.militarySpending).sort().map(([y,v]) => ({ x: y, y: v })) : null;
-  if (milData) {
-    mkChart('chart-mil', 'line', milData.map(d => d.x.slice(2)), milData.map(d => d.y),
-      { borderColor: '#7860c0', backgroundColor: 'rgba(120,96,192,0.07)', borderWidth: 2, tension: .4, fill: true, pointRadius: 3, pointBackgroundColor: '#7860c0' });
+  try {
+    chartInstances[id] = new Chart(el, {
+      type,
+      data: { labels, datasets: [{ data, ...dsOpts }] },
+      options: CDef
+    });
+  } catch(e) { console.warn('Chart fail', id, e); }
+}
+
+function renderCharts(db) {
+  const wb = db.worldbank || {};
+
+  // 1. TEMPERATURE — NASA GISTEMP real data, color gradient by severity
+  const tempLabels = Object.keys(NASA_GISTEMP);
+  const tempData   = Object.values(NASA_GISTEMP);
+  mkOrUpdate('chart-temp', 'bar', tempLabels, tempData, {
+    backgroundColor: tempData.map(v =>
+      v >= 1.1  ? '#ff2222' :
+      v >= 0.9  ? '#c04a28' :
+      v >= 0.7  ? '#c8913a' :
+      v >= 0.5  ? '#a07030' : '#6a6458'
+    ),
+    borderRadius: 2,
+    borderWidth: 0,
+  }, {
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: ctx => `+${ctx.raw.toFixed(2)}°C anomaly` } }
+    },
+    scales: {
+      x: { ticks: { color: '#6a6458', font: { family:"'JetBrains Mono'", size: 9 }, maxTicksLimit: 8 }, grid: { color: 'rgba(212,178,106,0.06)' }, border: { color: 'rgba(212,178,106,0.1)' } },
+      y: { ticks: { color: '#6a6458', font: { family:"'JetBrains Mono'", size: 9 }, callback: v => '+' + v.toFixed(1) + '°C' }, grid: { color: 'rgba(212,178,106,0.07)' }, border: { color: 'rgba(212,178,106,0.1)' } }
+    },
+    animation: { duration: 800 }
+  });
+
+  // 2. DOLLAR RESERVE — IMF COFER with trend line
+  const dollarLabels = Object.keys(IMF_DOLLAR);
+  const dollarData   = Object.values(IMF_DOLLAR);
+  mkOrUpdate('chart-dollar', 'line', dollarLabels, dollarData, {
+    borderColor: '#d4b26a',
+    backgroundColor: 'rgba(212,178,106,0.08)',
+    borderWidth: 2.5,
+    tension: 0.35,
+    fill: true,
+    pointRadius: ctx => ctx.dataIndex === dollarData.length - 1 ? 6 : 3,
+    pointBackgroundColor: ctx => ctx.dataIndex === dollarData.length - 1 ? '#f0d090' : '#d4b26a',
+    pointBorderColor: 'transparent',
+  }, {
+    scales: {
+      x: { ticks: { color: '#6a6458', font: { family:"'JetBrains Mono'", size: 9 }, maxTicksLimit: 9 }, grid: { color: 'rgba(212,178,106,0.06)' }, border: { color: 'rgba(212,178,106,0.1)' } },
+      y: { min: 55, max: 73, ticks: { color: '#6a6458', font: { family:"'JetBrains Mono'", size: 9 }, callback: v => v + '%' }, grid: { color: 'rgba(212,178,106,0.07)' }, border: { color: 'rgba(212,178,106,0.1)' } }
+    },
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: ctx => `${ctx.raw.toFixed(1)}% of global reserves` } }
+    },
+    animation: { duration: 800 }
+  });
+
+  // 3. US DEBT — live World Bank data
+  if (wb.usDebtGDP && Object.keys(wb.usDebtGDP).length > 0) {
+    const debtEntries = Object.entries(wb.usDebtGDP).sort(([a],[b]) => a.localeCompare(b));
+    const debtLabels = debtEntries.map(([y]) => y.slice(2));
+    const debtData   = debtEntries.map(([,v]) => v);
+    mkOrUpdate('chart-debt', 'line', debtLabels, debtData, {
+      borderColor: '#c04a28',
+      backgroundColor: 'rgba(192,74,40,0.08)',
+      borderWidth: 2.5,
+      tension: 0.35,
+      fill: true,
+      pointRadius: ctx => ctx.dataIndex === debtData.length - 1 ? 6 : 2,
+      pointBackgroundColor: '#c04a28',
+    }, {
+      scales: {
+        x: { ticks: { color: '#6a6458', font: { family:"'JetBrains Mono'", size: 9 }, maxTicksLimit: 8 }, grid: { color: 'rgba(212,178,106,0.06)' }, border: { color: 'rgba(212,178,106,0.1)' } },
+        y: { ticks: { color: '#6a6458', font: { family:"'JetBrains Mono'", size: 9 }, callback: v => v + '%' }, grid: { color: 'rgba(212,178,106,0.07)' }, border: { color: 'rgba(212,178,106,0.1)' } }
+      },
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => `${ctx.raw.toFixed(1)}% of GDP` } } },
+      animation: { duration: 800 }
+    });
   }
 
-  // Life expectancy
-  const lifeData = wb.lifeExpectancy ? Object.entries(wb.lifeExpectancy).sort().map(([y,v]) => ({ x: y, y: v })) : null;
-  if (lifeData) {
-    mkChart('chart-life', 'line', lifeData.map(d => d.x.slice(2)), lifeData.map(d => d.y),
-      { borderColor: '#28b088', backgroundColor: 'rgba(40,176,136,0.07)', borderWidth: 2, tension: .4, fill: true, pointRadius: 3, pointBackgroundColor: '#28b088' });
+  // 4. MILITARY SPENDING — live World Bank data
+  if (wb.militarySpending && Object.keys(wb.militarySpending).length > 0) {
+    const milEntries = Object.entries(wb.militarySpending).sort(([a],[b]) => a.localeCompare(b));
+    const milLabels  = milEntries.map(([y]) => y.slice(2));
+    const milData    = milEntries.map(([,v]) => v);
+    mkOrUpdate('chart-mil', 'line', milLabels, milData, {
+      borderColor: '#7860c0',
+      backgroundColor: 'rgba(120,96,192,0.08)',
+      borderWidth: 2.5,
+      tension: 0.35,
+      fill: true,
+      pointRadius: ctx => ctx.dataIndex === milData.length - 1 ? 6 : 2,
+      pointBackgroundColor: '#7860c0',
+    }, {
+      scales: {
+        x: { ticks: { color: '#6a6458', font: { family:"'JetBrains Mono'", size: 9 }, maxTicksLimit: 8 }, grid: { color: 'rgba(212,178,106,0.06)' }, border: { color: 'rgba(212,178,106,0.1)' } },
+        y: { ticks: { color: '#6a6458', font: { family:"'JetBrains Mono'", size: 9 }, callback: v => v.toFixed(1) + '%' }, grid: { color: 'rgba(212,178,106,0.07)' }, border: { color: 'rgba(212,178,106,0.1)' } }
+      },
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => `${ctx.raw.toFixed(2)}% of world GDP` } } },
+      animation: { duration: 800 }
+    });
   }
 
-  // AGI timeline — multi-dataset, must NOT call mkChart first (would corrupt the canvas)
+  // 5. LIFE EXPECTANCY — live World Bank data
+  if (wb.lifeExpectancy && Object.keys(wb.lifeExpectancy).length > 0) {
+    const lifeEntries = Object.entries(wb.lifeExpectancy).sort(([a],[b]) => a.localeCompare(b));
+    const lifeLabels  = lifeEntries.map(([y]) => y.slice(2));
+    const lifeData    = lifeEntries.map(([,v]) => v);
+    mkOrUpdate('chart-life', 'line', lifeLabels, lifeData, {
+      borderColor: '#28b088',
+      backgroundColor: 'rgba(40,176,136,0.08)',
+      borderWidth: 2.5,
+      tension: 0.35,
+      fill: true,
+      pointRadius: ctx => ctx.dataIndex === lifeData.length - 1 ? 6 : 2,
+      pointBackgroundColor: '#28b088',
+    }, {
+      scales: {
+        x: { ticks: { color: '#6a6458', font: { family:"'JetBrains Mono'", size: 9 }, maxTicksLimit: 8 }, grid: { color: 'rgba(212,178,106,0.06)' }, border: { color: 'rgba(212,178,106,0.1)' } },
+        y: { min: 65, ticks: { color: '#6a6458', font: { family:"'JetBrains Mono'", size: 9 }, callback: v => v + 'yr' }, grid: { color: 'rgba(212,178,106,0.07)' }, border: { color: 'rgba(212,178,106,0.1)' } }
+      },
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => `${ctx.raw.toFixed(1)} years` } } },
+      animation: { duration: 800 }
+    });
+  }
+
+  // 6. AGI TIMELINE — expert probability projections (unchanged, speculative content)
   const agiEl = document.getElementById('chart-agi');
-  if (agiEl) {
+  if (agiEl && !chartInstances['chart-agi']) {
     try {
-      new Chart(agiEl, {
+      chartInstances['chart-agi'] = new Chart(agiEl, {
         type: 'line',
         data: {
-          labels: ['2026','2027','2028','2029','2030','2032','2035','2040'],
+          labels: ['2026','2027','2028','2029','2030','2032','2035','2040','2045'],
           datasets: [
-            {
-              label: 'Musk/Aggressive (2026)',
-              data: [45,65,78,86,91,95,98,99],
-              borderColor: '#c04a28',
-              borderWidth: 2,
-              borderDash: [5,4],
-              tension: .4,
-              pointRadius: 4,
-              pointBackgroundColor: '#c04a28',
-              fill: false
-            },
-            {
-              label: 'DeepMind/Legg (50% by 2028)',
-              data: [10,28,50,65,76,88,95,98],
-              borderColor: '#d4b26a',
-              backgroundColor: 'rgba(212,178,106,0.08)',
-              borderWidth: 3,
-              tension: .4,
-              fill: true,
-              pointRadius: 5,
-              pointBackgroundColor: '#d4b26a',
-              pointBorderColor: '#d4b26a'
-            },
-            {
-              label: 'Metaculus Community',
-              data: [9,18,33,47,60,78,90,96],
-              borderColor: '#7860c0',
-              borderWidth: 2,
-              borderDash: [3,3],
-              tension: .4,
-              pointRadius: 4,
-              pointBackgroundColor: '#7860c0',
-              fill: false
-            },
+            { label: 'Musk/Aggressive', data: [45,65,78,86,91,95,98,99,99], borderColor: '#c04a28', borderWidth: 2, borderDash: [5,4], tension: .4, pointRadius: 3, fill: false },
+            { label: 'DeepMind (50% by 2028)', data: [10,28,50,65,76,88,95,98,99], borderColor: '#d4b26a', backgroundColor: 'rgba(212,178,106,0.07)', borderWidth: 2.5, tension: .4, fill: true, pointRadius: 4, pointBackgroundColor: '#d4b26a' },
+            { label: 'Metaculus Community', data: [9,18,33,47,60,78,90,96,98], borderColor: '#7860c0', borderWidth: 2, borderDash: [3,3], tension: .4, pointRadius: 3, fill: false },
           ]
         },
         options: {
-          responsive: true,
-          maintainAspectRatio: false,
+          responsive: true, maintainAspectRatio: false, animation: { duration: 800 },
           plugins: {
-            legend: {
-              display: true,
-              position: 'bottom',
-              labels: {
-                color: '#a09880',
-                font: { family: "'JetBrains Mono'", size: 9 },
-                boxWidth: 24,
-                padding: 12,
-                usePointStyle: true
-              }
-            },
-            tooltip: {
-              callbacks: {
-                label: ctx => `${ctx.dataset.label}: ${ctx.raw}% probability`
-              }
-            }
+            legend: { display: true, position: 'bottom', labels: { color: '#a09880', font: { family:"'JetBrains Mono'", size: 9 }, boxWidth: 20, padding: 10, usePointStyle: true } },
+            tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.raw}% probability` } }
           },
           scales: {
-            x: {
-              ticks: { color: '#6a6458', font: { family: "'JetBrains Mono'", size: 9 } },
-              grid: { color: 'rgba(212,178,106,0.06)' },
-              border: { color: 'rgba(212,178,106,0.1)' }
-            },
-            y: {
-              min: 0, max: 100,
-              ticks: { color: '#6a6458', font: { family: "'JetBrains Mono'", size: 9 }, callback: v => v + '%' },
-              grid: { color: 'rgba(212,178,106,0.07)' },
-              border: { color: 'rgba(212,178,106,0.1)' }
-            }
+            x: { ticks: { color: '#6a6458', font: { family:"'JetBrains Mono'", size: 9 } }, grid: { color: 'rgba(212,178,106,0.06)' }, border: { color: 'rgba(212,178,106,0.1)' } },
+            y: { min: 0, max: 100, ticks: { color: '#6a6458', font: { family:"'JetBrains Mono'", size: 9 }, callback: v => v + '%' }, grid: { color: 'rgba(212,178,106,0.07)' }, border: { color: 'rgba(212,178,106,0.1)' } }
           }
         }
       });
-    } catch(e) { console.error('AGI chart error:', e); }
+    } catch(e) { console.warn('AGI chart fail', e); }
   }
 
-  // CSI history chart
-  if (db.csi.length > 1) {
+  // 7. CSI HISTORY — in the CSI section, update if exists
+  if (db.csi && db.csi.length > 1) {
     const csiHistory = db.csi.slice(0, 30).reverse();
+    const csiLabels  = csiHistory.map(c => new Date(c.timestamp).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}));
+    const csiData    = csiHistory.map(c => c.composite);
     const csiEl = document.getElementById('chart-csi');
     if (csiEl) {
-      try {
-        new Chart(csiEl, {
-          type: 'line',
-          data: {
-            labels: csiHistory.map(c => new Date(c.timestamp).toLocaleDateString()),
-            datasets: [{
-              data: csiHistory.map(c => c.composite),
-              borderColor: '#c04a28', backgroundColor: 'rgba(192,74,40,0.1)',
-              borderWidth: 2, tension: .4, fill: true, pointRadius: 4, pointBackgroundColor: '#c04a28'
-            }]
-          },
-          options: { ...CDef, scales: { ...CDef.scales, y: { ...CDef.scales.y, min: 0, max: 100 } } }
-        });
-      } catch(e) {}
+      if (chartInstances['chart-csi']) {
+        chartInstances['chart-csi'].data.labels = csiLabels;
+        chartInstances['chart-csi'].data.datasets[0].data = csiData;
+        chartInstances['chart-csi'].update('active');
+      } else {
+        try {
+          chartInstances['chart-csi'] = new Chart(csiEl, {
+            type: 'line',
+            data: { labels: csiLabels, datasets: [{ data: csiData, borderColor: '#c04a28', backgroundColor: 'rgba(192,74,40,0.1)', borderWidth: 2, tension: .4, fill: true, pointRadius: 4, pointBackgroundColor: '#c04a28' }] },
+            options: {
+              responsive: true, maintainAspectRatio: false, animation: { duration: 600 },
+              plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => `CSI: ${ctx.raw}/100` } } },
+              scales: {
+                x: { ticks: { color: '#6a6458', font: { family:"'JetBrains Mono'", size: 8 }, maxTicksLimit: 6 }, grid: { color: 'rgba(212,178,106,0.06)' }, border: { color: 'rgba(212,178,106,0.1)' } },
+                y: { min: 0, max: 100, ticks: { color: '#6a6458', font: { family:"'JetBrains Mono'", size: 9 } }, grid: { color: 'rgba(212,178,106,0.07)' }, border: { color: 'rgba(212,178,106,0.1)' } }
+              }
+            }
+          });
+        } catch(e) {}
+      }
     }
   }
 }
+
 
 /* ============ TIPPING SIMULATOR ============ */
 function initTippingSimulator() {
