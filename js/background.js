@@ -18,8 +18,8 @@
   canvas.style.cssText = `
     position: fixed; top: 0; left: 0;
     width: 100%; height: 100%;
-    z-index: 0; pointer-events: none;
-    opacity: 0; transition: opacity 1.8s ease;
+    z-index: -1; pointer-events: none;
+    opacity: 0; transition: opacity 2s ease;
   `;
   document.body.insertBefore(canvas, document.body.firstChild);
 
@@ -28,20 +28,22 @@
 
   // Config
   const CFG = {
-    count:      isMobile ? 55 : 110,
-    maxDist:    isMobile ? 120 : 160,
-    speed:      isMobile ? 0.18 : 0.22,
-    mouseRange: 140,
-    mouseForce: 0.012,
-    pulseEvery: 220,   // frames between random pulses
+    count:      isMobile ? 80 : 160,
+    maxDist:    isMobile ? 130 : 170,
+    speed:      isMobile ? 0.22 : 0.28,
+    mouseRange: 150,
+    mouseForce: 0.014,
+    pulseEvery: 180,   // frames between random pulses
     colors: [
       { r: 212, g: 178, b: 106, w: 40 },  // gold — dominant
-      { r: 192, g: 74,  b: 40,  w: 18 },  // ember
-      { r: 40,  g: 176, b: 136, w: 14 },  // teal
-      { r: 64,  g: 144, b: 216, w: 12 },  // ice blue
-      { r: 200, g: 190, b: 170, w: 16 },  // dim white
+      { r: 224, g: 96,  b: 64,  w: 20 },  // ember bright
+      { r: 40,  g: 200, b: 160, w: 16 },  // teal bright
+      { r: 80,  g: 160, b: 240, w: 14 },  // ice blue bright
+      { r: 220, g: 210, b: 190, w: 20 },  // warm white
+      { r: 255, g: 220, b: 140, w: 10 },  // bright gold highlight
     ],
-    auroras: isMobile ? 2 : 4,
+    auroras: isMobile ? 3 : 6,
+    starCount: isMobile ? 120 : 280,  // fixed stars in background
   };
 
   function pickColor() {
@@ -62,9 +64,9 @@
       this.vy = Math.sin(a) * sp;
       const col = pickColor();
       this.r  = col.r; this.g = col.g; this.b = col.b;
-      this.sz = 0.5 + Math.random() * 1.4;
-      this.alpha = 0.3 + Math.random() * 0.65;
-      this.twinkleSpeed = 0.008 + Math.random() * 0.018;
+      this.sz = 0.8 + Math.random() * 1.8;
+      this.alpha = 0.5 + Math.random() * 0.5;
+      this.twinkleSpeed = 0.01 + Math.random() * 0.02;
       this.twinklePhase = Math.random() * Math.PI * 2;
       this.life = 0;
       this.maxLife = 400 + Math.random() * 800;
@@ -119,24 +121,25 @@
       this.y  = H * (0.1 + Math.random() * 0.8);
       this.w  = W * (0.4 + Math.random() * 0.6);
       this.h  = H * (0.15 + Math.random() * 0.25);
-      this.vx = (Math.random() - 0.5) * 0.15;
-      this.vy = (Math.random() - 0.5) * 0.06;
-      // Pick aurora color
+      this.vx = (Math.random() - 0.5) * 0.18;
+      this.vy = (Math.random() - 0.5) * 0.07;
+      // Pick aurora color — boosted opacity
       const cols = [
-        [192, 74, 40, 0.025],    // ember
-        [212, 178, 106, 0.02],   // gold
-        [40, 176, 136, 0.018],   // teal
-        [64, 144, 216, 0.015],   // ice
+        [192, 74, 40, 0.055],    // ember
+        [212, 178, 106, 0.048],  // gold
+        [40, 176, 136, 0.042],   // teal
+        [64, 144, 216, 0.038],   // ice
+        [180, 60, 180, 0.030],   // violet
       ];
       const c = cols[Math.floor(Math.random() * cols.length)];
       this.col = `rgba(${c[0]},${c[1]},${c[2]},${c[3]})`;
       this.phase = Math.random() * Math.PI * 2;
-      this.phaseSpeed = 0.003 + Math.random() * 0.004;
+      this.phaseSpeed = 0.004 + Math.random() * 0.005;
     }
     update() {
       this.phase += this.phaseSpeed;
-      this.x += this.vx + Math.sin(this.phase * 0.7) * 0.3;
-      this.y += this.vy + Math.cos(this.phase * 0.5) * 0.15;
+      this.x += this.vx + Math.sin(this.phase * 0.7) * 0.35;
+      this.y += this.vy + Math.cos(this.phase * 0.5) * 0.18;
       if (this.x < -this.w) this.x = W + this.w;
       if (this.x > W + this.w) this.x = -this.w;
     }
@@ -152,6 +155,74 @@
       ctx.fill();
       ctx.restore();
     }
+  }
+
+  // Fixed star field — rendered once to offscreen canvas, drawn each frame
+  class StarField {
+    constructor() {
+      this.offscreen = document.createElement('canvas');
+      this.offscreen.width = 1;
+      this.offscreen.height = 1;
+      this.built = false;
+    }
+    build() {
+      this.offscreen.width  = W;
+      this.offscreen.height = H;
+      const oc = this.offscreen.getContext('2d');
+      oc.clearRect(0, 0, W, H);
+
+      const n = CFG.starCount;
+      for (let i = 0; i < n; i++) {
+        const x = Math.random() * W;
+        const y = Math.random() * H;
+        const r = Math.random();
+        // Three tiers: tiny dim, medium, rare bright
+        let size, alpha, col;
+        if (r < 0.65) {
+          // Tiny background stars
+          size  = 0.3 + Math.random() * 0.5;
+          alpha = 0.2 + Math.random() * 0.35;
+          col   = `rgba(200,190,170,${alpha.toFixed(2)})`;
+        } else if (r < 0.90) {
+          // Medium stars — gold/white tint
+          size  = 0.6 + Math.random() * 0.7;
+          alpha = 0.45 + Math.random() * 0.35;
+          const g = Math.random() < 0.5;
+          col = g ? `rgba(212,178,106,${alpha.toFixed(2)})` : `rgba(220,210,195,${alpha.toFixed(2)})`;
+        } else {
+          // Bright stars — cross-shaped glint
+          size  = 1.0 + Math.random() * 1.2;
+          alpha = 0.7 + Math.random() * 0.3;
+          const hue = Math.random();
+          if (hue < 0.4)      col = `rgba(212,178,106,${alpha.toFixed(2)})`;
+          else if (hue < 0.65) col = `rgba(64,160,240,${alpha.toFixed(2)})`;
+          else                 col = `rgba(255,220,180,${alpha.toFixed(2)})`;
+
+          // Draw cross glint
+          oc.strokeStyle = col;
+          oc.lineWidth = 0.4;
+          oc.globalAlpha = alpha * 0.6;
+          oc.beginPath();
+          oc.moveTo(x - size * 2.5, y); oc.lineTo(x + size * 2.5, y);
+          oc.stroke();
+          oc.beginPath();
+          oc.moveTo(x, y - size * 2.5); oc.lineTo(x, y + size * 2.5);
+          oc.stroke();
+          oc.globalAlpha = 1;
+        }
+
+        oc.beginPath();
+        oc.arc(x, y, size, 0, Math.PI * 2);
+        oc.fillStyle = col;
+        oc.fill();
+      }
+      this.built = true;
+    }
+    draw() {
+      if (!this.built) this.build();
+      ctx.drawImage(this.offscreen, 0, 0);
+    }
+    rebuild() { this.built = false; }
   }
 
   // Event pulse rings — expand from random particles
@@ -183,8 +254,7 @@
         const dy = particles[i].y - particles[j].y;
         const dist = Math.sqrt(dx*dx + dy*dy);
         if (dist < CFG.maxDist) {
-          const alpha = (1 - dist / CFG.maxDist) * 0.18;
-          // Blend the two particle colors
+          const alpha = (1 - dist / CFG.maxDist) * 0.28;
           const r = Math.round((particles[i].r + particles[j].r) / 2);
           const g = Math.round((particles[i].g + particles[j].g) / 2);
           const b = Math.round((particles[i].b + particles[j].b) / 2);
@@ -192,7 +262,7 @@
           ctx.moveTo(particles[i].x, particles[i].y);
           ctx.lineTo(particles[j].x, particles[j].y);
           ctx.strokeStyle = `rgba(${r},${g},${b},${alpha.toFixed(3)})`;
-          ctx.lineWidth = 0.5;
+          ctx.lineWidth = 0.6;
           ctx.stroke();
         }
       }
@@ -205,12 +275,14 @@
   }
 
   let auroras = [];
+  let starField;
   let frame   = 0;
 
   function init() {
     resize();
     particles = Array.from({ length: CFG.count }, () => new Particle());
     auroras   = Array.from({ length: CFG.auroras }, () => new Aurora());
+    starField = new StarField();
   }
 
   function render() {
@@ -218,10 +290,13 @@
     frame++;
 
     // Clear with slight trail for star-trail effect
-    ctx.fillStyle = 'rgba(5,5,4,0.88)';
+    ctx.fillStyle = 'rgba(5,5,4,0.82)';
     ctx.fillRect(0, 0, W, H);
 
-    // Auroras first (background)
+    // Fixed star field (rendered to offscreen, cheap to draw)
+    starField.draw();
+
+    // Auroras (background glow layers)
     if (!prefersReduced) {
       for (const a of auroras) { a.update(); a.draw(); }
     }
@@ -235,7 +310,7 @@
     // Pulses
     if (!prefersReduced && frame % CFG.pulseEvery === 0 && particles.length > 0) {
       const p = particles[Math.floor(Math.random() * particles.length)];
-      pulses.push(new Pulse(p.x, p.y, `rgba(${p.r},${p.g},${p.b},0.7)`));
+      pulses.push(new Pulse(p.x, p.y, `rgba(${p.r},${p.g},${p.b},0.8)`));
     }
     for (let i = pulses.length - 1; i >= 0; i--) {
       pulses[i].update();
@@ -249,7 +324,10 @@
   document.addEventListener('mouseleave', () => { mouse.x = -9999; mouse.y = -9999; });
 
   // Resize
-  window.addEventListener('resize', () => { resize(); });
+  window.addEventListener('resize', () => {
+    resize();
+    if (starField) starField.rebuild();
+  });
 
   // Pause when tab hidden
   document.addEventListener('visibilitychange', () => {

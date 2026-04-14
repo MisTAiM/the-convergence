@@ -1102,7 +1102,7 @@ section[id] {
   border-top: 1px solid var(--gld);
   min-width: 230px;
   padding: .5rem 0;
-  z-index: 200;
+  z-index: 650;
   opacity: 0;
   pointer-events: none;
   transform: translateY(-4px);
@@ -1448,16 +1448,19 @@ section[id] {
    ANIMATED BACKGROUND CANVAS + CONTENT LAYERING
 ═══════════════════════════════════════════════════ */
 
-/* Canvas sits behind everything at z-index 0 */
-#bg-canvas { z-index: 0 !important; }
+/* Canvas sits behind everything */
+#bg-canvas { z-index: -1 !important; position: fixed !important; }
 
-/* All content sits above canvas */
-#nav, #breaking-banner, #live-pulse,
+/* Content sits above canvas — sections only need relative positioning */
+#breaking-banner, #live-pulse,
 #hero, #how-it-works,
 .mod, section, footer, #status-bar {
   position: relative;
   z-index: 1;
 }
+
+/* Nav keeps its original fixed + z-index:600 — do NOT override here */
+/* Only add background tweak */
 
 /* Make sections slightly transparent so aurora glows through */
 .mod {
@@ -1481,11 +1484,12 @@ section[id] {
   background: rgba(14, 13, 10, 0.88) !important;
 }
 
-/* Nav — solid but glassy */
+/* Nav — glassy overlay, z-index and position kept from original rule above */
 #nav {
   background: rgba(5, 5, 4, 0.94) !important;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  /* position:fixed and z-index:600 preserved from original #nav rule */
 }
 
 /* Breaking banner glassy */
