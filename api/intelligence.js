@@ -78,21 +78,42 @@ module.exports = async (req, res) => {
         const combined = (item.title + ' ' + item.desc).toLowerCase();
         const hits = CHARGES_KW.filter(k => combined.includes(k));
         if (hits.length > 0) {
-          // Classify
-          // High profile = elected/appointed officials OR large financial scale OR serious power crimes
-            const hasOfficial = combined.includes('senator') || combined.includes('congressman') ||
-              combined.includes('representative') || combined.includes('mayor') ||
-              combined.includes('governor') || combined.includes('police chief') ||
-              combined.includes('sheriff') || combined.includes('federal agent') ||
-              combined.includes('dea agent') || combined.includes('irs agent');
-            const hasScale = combined.includes(' million') || combined.includes(' billion') ||
-              combined.includes('ponzi') || combined.includes('securities fraud') ||
-              combined.includes('ceo') || combined.includes('largest') ||
-              combined.includes('nationwide scheme') || combined.includes('international');
-            const hasPowerCrime = combined.includes('bribery') || combined.includes('racketeering') ||
-              combined.includes('obstruction of justice') || combined.includes('public corruption') ||
-              combined.includes('civil rights') || combined.includes('election fraud');
-            const isHighProfile = hasOfficial || hasScale || hasPowerCrime;
+          // HIGH-PROFILE: must be an elected/appointed official, OR a $10M+ financial crime,
+          // OR a serious power-structure crime. Regular drug/assault/theft = NOT high-profile.
+          const hasOfficial =
+            combined.includes('senator') || combined.includes('congressman') ||
+            combined.includes('representative') || combined.includes('mayor') ||
+            combined.includes('governor') || combined.includes('police chief') ||
+            combined.includes('state official') || combined.includes('city official') ||
+            combined.includes('county official') || combined.includes('public official') ||
+            combined.includes('sheriff') || combined.includes('police officer charged') ||
+            combined.includes('federal agent charged') || combined.includes('dea agent') ||
+            combined.includes('fbi agent') || combined.includes('irs agent') ||
+            combined.includes('judge charged') || combined.includes('prosecutor charged');
+
+          // Scale: must involve $10M+, or systemic financial crimes
+          const hasScale =
+            /\$\s*\d{2,}[\s,]*million/.test(combined) ||   // $10M+ (2+ digit millions)
+            combined.includes('billion') ||
+            combined.includes('ponzi') ||
+            combined.includes('securities fraud') ||
+            combined.includes('wire fraud scheme') ||       // scheme required for wire fraud
+            combined.includes('nationwide scheme') ||
+            combined.includes('transnational') ||
+            combined.includes('money laundering network');
+
+          // Power crimes: attacks on institutions themselves
+          const hasPowerCrime =
+            combined.includes('bribery') ||
+            combined.includes('racketeering') ||
+            combined.includes('obstruction of justice') ||
+            combined.includes('public corruption') ||
+            combined.includes('election fraud') ||
+            combined.includes('vote fraud') ||
+            combined.includes('civil rights violation') ||
+            combined.includes('extortion') && combined.includes('official');
+
+          const isHighProfile = hasOfficial || hasScale || hasPowerCrime;
           charges.push({
             title: item.title,
             desc: item.desc,
@@ -194,9 +215,15 @@ module.exports = async (req, res) => {
         const combined = item.title.toLowerCase();
         const hits = CHARGES_KW.filter(k => combined.includes(k));
         if (hits.length > 0) {
-          const isHighProfile = combined.includes('million') || combined.includes('billion') ||
-            combined.includes('senator') || combined.includes('official') || combined.includes('bribery') ||
-            combined.includes('conspiracy') || combined.includes('racketeering') || combined.includes('ponzi');
+          const isHighProfile =
+            /\$\s*\d{2,}[\s,]*million/.test(combined) ||
+            combined.includes('billion') ||
+            combined.includes('senator') || combined.includes('congressman') ||
+            combined.includes('governor') || combined.includes('mayor') ||
+            combined.includes('public official') || combined.includes('police chief') ||
+            combined.includes('bribery') || combined.includes('racketeering') ||
+            combined.includes('ponzi') || combined.includes('election fraud') ||
+            combined.includes('obstruction of justice') || combined.includes('public corruption');
           charges.unshift({
             title: item.title,
             desc: 'DOJ Press Release',

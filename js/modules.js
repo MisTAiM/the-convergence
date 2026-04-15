@@ -498,7 +498,7 @@ function renderDataTable(db) {
     { ind: 'Renewable Electricity Share', val: G(wb.renewableElectricity)?.toFixed(1) + '%', trend: '↑', color: 'var(--jbrt)', src: 'World Bank API' },
     { ind: 'US Debt-to-GDP', val: G(wb.usDebtGDP)?.toFixed(1) + '%', trend: '↑', color: 'var(--ebrt)', src: 'World Bank API' },
     { ind: 'US GDP Growth', val: G(wb.gdpGrowth)?.toFixed(2) + '%', trend: '→', color: 'var(--gld)', src: 'World Bank API' },
-    { ind: 'Dollar Reserve Share', val: '57.8%', trend: '↓', color: 'var(--ebrt)', src: 'IMF COFER' },
+    { ind: 'Dollar Reserve Share', val: '56.3%', trend: '↓', color: 'var(--ebrt)', src: 'IMF COFER Q2-2025' },
     { ind: 'Global Temp Anomaly', val: '1.47°C', trend: '↑', color: 'var(--ebrt)', src: 'NASA GISTEMP' },
   ];
 
@@ -1079,7 +1079,7 @@ const STATIC_EVENTS = [
   { lat:9.35, lng:-79.92, name:'Panama Canal', event:'💰 Drought Restrictions', type:'economic', size:0.8, desc:'Record low water levels 2024 forced traffic restrictions. Climate change threatens long-term viability of this 6% global trade route.', source:'ACP 2026' },
 
   // Geopolitical hubs
-  { lat:40.71, lng:-74.01, name:'New York', event:'📊 US Debt Clock — $36T', type:'economic', size:0.9, desc:'Federal debt at 118% GDP. Fastest peacetime debt growth in US history. Dollar reserve share at 57.8% (down from 71% in 2000).', source:'World Bank API Live' },
+  { lat:40.71, lng:-74.01, name:'New York', event:'📊 US Debt Clock — $36T', type:'economic', size:0.9, desc:'Federal debt at 118% GDP. Fastest peacetime debt growth in US history. Dollar reserve share at 56.3% (down from 71% in 2000, IMF COFER Q2 2025).', source:'World Bank API Live' },
   { lat:39.90, lng:116.41, name:'Beijing', event:'📊 BRICS Pay + Yuan Reserve Push', type:'economic', size:0.95, desc:'Yuan reserve share rising. BRICS Pay operational in 44 countries. China buying gold at record pace. Dollar reserve dominance structurally challenged.', source:'IMF COFER 2026' },
   { lat:55.75, lng:37.62, name:'Moscow', event:'📊 Non-Dollar Trade Hub', type:'economic', size:0.8, desc:'Russia conducting 90%+ of trade in non-dollar currencies. Ruble-yuan settlement expanding. Sanctions accelerating global dedollarization.', source:'Bank of Russia 2026' },
   { lat:28.61, lng:77.21, name:'New Delhi', event:'📊 India: Alternative Reserve', type:'economic', size:0.8, desc:'Rupee internationalization accelerating. Digital rupee CBDC launched. India now largest global oil buyer, negotiating in non-dollar terms.', source:'RBI 2026' },
@@ -1106,9 +1106,9 @@ const STATIC_EVENTS = [
   { lat:5.23, lng:-52.77, name:'Kourou', event:'🚀 Ariane 6 Launch Site', type:'climate', size:0.65, desc:'European Space Agency launch facility. Ariane 6 rocket operational 2024. European space sovereignty — independent of US/Russia/China launch providers.', source:'ESA 2026' },
 
   // Nuclear
-  { lat:34.05, lng:131.86, name:'Hiroshima', event:'☢️ Nuclear Memory Site', type:'war', size:0.6, desc:'FAS Nuclear Notebook 2024: 10,929 warheads globally. Russia: 5,580. USA: 5,044. 9 nuclear states. Multipolar deterrence increasingly unstable.', source:'FAS Nuclear Notebook 2024' },
+  { lat:34.05, lng:131.86, name:'Hiroshima', event:'☢️ Nuclear Memory Site', type:'war', size:0.6, desc:'FAS Status of World Nuclear Forces 2026: 12,187 warheads globally. Russia: ~5,460. USA: ~5,177. 9 nuclear states. New START expired Feb 2026.', source:'FAS Status of World Nuclear Forces 2026' },
   { lat:37.60, lng:127.15, name:'Seoul', event:'☢️ Nuclear Proximity Zone', type:'war', size:0.75, desc:'DPRK estimated 50 nuclear warheads. Intercontinental range achieved. Seoul 35km from border. Densest nuclear standoff zone outside Europe.', source:'FAS 2024' },
-  { lat:30.00, lng:70.00, name:'Pakistan-India Border', event:'☢️ Nuclear Flashpoint', type:'war', size:0.85, desc:'India: 180 warheads, Pakistan: 170. Both modernizing rapidly. Kashmir tensions perennial. Only nuclear-armed states with active territorial dispute and documented near-exchanges.', source:'FAS Nuclear Notebook 2024' },
+  { lat:30.00, lng:70.00, name:'Pakistan-India Border', event:'☢️ Nuclear Flashpoint', type:'war', size:0.85, desc:'India: 180 warheads, Pakistan: 170. Both modernizing rapidly. Kashmir tensions perennial. Only nuclear-armed states with active territorial dispute and documented near-exchanges.', source:'FAS Status of World Nuclear Forces 2026' },
 
   // Diplomacy / Recovery
   { lat:46.95, lng:7.45, name:'Bern', event:'🔵 Swiss Neutrality Hub', type:'diplomacy', size:0.65, desc:'Switzerland hosting multiple track-2 diplomacy channels. Iran backchannels. Ukraine peace initiative. Neutral ground increasingly rare in multipolar world.', source:'FDFA Switzerland 2026' },
@@ -1878,8 +1878,8 @@ SPACE WEATHER: Kp-index ${sw.kpCurrent.kp} — ${sw.stormLevel}. Solar wind ${sw
 
 CSI SCORE: ${csi.composite || '?'}/100 — ${csi.composite >= 80 ? 'CRITICAL' : csi.composite >= 70 ? 'HIGH STRESS' : 'ELEVATED'}
 CLIMATE: ${wb.temp2024 ? `+${wb.temp2024}°C anomaly` : '1.47°C 2024 anomaly (NASA)'}
-DOLLAR RESERVE: ${wb.dollarReserve ? `${wb.dollarReserve}%` : '57.8%'} of global reserves (IMF)
-NUCLEAR WARHEADS: 10,929 active (FAS 2024)
+DOLLAR RESERVE: ${wb.dollarReserve ? `${wb.dollarReserve}%` : '56.3%'} of global reserves (IMF COFER Q2-2025)
+NUCLEAR WARHEADS: 12,187 total (FAS Status of World Nuclear Forces, Jan 2026)
 LIVE HEADLINES (${news.length}): ${news.map(n => `[${n.source}] ${n.title}`).join(' | ')}${narrativeCtx}${intelCtx}
 
 Write a professional intelligence brief with: 1) Situation Assessment (what is the dominant pattern today), 2) Key Developments (3-4 most significant confirmed events), 3) Civilizational Signal (what does the Enoch/Fourth Turning/Empire Cycle framework say about this moment), 4) Watch List (2-3 things to monitor in next 48 hours). Be direct, analytical, and precise. No fluff. This is for informed adults who want clarity, not anxiety.`;
@@ -1987,7 +1987,7 @@ const TERM_COMMANDS = {
   <span style="color:var(--ash)">Gold (GC=F):</span>        $4,787.40 — near ATH inflation-adjusted
   <span style="color:var(--ash)">Oil WTI (CL=F):</span>     $96.57 — Hormuz premium
   <span style="color:var(--ash)">Bitcoin (BTC):</span>      $71,696
-  <span style="color:var(--ash)">USD Reserve Share:</span>  57.8% (down from 71% in 2000)
+  <span style="color:var(--ash)">USD Reserve Share:</span>  56.3% (IMF COFER Q2 2025)
 <span style="color:var(--ash)">Source: Yahoo Finance / CoinGecko live via /api/markets</span>`;
   },
 
